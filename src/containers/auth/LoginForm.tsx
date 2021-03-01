@@ -7,6 +7,7 @@ import AuthForm from '../../components/auth/AuthForm';
 import { useHistory } from 'react-router-dom';
 
 import { validate, userSchema } from '../../lib/validation';
+import { setItem, removeItem, getItem } from '../../lib/localStorageRequest';
 
 const LoginForm = () => {
     const history = useHistory();
@@ -40,41 +41,20 @@ const LoginForm = () => {
         }
         dispatch(loginAsync({ username, password }))
     }
-  
-    useEffect(() => {
-        if (username) dispatch(checkAsync(username));
-    },[])
-
-    const checkAuthState = () => {
-        if (!authorized && !loading['auth/CHECK']) {
-            try {
-                localStorage.removeItem('username');
-            } catch (e) {
-                console.log(e);
-            }
-        }
-        
-        if (authorized && !loading['auth/CHECK']) {
-            try {
-                localStorage.setItem('username', JSON.stringify(username));
-                history.push('/postListPage', { from: '/login' });
-            } catch (e) {
-                console.log(e);
-            }
-        }
-    }
 
     useEffect(() => {
-        checkAuthState();
-       if (authorized && !loading['auth/LOGIN']) {
-            try {
-                localStorage.setItem('username', JSON.stringify(username));
-                history.push('/postListPage', { from: '/login' });
-            } catch (e) {
-                console.log(e);
-            }
+        const localUsername = getItem('username');
+        if (localUsername) {
+            dispatch(checkAsync(localUsername));
         }
-    }, [authorized])
+    }, [])
+
+    useEffect(() => {
+        if (authorized && !loading['auth/CHECK'] && !loading['auth/LOGIN']) {
+            setItem('username', JSON.stringify(username));
+            history.push('/postListPage', { from: '/login' });
+        }
+    }, [authorized, loading])
 
     return (
         <AuthForm authType="login" onChange={onChange} onSubmit={onSubmit} />

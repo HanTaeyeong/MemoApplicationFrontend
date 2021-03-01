@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
@@ -8,7 +8,11 @@ import 'react-quill/dist/quill.bubble.css';
 
 import palette from '../../lib/styles/palette';
 
-import { writePostAsync, WriteType } from '../../store/write';
+import write, { writePostAsync, finalizeWriting, changeWritingField } from '../../store/write';
+import { RootStateType } from '../../store';
+import { changeField } from '../../store/auth';
+import { writeFile } from 'fs';
+
 // import useInterval from '../../lib/hook/useInterval';
 
 const EditorBlock = styled.div`
@@ -81,33 +85,47 @@ const quillOption = {
 const Editor = () => {
     const dispatch = useDispatch();
     const history = useHistory();
+
+    const writeState = useSelector(({ write, loading }: RootStateType) => 
+    ({ ...write, loading: { ...loading } }));
+    
+    const { title, contents, tags, finishWriting, loading } = writeState;
+
     const [editorState, setEditorState] = useState({ title: '', contents: '', theme: 'snow' });
 
     const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setEditorState({ ...editorState, [name]: value })
+        dispatch(changeWritingField({ ...writeState, title: value }));
+      
     }
 
     const onChangeContents = (text: string) => {
-        setEditorState({ ...editorState, contents: text })
-        console.log(text);
+
+        dispatch(changeWritingField({ ...writeState, contents: text }));
+        
     }
+
+    useEffect(() => {
+        console.log(writeState);
+        
+    }, [writeState])
 
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
         setEditorState({ ...editorState, theme: e.target.value })
     }
 
-    const { title, body, tags } = useSelector(({ write }: { write: WriteType }) => ({
-        ...write
-    }))
-
     // useInterval(dispatch(writePostAsync({ title, body, tags })), 60000);
-
     const onGoingBack = async () => {
-        await dispatch(writePostAsync({ title, body, tags }))
-        history.goBack();
+        dispatch(finalizeWriting);
+        dispatch(writePostAsync({ title, contents, tags }))
     }
+
+    useEffect(() => {
+        if (finishWriting && !loading['write/WRITE_POST']) {
+            history.push('/postListPage', { from: '/write' });
+        }
+    }, [loading])
 
     return (
         <EditorBlock>

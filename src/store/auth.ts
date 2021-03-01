@@ -36,7 +36,7 @@ export const logout = createAction(LOGOUT, ({ username }) => ({ username }));
 export const logoutAsync = createRequestThunk(LOGOUT, authAPI.logout);
 
 
-export const check = createAction(CHECK, authAPI.check);
+export const check = createAction(CHECK, ({ username }) => ({ username }));
 export const checkAsync = createRequestThunk(CHECK, authAPI.check);
 
 

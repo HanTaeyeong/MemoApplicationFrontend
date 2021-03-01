@@ -1,14 +1,15 @@
 export const getItem = (itemName: string) => {
     try {
-        return localStorage.getItem(`${itemName}`);
+        const result = localStorage.getItem(`${itemName}`);
+        return result ? result :'';
     } catch (e) {
-        console.log(e)
+        console.log(e);
     }
 }
 
-export const setItem = (itemName: string, value:string) => {
+export const setItem = (itemName: string, value: string) => {
     try {
-        return localStorage.setItem(`${itemName}`,value);
+        return localStorage.setItem(`${itemName}`, value);
     } catch (e) {
         console.log(e)
     }

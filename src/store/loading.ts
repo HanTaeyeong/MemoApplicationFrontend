@@ -10,7 +10,9 @@ const initialState = {
     'auth/LOGIN': false,
     'auth/REGISTER': false,
     'auth/LOGOUT': false,
-    'auth/CHECK': false
+    'auth/CHECK': false,
+    
+    'write/WRITE_POST':false,
 };
 
 const loading = createReducer(initialState,
