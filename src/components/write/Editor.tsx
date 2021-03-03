@@ -8,10 +8,8 @@ import 'react-quill/dist/quill.bubble.css';
 
 import palette from '../../lib/styles/palette';
 
-import write, { writePostAsync, finalizeWriting, changeWritingField } from '../../store/write';
+import { writePostAsync, changeWritingField, finalizeWriting, initialize } from '../../store/write';
 import { RootStateType } from '../../store';
-import { changeField } from '../../store/auth';
-import { writeFile } from 'fs';
 
 // import useInterval from '../../lib/hook/useInterval';
 
@@ -66,7 +64,7 @@ const quillOption = {
             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
             [{ 'list': 'ordered' }, { 'list': 'bullet' },
             { 'indent': '-1' }, { 'indent': '+1' }],
-            ['link', 'image', 'video'],
+            //['link', 'image', 'video'],
             ['clean']
         ],
         clipboard: {
@@ -100,15 +98,8 @@ const Editor = () => {
     }
 
     const onChangeContents = (text: string) => {
-
         dispatch(changeWritingField({ ...writeState, contents: text }));
-        
     }
-
-    useEffect(() => {
-        console.log(writeState);
-        
-    }, [writeState])
 
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
@@ -116,20 +107,30 @@ const Editor = () => {
     }
 
     // useInterval(dispatch(writePostAsync({ title, body, tags })), 60000);
-    const onGoingBack = async () => {
-        dispatch(finalizeWriting);
+    const onGoingBack = () => {
+        dispatch(finalizeWriting(''));
         dispatch(writePostAsync({ title, contents, tags }))
     }
+    const onInitialize= ()=>{
+        dispatch(initialize(''))
+    }
+
+    useEffect(()=>{
+        onInitialize();
+     
+    },[]);
 
     useEffect(() => {
+      
         if (finishWriting && !loading['write/WRITE_POST']) {
             history.push('/postListPage', { from: '/write' });
         }
-    }, [loading])
+    }, [loading['write/WRITE_POST'],finishWriting])
 
     return (
         <EditorBlock>
             <button onClick={onGoingBack}>Go to back</button>
+            <button onClick={onInitialize}>Initialize</button>
             <TitleInput onChange={e => onChangeTitle(e)} name='title' />
             <ReactQuill
                 onChange={e => onChangeContents(e)}

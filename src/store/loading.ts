@@ -13,6 +13,7 @@ const initialState = {
     'auth/CHECK': false,
     
     'write/WRITE_POST':false,
+    'write/GET_POST_LIST':false
 };
 
 const loading = createReducer(initialState,

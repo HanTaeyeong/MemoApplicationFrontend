@@ -4,6 +4,7 @@ const ajv = new Ajv({allErrors:true});
 
 //Minimum eight characters, at least one letter, one number and one special character:
 //js new Regex(is not the same with \d \\d);
+//number, integer, string, boolean, array, object or null
 
 export const userSchema = {
     "properties": {

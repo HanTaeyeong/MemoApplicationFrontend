@@ -9,7 +9,6 @@ import { initializeForm, logoutAsync} from '../../store/auth';
 import {removeItem} from '../../lib/localStorageRequest';
 
 const HeaderBlock = styled.div`
-    position:fixed;
     width:100%;
     background:white;
     box-shadow:0px 2px 4px rgba(0,0,0,0.08);
@@ -59,7 +58,7 @@ const Header = () => {
         <HeaderBlock>
             <Wrapper>
                 <form onSubmit={(e)=>onLogout(e)}>
-                    <div className='logo'>Reacters</div>
+                    <div className='logo'>Simple Memo</div>
                     <div className='right'>
                         <Button cyan={false} fullWidth={false}>Logout</Button>
                     </div>

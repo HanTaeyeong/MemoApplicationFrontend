@@ -1,8 +1,7 @@
 import client from './client';
 
 
-export const getPostList = () => client.get('/api/post/')
-
+export const getPostList = ({ page, limit }: { page: number, limit: number}) => client.get(`/api/post/get?page=${page}&limit=${limit}`)
 
 export const writePost = ({ title, contents, tags }: { title: string, contents: string, tags: string[] | undefined }) =>
     client.post('/api/post/write', { title, contents, tags });

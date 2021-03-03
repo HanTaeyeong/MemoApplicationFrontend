@@ -32,7 +32,7 @@ const AuthTemplate = ({children}:{children:JSX.Element}) => {
         <AuthTemplateBlock>
             <WhiteBox>
                 <div className="logo-area">
-                    <Link to="/">Reactor</Link>
+                    <Link to="/">Simple Memo</Link>
                 </div>
             </WhiteBox>
             {children}
