@@ -5,10 +5,11 @@ import { Dispatch } from 'redux';
 export function createRequestThunk(type: string, request: Function) {
     const SUCCESS = `${type}_SUCCESS`;
     const FAILURE = `${type}_FAILURE`;
-    
+
     return (params: any) => async (dispatch: Dispatch<any>) => {
         dispatch({ type });
         dispatch(startLoading(type));
+
         try {
             const response = await request(params);
             dispatch({

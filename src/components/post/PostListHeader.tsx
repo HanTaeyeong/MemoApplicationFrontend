@@ -5,44 +5,41 @@ import { useHistory } from 'react-router-dom';
 
 import { RootStateType } from '../../store';
 import Button from '../common/Button';
-import { initializeForm, logoutAsync} from '../../store/auth';
-import {removeItem} from '../../lib/localStorageRequest';
+import { initializeForm, logoutAsync } from '../../store/auth';
+import { removeItem } from '../../lib/localStorageRequest';
 
 const HeaderBlock = styled.div`
     width:100%;
-    background:white;
-    box-shadow:0px 2px 4px rgba(0,0,0,0.08);
-    margin-bottom:4rem;
-`;
-
-const Wrapper = styled.div`
     height:4rem;
+    
     display:flex;
     align-items:center;
+    
+    background:white;
+    box-shadow:0px 2px 4px rgba(0,0,0,0.08);
+    margin-bottom:1rem;
+
     justify-content:space-between;
+
     .logo{
         font-size:1.125rem;
         font-weight:800;
         letter-spacing:2px;
     }
     .right{
-        display:flex;
-        align-items:center;
+      
     }
 `;
-
-
 
 const Header = () => {
     const authState = useSelector(({ auth, loading }: RootStateType) =>
         ({ username: auth.username, authorized: auth.authorized, loading: { ...loading } }))
-    const { authorized,username } = authState;
+    const { authorized, username } = authState;
 
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const onLogout = (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const onLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
         dispatch(initializeForm);
         removeItem('username');
         dispatch(logoutAsync(''));
@@ -50,20 +47,14 @@ const Header = () => {
 
     useEffect(() => {
         if (!authorized && !username) {
-            history.push('/login', { from: 'PostListPage' }) 
+            history.push('/login', { from: 'PostListPage' })
         }
-    }, [authorized,username])
+    }, [authorized, username])
 
     return (
         <HeaderBlock>
-            <Wrapper>
-                <form onSubmit={(e)=>onLogout(e)}>
-                    <div className='logo'>Simple Memo</div>
-                    <div className='right'>
-                        <Button cyan={false} fullWidth={false}>Logout</Button>
-                    </div>
-                </form>
-            </Wrapper>
+                <span className='logo'>Simple Memo</span>
+                <Button cyan={false} fullWidth={false} onClickFunction={ onLogout}>Logout</Button>
         </HeaderBlock>
     )
 }

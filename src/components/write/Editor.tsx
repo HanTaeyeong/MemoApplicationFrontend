@@ -8,8 +8,12 @@ import 'react-quill/dist/quill.bubble.css';
 
 import palette from '../../lib/styles/palette';
 
-import { writePostAsync, changeWritingField, finalizeWriting, initialize } from '../../store/write';
+import Button from '../common/Button';
+
+import { writePostAsync, changeWritingField, finalizeWriting, initialize, updatePostAsync } from '../../store/write';
 import { RootStateType } from '../../store';
+
+
 
 // import useInterval from '../../lib/hook/useInterval';
 
@@ -53,6 +57,13 @@ const TitleInput = styled.input`
     margin-bottom:2rem;
     width:100%;
 `;
+const ButtonWrapper = styled.div`
+    margin:1rem;
+    margin-left:0;
+    display:flex;
+    justify-content:space-between;
+`;
+
 
 const quillOption = {
     theme: 'snow',
@@ -84,17 +95,17 @@ const Editor = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const writeState = useSelector(({ write, loading }: RootStateType) => 
-    ({ ...write, loading: { ...loading } }));
-    
-    const { title, contents, tags, finishWriting, loading } = writeState;
+    const writeState = useSelector(({ write, loading }: RootStateType) =>
+        ({ ...write, loading: { ...loading } }));
+
+
+    const { title, contents, tags, finishWriting, loading, _id } = writeState;
 
     const [editorState, setEditorState] = useState({ title: '', contents: '', theme: 'snow' });
 
     const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         dispatch(changeWritingField({ ...writeState, title: value }));
-      
     }
 
     const onChangeContents = (text: string) => {
@@ -107,37 +118,40 @@ const Editor = () => {
     }
 
     // useInterval(dispatch(writePostAsync({ title, body, tags })), 60000);
+
     const onGoingBack = () => {
         dispatch(finalizeWriting(''));
-        dispatch(writePostAsync({ title, contents, tags }))
+        if (!_id) { dispatch(writePostAsync({ title, contents, tags })) }
+        else {
+            dispatch(updatePostAsync({ _id, title, contents }))
+        }
     }
-    const onInitialize= ()=>{
-        dispatch(initialize(''))
-    }
-
-    useEffect(()=>{
-        onInitialize();
-     
-    },[]);
 
     useEffect(() => {
-      
-        if (finishWriting && !loading['write/WRITE_POST']) {
+        dispatch(initialize(''))
+    }, []);
+
+    useEffect(() => {
+        if (finishWriting && !loading['write/WRITE_POST'] && !loading['write/UPDATE_POST']) {
             history.push('/postListPage', { from: '/write' });
         }
-    }, [loading['write/WRITE_POST'],finishWriting])
+    }, [loading['write/WRITE_POST'], loading['write/UPDATE_POST'], finishWriting])
 
     return (
         <EditorBlock>
-            <button onClick={onGoingBack}>Go to back</button>
-            <button onClick={onInitialize}>Initialize</button>
-            <TitleInput onChange={e => onChangeTitle(e)} name='title' />
+            <ButtonWrapper>
+                <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
+            </ButtonWrapper>
+
+            <TitleInput onChange={e => onChangeTitle(e)} name='title'
+                placeholder="Write a title here" value={writeState.title} />
             <ReactQuill
                 onChange={e => onChangeContents(e)}
                 theme={editorState.theme}
                 modules={quillOption.modules}
                 formats={quillOption.formats}
                 placeholder={quillOption.placeholder}
+                value={writeState.contents}
             />
             <div className="themeSwitcher">
                 <label>Theme </label>

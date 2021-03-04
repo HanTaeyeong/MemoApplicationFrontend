@@ -13,7 +13,6 @@ const persistConfig = {
     whiteList: ['auth', 'loading', 'write']
 }
 
-
 const rootReducer = combineReducers({
     auth, loading, write
 })

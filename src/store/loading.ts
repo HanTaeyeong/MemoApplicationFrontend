@@ -11,9 +11,11 @@ const initialState = {
     'auth/REGISTER': false,
     'auth/LOGOUT': false,
     'auth/CHECK': false,
-    
-    'write/WRITE_POST':false,
-    'write/GET_POST_LIST':false
+
+    'write/WRITE_POST': false,
+    'write/GET_POST_LIST': false,
+    'write/UPDATE_POST': false,
+    'write/DELETE_POST': false
 };
 
 const loading = createReducer(initialState,

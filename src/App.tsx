@@ -10,9 +10,9 @@ function App() {
   return (
     <div>
       <Route path={["/","/login"]} component={LoginPage} exact/>
-      <Route path="/register" component={RegisterPage} />
+      <Route path="/register" component={RegisterPage} exact/>
       <Route path='/postListPage' component={PostListPage} exact />
-      <Route path="/write" component={WritePage} />
+      <Route path="/write" component={WritePage} exact/>
     </div>
   );
 }

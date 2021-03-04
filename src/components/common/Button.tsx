@@ -2,9 +2,9 @@ import React from 'react'
 import styled, { css } from 'styled-components';
 import palette from '../../lib/styles/palette';
 
-interface ButtonPropsType{
-    cyan:Boolean;
-    fullWidth:Boolean;
+interface ButtonPropsType {
+    cyan: Boolean;
+    fullWidth: Boolean;
 }
 
 const StyledButton = styled.button`
@@ -22,7 +22,7 @@ const StyledButton = styled.button`
         background: ${palette.gray[6]};
     }
 
-    ${(props:ButtonPropsType) => props.fullWidth &&
+    ${(props: ButtonPropsType) => props.fullWidth &&
         css`
     padding-top:0.75rem;
     padding-bottom:0.75rem;
@@ -30,7 +30,7 @@ const StyledButton = styled.button`
     font-size:1.125rem;
     `}
     
-    ${(props:ButtonPropsType) => props.cyan && css`
+    ${(props: ButtonPropsType) => props.cyan && css`
         background:${palette.cyan[5]};
         &:hover{
             background:${palette.cyan[4]}
@@ -39,10 +39,26 @@ const StyledButton = styled.button`
 
 `;
 
+interface ButtonType {
+    children: String;
+    cyan: Boolean;
+    fullWidth: Boolean;
+    onClickFunction?: Function | undefined;
+}
 
-const Button = ({ children,cyan,fullWidth }: { children: String,cyan:Boolean,fullWidth:Boolean }) => {
+const Button = ({ children, cyan, fullWidth, onClickFunction }: ButtonType) => {
+
+    const onClick = () => {
+        if (onClickFunction) {
+            return onClickFunction();
+        } else {
+            return () => { }
+        }
+    }
+
     return (
-        <StyledButton cyan={cyan} fullWidth={fullWidth} >{children}</StyledButton>
+        <StyledButton cyan={cyan} fullWidth={fullWidth}
+            onClick={onClick}>{children}</StyledButton>
     )
 }
 

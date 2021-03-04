@@ -21,13 +21,11 @@ export const userSchema = {
 }
 
 export const validate = (schema: Object, data: Object) => {
-
-    console.log(data);
-
     const validate = ajv.compile(schema);
     const valid = validate(data);
 
     if (!valid) {
+        alert(`ID only with alphabet and numbers! [4~16] \n\nPassword with at least 1 alphabet, 1 number and 1 special character! [8~32]`)
         return { ...validate.errors, isValid: false };
     }
     return { ...validate, isValid: true }
