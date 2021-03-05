@@ -1,5 +1,6 @@
 import client from './client';
 
+
 export const login = async ({ username, password }: { username: string, password: string }) =>
     await client.post('/api/auth/login', { username, password });
 
