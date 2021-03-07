@@ -1,17 +1,17 @@
 import client from './client';
 
-const proxy='/simplememo.com/api/auth';
+const prefix='/api/auth';
 
 export const login = async ({ username, password }: { username: string, password: string }) =>
-    await client.post(proxy+'/login', { username, password });
+    await client.post(prefix+'/login', { username, password });
 
 export const logout = async () => {
-    return await client.post(proxy+'/logout')
+    return await client.post(prefix+'/logout')
 };
 
 export const register = async ({ username, password }: { username: string, password: string }) =>
-    await client.post(proxy+'/register', { username, password })
+    await client.post(prefix+'/register', { username, password })
 
-export const check = async () => await client.get(proxy+'/check');
+export const check = async () => await client.get(prefix+'/check');
 
 

@@ -1,17 +1,17 @@
 import client from './client';
 
-const proxy='/simplememo.com/api/post'
+const prefix = '/api/post';
 
-export const getPostList = ({ page, limit }: { page: number, limit: number }) => client.get(`${proxy}/get?page=${page}&limit=${limit}`)
+export const getPostList = ({ page, limit }: { page: number, limit: number }) => client.get(`${prefix}/get?page=${page}&limit=${limit}`)
 
 export const writePost = ({ title, contents, tags }: { title: string, contents: string, tags: string[] | undefined }) =>
-    client.post(proxy+'/write', { title, contents, tags });
+    client.post(prefix + '/write', { title, contents, tags });
 
 export const readPost = (id: string) =>
-    client.get(`${proxy}/read/${id}`);
+    client.get(`${prefix}/read/${id}`);
 
 export const deletePost = (id: string) =>
-    client.delete(`${proxy}/delete/${id}`);
+    client.delete(`${prefix}/delete/${id}`);
 
 export const updatePost = ({ _id, title, contents, tags }: { _id: string, title: string, contents: string, tags: string[] | undefined }) =>
-    client.patch(`${proxy}/update/${_id}`, { title, contents, tags })
+    client.patch(`${prefix}/update/${_id}`, { title, contents, tags })
