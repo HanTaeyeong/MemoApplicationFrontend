@@ -54,7 +54,7 @@ const LoginForm = () => {
             setItem('username', JSON.stringify(username));
             history.push('/postListPage', { from: '/login' });
         }
-    }, [authorized, loading])
+    }, [authorized,loading['auth/CHECK'],loading['auth/LOGIN']])
 
     return (
         <AuthForm authType="login" onChange={onChange} onSubmit={onSubmit} />

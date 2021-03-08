@@ -76,13 +76,13 @@ const auth = createReducer(initialState,
         [CHANGE_FIELD]: (state, { payload: { authType, username, password, passwordConfirm } }) => ({ ...state, authType, username, password, passwordConfirm }),
         [INITIALIZE_FORM]: (state, { payload: { authType } }) => ({ ...initialState }),
 
-        [REGISTER_SUCCESS]: (state: AuthStateType, { payload: { auth } }: any) => ({ ...state, authError: null, auth }),
-        [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authError: error }),
+        [REGISTER_SUCCESS]: (state: AuthStateType, { payload: { auth } }: any) => ({ ...state, authorized:true,authError: null }),
+        [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state,authorized:false, authError: error }),
 
-        [LOGIN_SUCCESS]: (state: AuthStateType, { payload: { username } }: any) => ({ ...state, username, authorized: true, authError: null }),
+        [LOGIN_SUCCESS]: (state: AuthStateType, { payload: { username,password } }: any) => ({ ...state, authorized: true, authError: null }),
         [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authError: error }),
 
-        [CHECK_SUCCESS]: (state: AuthStateType, { payload: username }: any) => ({ ...state, username, authorized: true, checkError: false }),
+        [CHECK_SUCCESS]: (state: AuthStateType, { payload: username }: any) => ({ ...state, authorized: true, checkError: false }),
         [CHECK_FAILURE]: (state: AuthStateType, { payload: error }: any) => ({ ...state, authorized: false, checkError: error }),
 
         [LOGOUT_SUCCESS]: (state: AuthStateType, { payload: username }: any) => ({ ...initialState }),

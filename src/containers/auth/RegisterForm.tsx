@@ -31,13 +31,11 @@ const RegisterForm = () => {
 
     const onSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        console.log(authState);
         if (password !== passwordConfirm) {
             alert('password is diffrent');
             return;
         }
         const vaildationResult = validate(userSchema, { username, password })
-        console.log(vaildationResult);
         if (!vaildationResult.isValid) { return; }
 
         dispatch(registerAsync({ username, password }))
@@ -66,7 +64,7 @@ const RegisterForm = () => {
     }, [loading['auth/CHECK']])
 
     useEffect(() => {
-        if (authorized && !loading['auth/LOGIN']) {
+        if (authorized && !loading['auth/REGISTER']) {
             try {
                 localStorage.setItem('username', JSON.stringify(username));
                 history.push('/postListPage', { from: '/login' });
@@ -74,7 +72,7 @@ const RegisterForm = () => {
                 console.log(e);
             }
         }
-    }, [loading['auth/LOGIN']])
+    }, [loading['auth/REGISTER']])
 
     return (
         <AuthForm authType="register" onChange={onChange} onSubmit={onSubmit} />

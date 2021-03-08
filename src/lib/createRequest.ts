@@ -22,6 +22,7 @@ export function createRequestThunk(type: string, request: Function) {
                 payload: e,
                 error: true
             });
+            alert(e);
         } finally {
             dispatch(finishLoading(type));
         }
