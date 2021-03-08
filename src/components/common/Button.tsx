@@ -2,12 +2,17 @@ import React from 'react'
 import styled, { css } from 'styled-components';
 import palette from '../../lib/styles/palette';
 
+import {RootStateType} from '../../store';
+import { useSelector } from 'react-redux';
+
 interface ButtonPropsType {
     cyan: Boolean;
     fullWidth: Boolean;
 }
 
 const StyledButton = styled.button`
+    position:relative;
+
     border:none;
     border-radius: 4px;
     font-size: 1rem;
@@ -36,17 +41,56 @@ const StyledButton = styled.button`
             background:${palette.cyan[4]}
         }
     `}
+    
+        &.loading{
+            background:${palette.cyan[1]};
+            cursor:not-allowed;
+            .text{
+            visibility:hidden;
+        }
 
+        &::after{
+            content:"";
+            position:absolute;
+            width:1.5rem;
+            height:1.5rem;
+            border:0.25rem solid transparent;
+            border-top-color:${palette.cyan[5]};
+            border-radius:50%;
+            /* top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+             */
+             top:0;
+             left:0;
+             bottom:0;
+             right:0;
+             margin:auto;
+            animation:button-loading-spinner 1s ease infinite;
+        }
+        }
+        
+        @keyframes button-loading-spinner{
+            from{
+                transform:rotate(0turn);
+            }
+            to{
+                transform:rotate(1turn);
+            }
+        }
 `;
 
 interface ButtonType {
     children: String;
     cyan: Boolean;
     fullWidth: Boolean;
+
     onClickFunction?: Function | undefined;
 }
 
 const Button = ({ children, cyan, fullWidth, onClickFunction }: ButtonType) => {
+
+    const loadingState = useSelector(({ loading }:RootStateType) => ({ ...loading }));
 
     const onClick = () => {
         if (onClickFunction) {
@@ -58,7 +102,9 @@ const Button = ({ children, cyan, fullWidth, onClickFunction }: ButtonType) => {
 
     return (
         <StyledButton cyan={cyan} fullWidth={fullWidth}
-            onClick={onClick}>{children}</StyledButton>
+            onClick={onClick} className={(loadingState['auth/LOGIN'] || loadingState['auth/REGISTER']) ? 'loading' : ''}>
+            <span className={'text'}>{children}</span>
+        </StyledButton>
     )
 }
 

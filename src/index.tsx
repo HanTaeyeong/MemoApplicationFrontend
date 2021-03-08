@@ -16,20 +16,21 @@ import rootReducer from './store';
 import { tempSetUser, checkAsync, TEMP_SET_USER } from './store/auth';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
-//https://stackoverflow.com/questions/50059724/how-do-i-resolve-actions-must-be-plain-objects-use-custom-middleware-for-async/54066862
+
+console.log(navigator.language);
 
 const persister = persistStore(store);
 
 async function loadUser() {
   try {
-    const user = localStorage.getItem('user');
-    if (!user) return;
+    const username = localStorage.getItem('username');
+    if (!username) return;
 
-    store.dispatch({ type: TEMP_SET_USER, payload: user });
+    store.dispatch({ type: TEMP_SET_USER, payload: username });
     await checkAsync(() => { });
 
     if (store.getState().auth.checkError) {
-      localStorage.removeItem('user');
+      localStorage.removeItem('username');
     }
   } catch (e) { console.log(e) }
 }

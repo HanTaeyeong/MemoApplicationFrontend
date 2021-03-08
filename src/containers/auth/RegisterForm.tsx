@@ -7,6 +7,7 @@ import AuthForm from '../../components/auth/AuthForm';
 import { useHistory } from 'react-router-dom';
 
 import { validate, userSchema } from '../../lib/validation';
+import {setItem,removeItem} from '../../lib/localStorageRequest';
 
 const RegisterForm = () => {
     const history = useHistory();
@@ -14,7 +15,7 @@ const RegisterForm = () => {
     const authState = useSelector(({ auth, loading }: RootStateType) => ({
         ...auth,
         authType: 'register',
-        loading
+        loading:{...loading}
     }))
     const { authorized, username, password, passwordConfirm, loading } = authState;
 
@@ -43,34 +44,21 @@ const RegisterForm = () => {
 
     const checkAuthState = () => {
         if (!authorized && !loading['auth/CHECK']) {
-            try {
-                localStorage.removeItem('username');
-            } catch (e) {
-                console.log(e);
-            }
+            removeItem('username');
         }
-
-        if (authorized && !loading['auth/CHECK']) {
-            try {
-                localStorage.setItem('username', JSON.stringify(username));
+        if (authorized && !loading['auth/CHECK'] &&!loading['auth/REGISTER']) {
+                setItem('username', JSON.stringify(username));
                 history.push('/postListPage', { from: '/login' });
-            } catch (e) {
-                console.log(e);
-            }
         }
     }
     useEffect(() => {
         checkAuthState();
-    }, [loading['auth/CHECK']])
+    }, [])
 
     useEffect(() => {
         if (authorized && !loading['auth/REGISTER']) {
-            try {
-                localStorage.setItem('username', JSON.stringify(username));
+                setItem('username', JSON.stringify(username));
                 history.push('/postListPage', { from: '/login' });
-            } catch (e) {
-                console.log(e);
-            }
         }
     }, [loading['auth/REGISTER']])
 

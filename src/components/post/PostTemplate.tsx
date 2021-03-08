@@ -20,6 +20,51 @@ const PostTemplateBlock = styled.div`
 `;
 // { children: String,cyan:Boolean,fullWidth:Boolean }
 
+const LoadingSpinner=styled.div`
+    position:fixed;
+    margin:auto;
+    visibility:hidden;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    margin:auto;
+    width:0;
+    height:0;
+    background:black;
+
+    &.loading{
+        visibility:visible;
+    }
+    &::after{
+            content:"";
+            position:absolute;
+            width:5rem;
+            height:5rem;
+            border:0.5rem solid transparent;
+            border-top-color:${palette.cyan[5]};
+            border-radius:50%;
+            /* top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+             */
+             top:0;
+             left:0;
+             bottom:0;
+             right:0;
+             margin:auto;
+            animation:button-loading-spinner 1s ease infinite;
+        }
+        
+        @keyframes button-loading-spinner{
+            from{
+                transform:rotate(0turn);
+            }
+            to{
+                transform:rotate(1turn);
+            }
+        }
+`;
 
 const SButton = styled.button`
     border:none;
@@ -36,9 +81,11 @@ const SButton = styled.button`
         background: ${palette.gray[6]};
     }
 
-    &:disabled{
+    &:disabled, 
+    &.loading
+    {
         background:${palette.gray[3]};
-        color:${palette.gray[5]};
+        color:${palette.gray[4]};
         cursor:not-allowed;
     }
 `;
@@ -104,6 +151,7 @@ const PostTemplate = () => {
         setIsLoadingList(true);
         const res = await postApi.getPostList({ page, limit });
         const newPosts = [];
+        console.log(res);
 
         setPageState({
             ...pageState,
@@ -170,12 +218,12 @@ const PostTemplate = () => {
                     <span>{pageState.totalPostCount} total posts</span>
                 </SelectItems>
                 <PageItems>
-                    <SButton onClick={onChangePage} name="-1" disabled={pageState.page === 1}>before</SButton>
-                    <SButton onClick={onChangePage} name='1' disabled={pageState.page === pageState.lastPage}>next</SButton>
+                    <SButton onClick={onChangePage} name="-1" disabled={pageState.page === 1} className={isLoadingList ? 'loading' : ''}>before</SButton>
+                    <SButton onClick={onChangePage} name='1' disabled={pageState.page === pageState.lastPage} className={isLoadingList ? 'loading' : ''}>next</SButton>
                     <span>{pageState.page}/{pageState.lastPage} page</span>
                 </PageItems>
             </NavigationBlock>
-
+            <LoadingSpinner className={isLoadingList?'loading':''} />
             {posts.length ? posts.map((post) =>
                 <PostItem key={post._id} _id={post._id} title={post.title} contents={post.contents} lastUpdated={post.updatedAt} />
             ) : <div>Write a new memo...</div>}

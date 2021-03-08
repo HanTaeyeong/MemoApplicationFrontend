@@ -20,7 +20,7 @@ export const changeField = createAction(CHANGE_FIELD, ({ authType, username, pas
     authType, username, password, passwordConfirm
 }))();
 export const initializeForm = createAction(INITIALIZE_FORM, authType => authType)();
-export const tempSetUser = createAction(TEMP_SET_USER, user => user)();
+export const tempSetUser = createAction(TEMP_SET_USER, username => username)();
 
 export const register = createAction(REGISTER, ({ username, password }) => ({
     username, password
@@ -71,7 +71,7 @@ const initialState: AuthStateType = {
 
 const auth = createReducer(initialState,
     {
-        [TEMP_SET_USER]: (state, { payload: user }) => ({ ...state, user }),
+        [TEMP_SET_USER]: (state, { payload: username }) => ({ ...state, username }),
         [CHANGE_AUTH_TYPE]: (state, { payload: { authType } }) => ({ ...state, authType }),
         [CHANGE_FIELD]: (state, { payload: { authType, username, password, passwordConfirm } }) => ({ ...state, authType, username, password, passwordConfirm }),
         [INITIALIZE_FORM]: (state, { payload: { authType } }) => ({ ...initialState }),

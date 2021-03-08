@@ -55,7 +55,7 @@ const textMap: MapType = {
 
 const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange: Function, onSubmit: Function }) => {
     const text = textMap[authType];
-
+    
     return (
         <AuthFormBlock>
             <h3>{text}</h3>
