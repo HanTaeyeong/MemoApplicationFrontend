@@ -1,11 +1,11 @@
 import React from 'react'
-import Editor from '../components/write/Editor';
+import WriteTemplate from '../components/write/WriteTemplate';
 
 
 const WritePage = () => {
     return (
         <div>
-            <Editor/>
+            <WriteTemplate/>
         </div>
     )
 }

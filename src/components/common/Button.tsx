@@ -2,7 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components';
 import palette from '../../lib/styles/palette';
 
-import {RootStateType} from '../../store';
+import { RootStateType } from '../../store';
 import { useSelector } from 'react-redux';
 
 interface ButtonPropsType {
@@ -15,7 +15,7 @@ const StyledButton = styled.button`
 
     border:none;
     border-radius: 4px;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: bold;
     padding: 0.25rem 1rem;
     color: white;
@@ -32,7 +32,7 @@ const StyledButton = styled.button`
     padding-top:0.75rem;
     padding-bottom:0.75rem;
     width:100%;
-    font-size:1.125rem;
+    font-size:1.33rem;
     `}
     
     ${(props: ButtonPropsType) => props.cyan && css`
@@ -52,8 +52,8 @@ const StyledButton = styled.button`
         &::after{
             content:"";
             position:absolute;
-            width:1.5rem;
-            height:1.5rem;
+            width:1.25rem;
+            height:1.25rem;
             border:0.25rem solid transparent;
             border-top-color:${palette.cyan[5]};
             border-radius:50%;
@@ -90,7 +90,8 @@ interface ButtonType {
 
 const Button = ({ children, cyan, fullWidth, onClickFunction }: ButtonType) => {
 
-    const loadingState = useSelector(({ loading }:RootStateType) => ({ ...loading }));
+    const loadingState = useSelector(({ loading }: RootStateType) => ({ ...loading }));
+    const isLoading = loadingState['auth/LOGIN'] || loadingState['auth/REGISTER'] || loadingState['write/UPDATE_POST'] || loadingState['write/WRITE_POST'];
 
     const onClick = () => {
         if (onClickFunction) {
@@ -102,7 +103,7 @@ const Button = ({ children, cyan, fullWidth, onClickFunction }: ButtonType) => {
 
     return (
         <StyledButton cyan={cyan} fullWidth={fullWidth}
-            onClick={onClick} className={(loadingState['auth/LOGIN'] || loadingState['auth/REGISTER']) ? 'loading' : ''}>
+            onClick={onClick} className={isLoading ? 'loading' : ''}>
             <span className={'text'}>{children}</span>
         </StyledButton>
     )

@@ -1,16 +1,17 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useEffect, useLayoutEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import styled from 'styled-components';
 
-import PostListHeader from './PostListHeader';
+import ListHeader from './ListHeader';
 import PostItem from './PostItem';
-import Button from '../common/Button';
+import LoadingSpinner from './LoadingSpinner';
 
 import palette from '../../lib/styles/palette';
 
-import { initialize, changeWritingField } from '../../store/write';
+import { RootStateType } from '../../store';
+import { initialize, changeWritingFieldAsync } from '../../store/write';
 
 import * as postApi from '../../lib/api/post';
 
@@ -20,51 +21,6 @@ const PostTemplateBlock = styled.div`
 `;
 // { children: String,cyan:Boolean,fullWidth:Boolean }
 
-const LoadingSpinner=styled.div`
-    position:fixed;
-    margin:auto;
-    visibility:hidden;
-    top:0;
-    left:0;
-    bottom:0;
-    right:0;
-    margin:auto;
-    width:0;
-    height:0;
-    background:black;
-
-    &.loading{
-        visibility:visible;
-    }
-    &::after{
-            content:"";
-            position:absolute;
-            width:5rem;
-            height:5rem;
-            border:0.5rem solid transparent;
-            border-top-color:${palette.cyan[5]};
-            border-radius:50%;
-            /* top:50%;
-            left:50%;
-            transform:translate(-50%,-50%);
-             */
-             top:0;
-             left:0;
-             bottom:0;
-             right:0;
-             margin:auto;
-            animation:button-loading-spinner 1s ease infinite;
-        }
-        
-        @keyframes button-loading-spinner{
-            from{
-                transform:rotate(0turn);
-            }
-            to{
-                transform:rotate(1turn);
-            }
-        }
-`;
 
 const SButton = styled.button`
     border:none;
@@ -133,7 +89,7 @@ const NewMemoBlock = styled.div`
     margin-bottom:1rem;
 `
 
-interface PostType {
+interface ItemType {
     _id: string,
     title: string,
     contents: string,
@@ -142,6 +98,7 @@ interface PostType {
 const PostTemplate = () => {
     const history = useHistory();
     const dispatch = useDispatch();
+    const loading = useSelector(({ loading }: RootStateType) => (loading))
     const [posts, setPosts] = useState<any[]>([]);
     const [pageState, setPageState] = useState({ page: 1, limit: 10, lastPage: 1, totalPostCount: 0 });
     const [isLoadingList, setIsLoadingList] = useState(false);
@@ -151,7 +108,6 @@ const PostTemplate = () => {
         setIsLoadingList(true);
         const res = await postApi.getPostList({ page, limit });
         const newPosts = [];
-        console.log(res);
 
         setPageState({
             ...pageState,
@@ -191,6 +147,14 @@ const PostTemplate = () => {
         setPageState({ ...pageState, page: nextPage });
     };
 
+    const onClickItem = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.preventDefault();
+        const { _id, title, contents } = JSON.parse(e.currentTarget.id);
+
+        dispatch(changeWritingFieldAsync({ _id, title, contents }));
+        history.push('/write', { from: '/postListPage' });
+    }
+
     useEffect(() => {
         if (!isLoadingList) {
             getList();
@@ -199,14 +163,13 @@ const PostTemplate = () => {
 
     const moveToWrite = () => {
         dispatch(initialize(''));
-        dispatch(changeWritingField({ _id: "", title: "", contents: "", tags: [] }))
+        dispatch(changeWritingFieldAsync({ _id: "", title: "", contents: "", tags: [] }))
         history.push('/write', { from: '/postListPage' });
     }
 
     return (
         <PostTemplateBlock>
-            <PostListHeader />
-
+            <ListHeader />
             <NavigationBlock>
                 <SelectItems>
                     <select name="limits" onChange={onChangeSelect} >
@@ -223,9 +186,9 @@ const PostTemplate = () => {
                     <span>{pageState.page}/{pageState.lastPage} page</span>
                 </PageItems>
             </NavigationBlock>
-            <LoadingSpinner className={isLoadingList?'loading':''} />
+            <LoadingSpinner className={isLoadingList ? 'loading' : ''} />
             {posts.length ? posts.map((post) =>
-                <PostItem key={post._id} _id={post._id} title={post.title} contents={post.contents} lastUpdated={post.updatedAt} />
+                <PostItem key={post._id} _id={post._id} title={post.title} contents={post.contents} lastUpdated={post.updatedAt} onClickItem={onClickItem} />
             ) : <div>Write a new memo...</div>}
 
             <NewMemoButton onClick={moveToWrite}>+</NewMemoButton>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import palette from '../../lib/styles/palette';
 
 const PostItemBlock = styled.div`
+
 margin-top:0.5rem;
 border-bottom:1px solid ${palette.gray[2]};
 cursor:pointer;
@@ -17,6 +18,7 @@ cursor:pointer;
 
 const ItemHead = styled.div`
 display:flex;
+
 flex-direction:row;
 justify-content:space-between;
     
@@ -42,31 +44,30 @@ const ItemContent = styled.div`
     font-size:0.77rem;
     color:${palette.gray[8]};
     margin-bottom:2rem;
+    
     `
+interface PostItemType {
+    _id: string,
+    title: string,
+    contents: string,
+    lastUpdated: string,
+    onClickItem?:Function,
+}
 
-const PostItem = ({ _id, title, contents, lastUpdated }: { _id: string, title: string, contents: string, lastUpdated: string }) => {
-    const dispatch = useDispatch();
-    const history = useHistory();
-    const writeState = useSelector(({ write, loading }: RootStateType) => ({
-        ...write, loading: { ...loading },
-    }))
 
-    const onClick = () => {
-        dispatch(changeWritingField({ _id, title, contents }));
-
-        history.push('/write', { from: '/PostListPage' });
-    }
+const PostItem = ({ _id, title, contents, lastUpdated, onClickItem }: PostItemType) => {
+    const idObject={_id,title,contents};
 
     return (
-        <PostItemBlock onClick={onClick}>
+        <PostItemBlock id={JSON.stringify(idObject)} title={title} onClick={(e)=>onClickItem?onClickItem(e):{}}>
             <ItemHead>
                 <span className="title">{title}</span>
                 <ItemSubInfo>
                     <span><b>Last update</b></span>
                     <span>{lastUpdated.slice(0, 10)}</span>
                 </ItemSubInfo>
-
             </ItemHead>
+
             <ItemContent>
                 {contents}
             </ItemContent>

@@ -10,14 +10,14 @@ import palette from '../../lib/styles/palette';
 
 import Button from '../common/Button';
 
-import { writePostAsync, changeWritingField, finalizeWriting, initialize, updatePostAsync } from '../../store/write';
+import { writePostAsync, changeWritingFieldAsync, finalizeWriting, initialize, updatePostAsync } from '../../store/write';
 import { RootStateType } from '../../store';
 
 
 
 // import useInterval from '../../lib/hook/useInterval';
 
-const EditorBlock = styled.div`
+const WriteTemplateBlock = styled.div`
     padding-top:5rem;
     padding-bottom:5rem;
     margin: 1rem 4rem;
@@ -91,7 +91,7 @@ const quillOption = {
     ]
 }
 
-const Editor = () => {
+const WriteTemplate = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -105,11 +105,11 @@ const Editor = () => {
 
     const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        dispatch(changeWritingField({ ...writeState, title: value }));
+        dispatch(changeWritingFieldAsync({ ...writeState, title: value }));
     }
 
     const onChangeContents = (text: string) => {
-        dispatch(changeWritingField({ ...writeState, contents: text }));
+        dispatch(changeWritingFieldAsync({ ...writeState, contents: text }));
     }
 
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -138,11 +138,10 @@ const Editor = () => {
     }, [loading['write/WRITE_POST'], loading['write/UPDATE_POST'], finishWriting])
 
     return (
-        <EditorBlock>
-            <ButtonWrapper>
-                <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
-            </ButtonWrapper>
-
+        <WriteTemplateBlock>
+           
+            <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
+       
             <TitleInput onChange={e => onChangeTitle(e)} name='title'
                 placeholder="Write a title here" value={writeState.title} />
             <ReactQuill
@@ -161,8 +160,8 @@ const Editor = () => {
                     <option value="bubble">Bubble</option>
                 </select>
             </div>
-        </EditorBlock>
+        </WriteTemplateBlock>
     )
 }
 
-export default Editor
+export default WriteTemplate;

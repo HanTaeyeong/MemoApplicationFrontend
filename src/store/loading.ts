@@ -12,6 +12,7 @@ const initialState = {
     'auth/LOGOUT': false,
     'auth/CHECK': false,
 
+    'write/CHANGE_WRITING_FIELD':false,
     'write/WRITE_POST': false,
     'write/GET_POST_LIST': false,
     'write/UPDATE_POST': false,
