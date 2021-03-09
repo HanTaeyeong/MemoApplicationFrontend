@@ -4,10 +4,9 @@ import { Link } from 'react-router-dom';
 import palette from '../../lib/styles/palette';
 import Button from '../common/Button';
 
-
 const AuthFormBlock = styled.div`
     h3{
-        margin:0;
+        margin-left:1rem;
         margin-bottom:1rem;
         color:${palette.gray[8]};
     }
@@ -15,17 +14,18 @@ const AuthFormBlock = styled.div`
 
 const StyledInput = styled.input`
     font-size:1rem;
-    border:none;
-    border-bottom:1px solid ${palette.gray[5]};
-    padding-bottom:0.5rem;
+    border:1px solid ${palette.gray[5]};
+    border-radius:50px;
+
+    padding:0.5rem;
+    padding-left:1rem;
     outline:none;
     width:100%;
-    &:focus{
+    margin-bottom: 1rem;
+
+    :focus{
         color:$oc-teal-7;
-        border-bottom: 1px solid ${palette.gray[7]};
-    }
-    &+&{
-        margin-top: 1rem;
+        border:1px solid ${palette.cyan[5]};
     }
 `
 

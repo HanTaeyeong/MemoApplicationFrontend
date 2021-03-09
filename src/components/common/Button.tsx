@@ -14,14 +14,14 @@ const StyledButton = styled.button`
     position:relative;
 
     border:none;
-    border-radius: 4px;
+    border-radius: 5rem;
     font-size: 1.25rem;
     font-weight: bold;
     padding: 0.25rem 1rem;
     color: white;
     outline: none;
     cursor: pointer;
-
+    box-shadow: 0.25rem 0.25rem 0.5rem 0.2rem rgba(0, 0, 0, 0.1);
     background: ${palette.gray[8]};
     &:hover{
         background: ${palette.gray[6]};
