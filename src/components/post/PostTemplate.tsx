@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -11,7 +11,7 @@ import LoadingSpinner from './LoadingSpinner';
 import palette from '../../lib/styles/palette';
 
 import { RootStateType } from '../../store';
-import { initialize, changeWritingFieldAsync } from '../../store/write';
+import { initialize, changeWritingField } from '../../store/write';
 
 import * as postApi from '../../lib/api/post';
 
@@ -98,7 +98,8 @@ interface ItemType {
 const PostTemplate = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const loading = useSelector(({ loading }: RootStateType) => (loading))
+    const loading = useSelector(({ loading }: RootStateType) => loading)
+    const write = useSelector(({ write }: RootStateType) => write)
     const [posts, setPosts] = useState<any[]>([]);
     const [pageState, setPageState] = useState({ page: 1, limit: 10, lastPage: 1, totalPostCount: 0 });
     const [isLoadingList, setIsLoadingList] = useState(false);
@@ -151,7 +152,7 @@ const PostTemplate = () => {
         e.preventDefault();
         const { _id, title, contents } = JSON.parse(e.currentTarget.id);
 
-        dispatch(changeWritingFieldAsync({ _id, title, contents }));
+        dispatch(changeWritingField({ ...write, _id, title, contents }));
         history.push('/write', { from: '/postListPage' });
     }
 
@@ -163,7 +164,7 @@ const PostTemplate = () => {
 
     const moveToWrite = () => {
         dispatch(initialize(''));
-        dispatch(changeWritingFieldAsync({ _id: "", title: "", contents: "", tags: [] }))
+        dispatch(changeWritingField({ _id: "", title: "", contents: "", tags: [] }))
         history.push('/write', { from: '/postListPage' });
     }
 

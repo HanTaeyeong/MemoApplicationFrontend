@@ -10,7 +10,7 @@ import palette from '../../lib/styles/palette';
 
 import Button from '../common/Button';
 
-import { writePostAsync, changeWritingFieldAsync, finalizeWriting, initialize, updatePostAsync } from '../../store/write';
+import { writePostAsync, changeWritingField, finalizeWriting, initialize, updatePostAsync } from '../../store/write';
 import { RootStateType } from '../../store';
 
 
@@ -64,7 +64,6 @@ const ButtonWrapper = styled.div`
     justify-content:space-between;
 `;
 
-
 const quillOption = {
     theme: 'snow',
     placeholder: 'write here...',
@@ -95,29 +94,26 @@ const WriteTemplate = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const writeState = useSelector(({ write, loading }: RootStateType) =>
-        ({ ...write, loading: { ...loading } }));
+    const write = useSelector(({ write }: RootStateType) => write);
+    const loading = useSelector(({ loading }: RootStateType) => loading);
 
-
-    const { title, contents, tags, finishWriting, loading, _id } = writeState;
+    const { title, contents, tags, finishWriting, _id } =write;
 
     const [editorState, setEditorState] = useState({ title: '', contents: '', theme: 'snow' });
 
     const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        dispatch(changeWritingFieldAsync({ ...writeState, title: value }));
+        dispatch(changeWritingField({ ...write, title: value }));
     }
 
     const onChangeContents = (text: string) => {
-        dispatch(changeWritingFieldAsync({ ...writeState, contents: text }));
+        dispatch(changeWritingField({ ...write, contents: text }));
     }
 
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
         setEditorState({ ...editorState, theme: e.target.value })
     }
-
-    // useInterval(dispatch(writePostAsync({ title, body, tags })), 60000);
 
     const onGoingBack = () => {
         dispatch(finalizeWriting(''));
@@ -139,18 +135,17 @@ const WriteTemplate = () => {
 
     return (
         <WriteTemplateBlock>
-           
+
             <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
-       
             <TitleInput onChange={e => onChangeTitle(e)} name='title'
-                placeholder="Write a title here" value={writeState.title} />
+                placeholder="Write a title here" value={write.title} />
             <ReactQuill
                 onChange={e => onChangeContents(e)}
                 theme={editorState.theme}
                 modules={quillOption.modules}
                 formats={quillOption.formats}
                 placeholder={quillOption.placeholder}
-                value={writeState.contents}
+                value={write.contents}
             />
             <div className="themeSwitcher">
                 <label>Theme </label>
