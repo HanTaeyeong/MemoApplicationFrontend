@@ -7,6 +7,8 @@ const AuthTemplateBlock = styled.div`
     flex-direction:column;
     justify-content:center;
     align-items:center;
+    padding-left:1.5rem;
+    padding-right:1.5rem;
 `;
 
 const WhiteBox = styled.div`
@@ -20,7 +22,6 @@ const WhiteBox = styled.div`
     box-shadow: 0 0 8px rgba(0,0,0,0.025);
     padding: 2rem;
     width:360px;
-   
     border-radius:2px;
 `;
 

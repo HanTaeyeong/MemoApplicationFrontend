@@ -17,12 +17,11 @@ export function createRequestThunk(type: string, request: Function) {
                 payload: response.data
             });
         } catch (e) {
+
             dispatch({
                 type: FAILURE,
-                payload: e,
-                error: true
+                payload: {error:e.toJSON()},
             });
-            alert(e);
         } finally {
             dispatch(finishLoading(type));
         }

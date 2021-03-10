@@ -6,27 +6,22 @@ import { changeField, checkAsync, loginAsync } from '../../store/auth';
 import AuthForm from '../../components/auth/AuthForm';
 import { useHistory } from 'react-router-dom';
 
-import { validate, userSchema } from '../../lib/validation';
+import { validate, IdSchema, PasswordSchema } from '../../lib/validation';
 import { setItem, removeItem, getItem } from '../../lib/localStorageRequest';
 
 const LoginForm = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const authState = useSelector(({ auth, loading }: RootStateType) => ({
-        ...auth,
-        authType: 'login',
-        loading: {
-            ...loading
-        }
-    }))
-    const { authorized, username, password, loading } = authState;
+    const auth = useSelector(({ auth }: RootStateType) => auth);
+    const loading = useSelector(({ loading }: RootStateType) => loading);
+
+    const { authorized, username, password } = auth;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value, name } = e.target;
         dispatch(
             changeField({
-                ...authState,
-                authType: 'login',
+                ...auth,
                 [name]: value
             })
         )
@@ -34,11 +29,29 @@ const LoginForm = () => {
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const vaildationResult = validate(userSchema, { username, password })
-        if (!vaildationResult.isValid) {
-            console.log('invalid username or password');
+
+        const idResult = validate(IdSchema, { username })
+        if (!idResult.isValid) {
+            dispatch(
+                changeField({
+                    ...auth,
+                    authError: 'ID should consists of number and alphabet (4 ~ 16).'
+                })
+            )
             return;
         }
+
+        const passwordResult= validate (PasswordSchema, {password});
+        if (!passwordResult.isValid) {
+            dispatch(
+                changeField({
+                    ...auth,
+                    authError: 'Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
+                })
+            )
+            return;
+        }
+
         dispatch(loginAsync({ username, password }))
     }
 
@@ -54,7 +67,7 @@ const LoginForm = () => {
             setItem('username', JSON.stringify(username));
             history.push('/postListPage', { from: '/login' });
         }
-    }, [authorized,loading['auth/CHECK'],loading['auth/LOGIN']])
+    }, [authorized, loading['auth/CHECK'], loading['auth/LOGIN']])
 
     return (
         <AuthForm authType="login" onChange={onChange} onSubmit={onSubmit} />

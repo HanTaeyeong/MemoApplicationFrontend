@@ -1,6 +1,11 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import {useSelector,useDispatch} from 'react-redux';
+
+import {RootStateType} from '../../store';
+import {changeField} from '../../store/auth';
+
 import palette from '../../lib/styles/palette';
 import Button from '../common/Button';
 
@@ -28,6 +33,13 @@ const StyledInput = styled.input`
         border:1px solid ${palette.cyan[5]};
     }
 `
+const ErrorMessage = styled.div`
+width:100%;
+    margin:0 auto;
+    color:red;
+text-align:center;
+margin-bottom:1rem;
+`;
 
 const Footer = styled.div`
     margin-top:2rem;
@@ -55,16 +67,26 @@ const textMap: MapType = {
 
 const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange: Function, onSubmit: Function }) => {
     const text = textMap[authType];
+    const auth= useSelector(({auth}:RootStateType) => auth);
+    const dispatch = useDispatch();
+    
+    useEffect(()=>{
+        dispatch(changeField({authError:''}));
+    },[])
     
     return (
         <AuthFormBlock>
             <h3>{text}</h3>
-            <form onSubmit={(e)=>onSubmit(e)}>
-                <StyledInput onChange={(e)=>onChange(e)} autoComplete="username" name="username" placeholder="Id" />
-                <StyledInput onChange={(e)=>onChange(e)} type="password" autoComplete="new-password" name="password" placeholder="password" />
-                {authType === 'register' && (<StyledInput onChange={(e)=>onChange(e)} autoComplete="new-password" name="passwordConfirm" placeholder="passwordConfirm" type="password" />)}
+            <form onSubmit={(e) => onSubmit(e)}>
+                <StyledInput onChange={(e) => onChange(e)} autoComplete="username" name="username" placeholder="Id" />
+                <StyledInput onChange={(e) => onChange(e)} type="password" autoComplete="new-password" name="password" placeholder="password" />
+                {authType === 'register' && (<StyledInput onChange={(e) => onChange(e)} autoComplete="new-password" name="passwordConfirm" placeholder="passwordConfirm" type="password" />)}
+                
+                {auth.authError&&<ErrorMessage>{auth.authError}</ErrorMessage>}
+            
                 <ButtonWithMarginTop cyan fullWidth >{text}</ButtonWithMarginTop>
             </form>
+            
             <Footer>
                 {authType === 'login' ? (
                     <Link to='/register'>Go to Register</Link>

@@ -6,25 +6,22 @@ import { changeField, registerAsync } from '../../store/auth';
 import AuthForm from '../../components/auth/AuthForm';
 import { useHistory } from 'react-router-dom';
 
-import { validate, userSchema } from '../../lib/validation';
-import {setItem,removeItem} from '../../lib/localStorageRequest';
+import { validate, IdSchema, PasswordSchema } from '../../lib/validation';
+import { setItem, removeItem } from '../../lib/localStorageRequest';
 
 const RegisterForm = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const authState = useSelector(({ auth, loading }: RootStateType) => ({
-        ...auth,
-        authType: 'register',
-        loading:{...loading}
-    }))
-    const { authorized, username, password, passwordConfirm, loading } = authState;
+    const auth = useSelector(({ auth }: RootStateType) => auth);
+    const loading = useSelector(({ loading }: RootStateType) => loading);
+
+    const { authorized, username, password, passwordConfirm } = auth;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value, name } = e.target;
         dispatch(
             changeField({
-                ...authState,
-                authType: 'register',
+                ...auth,
                 [name]: value
             })
         )
@@ -33,11 +30,33 @@ const RegisterForm = () => {
     const onSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         if (password !== passwordConfirm) {
-            alert('password is diffrent');
+            dispatch(changeField({
+                ...auth, authError: 'Passwords are not same.'
+            }))
             return;
         }
-        const vaildationResult = validate(userSchema, { username, password })
-        if (!vaildationResult.isValid) { return; }
+
+        const idResult = validate(IdSchema, { username })
+        if (!idResult.isValid) {
+            dispatch(
+                changeField({
+                    ...auth,
+                    authError: 'ID should consists of number and alphabet (4 ~ 16).'
+                })
+            )
+            return;
+        }
+
+        const passwordResult = validate(PasswordSchema, { password });
+        if (!passwordResult.isValid) {
+            dispatch(
+                changeField({
+                    ...auth,
+                    authError: 'Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
+                })
+            )
+            return;
+        }
 
         dispatch(registerAsync({ username, password }))
     }
@@ -46,9 +65,9 @@ const RegisterForm = () => {
         if (!authorized && !loading['auth/CHECK']) {
             removeItem('username');
         }
-        if (authorized && !loading['auth/CHECK'] &&!loading['auth/REGISTER']) {
-                setItem('username', JSON.stringify(username));
-                history.push('/postListPage', { from: '/login' });
+        if (authorized && !loading['auth/CHECK'] && !loading['auth/REGISTER']) {
+            setItem('username', JSON.stringify(username));
+            history.push('/postListPage', { from: '/login' });
         }
     }
     useEffect(() => {
@@ -57,8 +76,8 @@ const RegisterForm = () => {
 
     useEffect(() => {
         if (authorized && !loading['auth/REGISTER']) {
-                setItem('username', JSON.stringify(username));
-                history.push('/postListPage', { from: '/login' });
+            setItem('username', JSON.stringify(username));
+            history.push('/postListPage', { from: '/login' });
         }
     }, [loading['auth/REGISTER']])
 

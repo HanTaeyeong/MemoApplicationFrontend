@@ -1,7 +1,7 @@
 import { createAction, ActionType, createReducer, Action } from 'typesafe-actions';
 import { createRequestThunk, createRequestActionTypes } from '../lib/createRequest';
 import * as authAPI from '../lib/api/auth';
-import { create } from 'domain';
+import ErrorCodes from '../lib/ErrorCodes';
 
 const CHANGE_AUTH_TYPE = 'auth/CHANGE_AUTH_TYPE';
 const CHANGE_FIELD = 'auth/CHANGE_FIELD';
@@ -16,8 +16,8 @@ export const [CHECK, CHECK_SUCCESS, CHECK_FAILURE] = createRequestActionTypes('a
 
 export const changeAuthType = createAction(CHANGE_AUTH_TYPE, ({ authType }) => ({ authType }))();
 
-export const changeField = createAction(CHANGE_FIELD, ({ authType, username, password, passwordConfirm }) => ({
-    authType, username, password, passwordConfirm
+export const changeField = createAction(CHANGE_FIELD, ({ authType, username, password, passwordConfirm, authError }) => ({
+    authType, username, password, passwordConfirm, authError
 }))();
 export const initializeForm = createAction(INITIALIZE_FORM, authType => authType)();
 export const tempSetUser = createAction(TEMP_SET_USER, username => username)();
@@ -73,14 +73,14 @@ const auth = createReducer(initialState,
     {
         [TEMP_SET_USER]: (state, { payload: username }) => ({ ...state, username }),
         [CHANGE_AUTH_TYPE]: (state, { payload: { authType } }) => ({ ...state, authType }),
-        [CHANGE_FIELD]: (state, { payload: { authType, username, password, passwordConfirm } }) => ({ ...state, authType, username, password, passwordConfirm }),
+        [CHANGE_FIELD]: (state, { payload: { authType, username, password, passwordConfirm, authError } }) => ({ ...state, authType, username, password, passwordConfirm, authError }),
         [INITIALIZE_FORM]: (state, { payload: { authType } }) => ({ ...initialState }),
 
-        [REGISTER_SUCCESS]: (state: AuthStateType, { payload: { auth } }: any) => ({ ...state, authorized:true,authError: null }),
-        [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state,authorized:false, authError: error }),
+        [REGISTER_SUCCESS]: (state: AuthStateType, { payload: { auth } }: any) => ({ ...state, authorized: true, authError: false }),
+        [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authError: ErrorCodes[+error.message.slice(-3)] }),
 
-        [LOGIN_SUCCESS]: (state: AuthStateType, { payload: { username,password } }: any) => ({ ...state, authorized: true, authError: null }),
-        [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authError: error }),
+        [LOGIN_SUCCESS]: (state: AuthStateType, { payload: { username, password } }: any) => ({ ...state, authorized: true, authError: false }),
+        [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authError: ErrorCodes[+error.message.slice(-3)] }),
 
         [CHECK_SUCCESS]: (state: AuthStateType, { payload: username }: any) => ({ ...state, authorized: true, checkError: false }),
         [CHECK_FAILURE]: (state: AuthStateType, { payload: error }: any) => ({ ...state, authorized: false, checkError: error }),
