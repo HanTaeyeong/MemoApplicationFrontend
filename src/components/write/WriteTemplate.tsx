@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import history from '../../history';
 import styled from 'styled-components';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -10,7 +10,7 @@ import palette from '../../lib/styles/palette';
 
 import Button from '../common/Button';
 
-import { writePostAsync, changeWritingField, finalizeWriting, initialize, updatePostAsync } from '../../store/write';
+import { writePostAsync, changeWritingField, updatePostAsync } from '../../store/write';
 import { RootStateType } from '../../store';
 
 
@@ -92,12 +92,12 @@ const quillOption = {
 
 const WriteTemplate = () => {
     const dispatch = useDispatch();
-    const history = useHistory();
+    const [moveToPostList, setMoveToPostList] = useState(false);
 
     const write = useSelector(({ write }: RootStateType) => write);
     const loading = useSelector(({ loading }: RootStateType) => loading);
 
-    const { title, contents, tags, finishWriting, _id } =write;
+    const { title, contents, tags, _id } = write;
 
     const [editorState, setEditorState] = useState({ title: '', contents: '', theme: 'snow' });
 
@@ -116,22 +116,18 @@ const WriteTemplate = () => {
     }
 
     const onGoingBack = () => {
-        dispatch(finalizeWriting(''));
         if (!_id) { dispatch(writePostAsync({ title, contents, tags })) }
         else {
             dispatch(updatePostAsync({ _id, title, contents }))
         }
+        setMoveToPostList(true);
     }
 
-    useEffect(() => {
-        dispatch(initialize(''))
-    }, []);
-
-    useEffect(() => {
-        if (finishWriting && !loading['write/WRITE_POST'] && !loading['write/UPDATE_POST']) {
-            history.push('/postListPage', { from: '/write' });
+    useLayoutEffect(() => {
+        if (moveToPostList && !loading['write/WRITE_POST'] && !loading['write/UPDATE_POST']) {
+            history.push('/postListPage');
         }
-    }, [loading['write/WRITE_POST'], loading['write/UPDATE_POST'], finishWriting])
+    }, [loading['write/WRITE_POST'], loading['write/UPDATE_POST'], moveToPostList])
 
     return (
         <WriteTemplateBlock>

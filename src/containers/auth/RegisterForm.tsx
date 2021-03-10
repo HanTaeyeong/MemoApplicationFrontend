@@ -4,13 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from '../../store';
 import { changeField, registerAsync } from '../../store/auth';
 import AuthForm from '../../components/auth/AuthForm';
-import { useHistory } from 'react-router-dom';
+import history from '../../history';
 
 import { validate, IdSchema, PasswordSchema } from '../../lib/validation';
 import { setItem, removeItem } from '../../lib/localStorageRequest';
 
 const RegisterForm = () => {
-    const history = useHistory();
     const dispatch = useDispatch();
     const auth = useSelector(({ auth }: RootStateType) => auth);
     const loading = useSelector(({ loading }: RootStateType) => loading);
@@ -67,7 +66,7 @@ const RegisterForm = () => {
         }
         if (authorized && !loading['auth/CHECK'] && !loading['auth/REGISTER']) {
             setItem('username', JSON.stringify(username));
-            history.push('/postListPage', { from: '/login' });
+            history.push('/postListPage');
         }
     }
     useEffect(() => {
@@ -77,7 +76,7 @@ const RegisterForm = () => {
     useEffect(() => {
         if (authorized && !loading['auth/REGISTER']) {
             setItem('username', JSON.stringify(username));
-            history.push('/postListPage', { from: '/login' });
+            history.push('/postListPage');
         }
     }, [loading['auth/REGISTER']])
 

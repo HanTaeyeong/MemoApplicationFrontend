@@ -5,12 +5,14 @@ import { RootStateType } from '../../store';
 import { changeField, checkAsync, loginAsync } from '../../store/auth';
 import AuthForm from '../../components/auth/AuthForm';
 import { useHistory } from 'react-router-dom';
+import history from '../../history';
+
 
 import { validate, IdSchema, PasswordSchema } from '../../lib/validation';
 import { setItem, removeItem, getItem } from '../../lib/localStorageRequest';
 
 const LoginForm = () => {
-    const history = useHistory();
+    //const history = useHistory();
     const dispatch = useDispatch();
     const auth = useSelector(({ auth }: RootStateType) => auth);
     const loading = useSelector(({ loading }: RootStateType) => loading);
@@ -65,7 +67,7 @@ const LoginForm = () => {
     useEffect(() => {
         if (authorized && !loading['auth/CHECK'] && !loading['auth/LOGIN']) {
             setItem('username', JSON.stringify(username));
-            history.push('/postListPage', { from: '/login' });
+            history.push('/postListPage');
         }
     }, [authorized, loading['auth/CHECK'], loading['auth/LOGIN']])
 

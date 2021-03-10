@@ -2,20 +2,14 @@ import { createAction, createReducer } from 'typesafe-actions';
 import { createRequestThunk, createRequestActionTypes } from '../lib/createRequest';
 import * as postApi from '../lib/api/post';
 
-const INITIALIZE = 'write/INITIALIZE';
 const CHANGE_WRITING_FIELD ='write/CHANGE_WRITING_FIELD';
-const FINALIZE_WRITING = 'write/FINALIZE_WRITING';
 
 
 const [WRITE_POST, WRITE_POST_SUCCESS, WRITE_POST_FAILURE] = createRequestActionTypes('write/WRITE_POST');
 const [UPDATE_POST, UPDATE_POST_SUCCESS, UPDATE_POST_FAILURE] = createRequestActionTypes('write/UPDATE_POST');
 
-export const initialize = createAction(INITIALIZE, action => action)();
-export const finalizeWriting = createAction(FINALIZE_WRITING, action => action)();
-
 export const changeWritingField = createAction(CHANGE_WRITING_FIELD, ({ _id, title, contents, tags }) =>
     ({ _id, title, contents, tags }))();
-
 
 export const writePost = createAction(WRITE_POST, ({ title, contents, tags }) => ({ title, contents, tags }))
 export const writePostAsync = createRequestThunk(WRITE_POST, postApi.writePost);
@@ -31,7 +25,6 @@ export interface WriteType {
     username: string,
 
     postError: boolean;
-    finishWriting: boolean,
 }
 const initialState: WriteType = {
     _id: '',
@@ -41,14 +34,10 @@ const initialState: WriteType = {
     username: '',
 
     postError: false,
-    finishWriting: false,
 }
 
 
 const write = createReducer(initialState, {
-    [INITIALIZE]: (state, { payload: action }) => ({ ...state, finishWriting: false }),
-    [FINALIZE_WRITING]: (state, { payload: action }) => ({ ...state, finishWriting: true }),
-
     [CHANGE_WRITING_FIELD]: (state: WriteType, { payload: { _id, title, contents, tags } }:any) => ({ ...state, _id, title, contents, tags }),
   
     [WRITE_POST_SUCCESS]: (state: WriteType) => ({ ...state, postError: false }),
