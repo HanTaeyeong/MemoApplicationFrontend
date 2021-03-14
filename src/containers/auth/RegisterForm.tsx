@@ -30,7 +30,7 @@ const RegisterForm = () => {
         e.preventDefault();
         if (password !== passwordConfirm) {
             dispatch(changeField({
-                ...auth, authError: 'Passwords are not same.'
+                ...auth, authError: '[PW] Passwords are not same.'
             }))
             return;
         }
@@ -40,7 +40,7 @@ const RegisterForm = () => {
             dispatch(
                 changeField({
                     ...auth,
-                    authError: 'ID should consists of number and alphabet (4 ~ 16).'
+                    authError: '[ID] ID should consists of number and alphabet (4 ~ 16).'
                 })
             )
             return;
@@ -51,12 +51,11 @@ const RegisterForm = () => {
             dispatch(
                 changeField({
                     ...auth,
-                    authError: 'Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
+                    authError: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
                 })
             )
             return;
         }
-
         dispatch(registerAsync({ username, password }))
     }
 

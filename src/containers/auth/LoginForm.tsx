@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootStateType } from '../../store';
@@ -12,10 +12,13 @@ import { validate, IdSchema, PasswordSchema } from '../../lib/validation';
 import { setItem, removeItem, getItem } from '../../lib/localStorageRequest';
 
 const LoginForm = () => {
-    //const history = useHistory();
+    
     const dispatch = useDispatch();
     const auth = useSelector(({ auth }: RootStateType) => auth);
     const loading = useSelector(({ loading }: RootStateType) => loading);
+    
+    const idRef=useRef();
+    const passwordRef=useRef();
 
     const { authorized, username, password } = auth;
 
@@ -37,7 +40,7 @@ const LoginForm = () => {
             dispatch(
                 changeField({
                     ...auth,
-                    authError: 'ID should consists of number and alphabet (4 ~ 16).'
+                    authError: '[ID] ID should consists of number and alphabet (4 ~ 16).'
                 })
             )
             return;
@@ -48,7 +51,7 @@ const LoginForm = () => {
             dispatch(
                 changeField({
                     ...auth,
-                    authError: 'Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
+                    authError: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
                 })
             )
             return;

@@ -1,10 +1,10 @@
-import React,{useEffect} from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import {useSelector,useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import {RootStateType} from '../../store';
-import {changeField} from '../../store/auth';
+import { RootStateType } from '../../store';
+import { changeField } from '../../store/auth';
 
 import palette from '../../lib/styles/palette';
 import Button from '../common/Button';
@@ -27,10 +27,13 @@ const StyledInput = styled.input`
     outline:none;
     width:100%;
     margin-bottom: 1rem;
-
+   
     :focus{
         color:$oc-teal-7;
         border:1px solid ${palette.cyan[5]};
+        &.error{
+        border:1px solid red;
+        }
     }
 `
 const ErrorMessage = styled.div`
@@ -67,26 +70,42 @@ const textMap: MapType = {
 
 const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange: Function, onSubmit: Function }) => {
     const text = textMap[authType];
-    const auth= useSelector(({auth}:RootStateType) => auth);
+    const auth = useSelector(({ auth }: RootStateType) => auth);
     const dispatch = useDispatch();
-    
-    useEffect(()=>{
-        dispatch(changeField({authError:''}));
-    },[])
-    
+
+    const idRef = useRef<HTMLInputElement>(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        dispatch(changeField({ authError: '' }));
+    }, [])
+
+    useEffect(() => {
+        if (auth.authError && auth.authError.slice(0, 4) === "[ID]") {
+            const { current } = idRef;
+            current?.focus();
+        } else if (auth.authError && auth.authError.slice(0, 4) === "[PW]") {
+            const { current } = passwordRef;
+            current?.focus();
+        }
+    }, [auth.authError])
+
     return (
         <AuthFormBlock>
             <h3>{text}</h3>
             <form onSubmit={(e) => onSubmit(e)}>
-                <StyledInput onChange={(e) => onChange(e)} autoComplete="username" name="username" placeholder="Id" />
-                <StyledInput onChange={(e) => onChange(e)} type="password" autoComplete="new-password" name="password" placeholder="password" />
+                <StyledInput onChange={(e) => onChange(e)} autoComplete="username" name="username"
+                    placeholder="Id" ref={idRef} className={auth.authError && 'error'} />
+                <StyledInput onChange={(e) => onChange(e)} type="password" autoComplete="new-password"
+                    name="password" placeholder="password" ref={passwordRef} className={auth.authError && 'error'} />
+
                 {authType === 'register' && (<StyledInput onChange={(e) => onChange(e)} autoComplete="new-password" name="passwordConfirm" placeholder="passwordConfirm" type="password" />)}
-                
-                {auth.authError&&<ErrorMessage>{auth.authError}</ErrorMessage>}
-            
+
+                {auth.authError && <ErrorMessage>{auth.authError}</ErrorMessage>}
+
                 <ButtonWithMarginTop cyan fullWidth >{text}</ButtonWithMarginTop>
             </form>
-            
+
             <Footer>
                 {authType === 'login' ? (
                     <Link to='/register'>Go to Register</Link>
