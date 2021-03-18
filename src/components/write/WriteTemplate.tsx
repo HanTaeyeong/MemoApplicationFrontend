@@ -10,10 +10,8 @@ import palette from '../../lib/styles/palette';
 
 import Button from '../common/Button';
 
-import { writePostAsync, changeWritingField, updatePostAsync } from '../../store/write';
+import { writePostAsync, changeWritingField, updatePostAsync, deletePostAsync } from '../../store/write';
 import { RootStateType } from '../../store';
-
-
 
 // import useInterval from '../../lib/hook/useInterval';
 
@@ -48,6 +46,7 @@ const WriteTemplateBlock = styled.div`
 }
 `;
 
+
 const TitleInput = styled.input`
     font-size:3rem;
     outline:none;
@@ -57,6 +56,7 @@ const TitleInput = styled.input`
     margin-bottom:2rem;
     width:100%;
 `;
+
 const ButtonWrapper = styled.div`
     margin:1rem;
     margin-left:0;
@@ -122,17 +122,23 @@ const WriteTemplate = () => {
         }
         setMoveToPostList(true);
     }
+    const onDelete = () => {
+        dispatch(deletePostAsync({ _id }));
+        setMoveToPostList(true);
+    }
 
     useLayoutEffect(() => {
-        if (moveToPostList && !loading['write/WRITE_POST'] && !loading['write/UPDATE_POST']) {
+        if (moveToPostList && !loading['write/WRITE_POST'] && !loading['write/UPDATE_POST'] && !loading['write/DELETE_POST']) {
             history.push('/postListPage');
         }
-    }, [loading['write/WRITE_POST'], loading['write/UPDATE_POST'], moveToPostList])
+    }, [loading['write/WRITE_POST'], loading['write/UPDATE_POST'], loading['write/DELETE_POST'], moveToPostList])
 
     return (
         <WriteTemplateBlock>
-
-            <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
+            <ButtonWrapper>
+                <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
+                <Button cyan={false} fullWidth={false} onClickFunction={onDelete}>Delete</Button>
+            </ButtonWrapper>
             <TitleInput onChange={e => onChangeTitle(e)} name='title'
                 placeholder="Write a title here" value={write.title} />
             <ReactQuill

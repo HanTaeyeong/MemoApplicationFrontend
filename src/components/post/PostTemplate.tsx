@@ -118,7 +118,8 @@ const PostTemplate = () => {
         for (const d of res.data) {
             newPosts.push({ ...d._doc })
         }
-
+        console.log(newPosts);
+        
         setPosts(newPosts);
         setIsLoadingList(false);
     }
