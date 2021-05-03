@@ -1,10 +1,3 @@
-import React, { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-
-import { RootStateType } from '../../store';
-import { changeWritingField } from '../../store/write';
-
 import styled from 'styled-components';
 
 import palette from '../../lib/styles/palette';
@@ -46,25 +39,23 @@ const ItemContent = styled.div`
     margin-bottom:2rem;
     
     `
-interface PostItemType {
+export interface PostItemType {
     _id: string,
     title: string,
     contents: string,
     lastUpdated: string,
-    onClickItem?:Function,
 }
 
-
-const PostItem = ({ _id, title, contents, lastUpdated, onClickItem }: PostItemType) => {
-    const idObject={_id,title,contents};
+const PostItem = ({ post, onClickItem }: { post: PostItemType, onClickItem?: Function }) => {
+    const { title, contents, lastUpdated } = post;
 
     return (
-        <PostItemBlock id={JSON.stringify(idObject)} title={title} onClick={(e)=>onClickItem?onClickItem(e):{}}>
+        <PostItemBlock title={title} onClick={(e) => onClickItem ? onClickItem(e) : {}}>
             <ItemHead>
                 <span className="title">{title}</span>
                 <ItemSubInfo>
                     <span><b>Last update</b></span>
-                    <span>{lastUpdated.slice(0, 10)}</span>
+                    <span>{lastUpdated?.slice(0, 10)}</span>
                 </ItemSubInfo>
             </ItemHead>
 

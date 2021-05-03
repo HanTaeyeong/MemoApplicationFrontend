@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import ListHeader from './ListHeader';
-import PostItem from './PostItem';
+import PostItem,{PostItemType} from './PostItem';
 import LoadingSpinner from './LoadingSpinner';
 
 import palette from '../../lib/styles/palette';
@@ -19,8 +19,6 @@ const PostTemplateBlock = styled.div`
     width:100%;
     height:100%;
 `;
-// { children: String,cyan:Boolean,fullWidth:Boolean }
-
 
 const SButton = styled.button`
     border:none;
@@ -95,33 +93,37 @@ interface ItemType {
     contents: string,
 }
 
+const pageLimitValues=['10','20','50','100'];
+
 const PostTemplate = () => {
     const dispatch = useDispatch();
     const loading = useSelector(({ loading }: RootStateType) => loading)
     const write = useSelector(({ write }: RootStateType) => write)
-    const [posts, setPosts] = useState<any[]>([]);
+    const [posts, setPosts] = useState<PostItemType[]>([]);
     const [pageState, setPageState] = useState({ page: 1, limit: 10, lastPage: 1, totalPostCount: 0 });
     const [isLoadingList, setIsLoadingList] = useState(false);
 
-    async function getList() {
+    async function getPostList() {
         const { page, limit } = pageState;
         setIsLoadingList(true);
-        const res = await postApi.getPostList({ page, limit });
-        const newPosts = [];
+        const postList = await postApi.getPostList({ page, limit });
+        setIsLoadingList(false);
+        return postList;
+    }
 
+    const onPageStateChanged = async () => {
+        const postList = await getPostList();
+        const { headers } = postList;
+        const newPosts = [];
         setPageState({
             ...pageState,
-            lastPage: +res.headers['last-page'],
-            totalPostCount: +res.headers['total-post-count']
+            lastPage: +headers['last-page'],
+            totalPostCount: +headers['total-post-count']
         })
-
-        for (const d of res.data) {
+        for (const d of postList.data) {
             newPosts.push({ ...d._doc })
         }
-        console.log(newPosts);
-        
         setPosts(newPosts);
-        setIsLoadingList(false);
     }
 
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -144,22 +146,19 @@ const PostTemplate = () => {
         if (nextPage > pageState.lastPage) {
             nextPage = pageState.lastPage;
         }
-
         setPageState({ ...pageState, page: nextPage });
     };
 
     const onClickItem = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
         const { _id, title, contents } = JSON.parse(e.currentTarget.id);
-
         dispatch(changeWritingField({ ...write, _id, title, contents }));
-        
         history.push('/write');
     }
 
     useEffect(() => {
         if (!isLoadingList) {
-            getList();
+            onPageStateChanged();
         }
     }, [pageState.page, pageState.limit])
 
@@ -174,10 +173,7 @@ const PostTemplate = () => {
             <NavigationBlock>
                 <SelectItems>
                     <select name="limits" onChange={onChangeSelect} >
-                        <option value="10">10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
+                        {pageLimitValues.map(val=><option value={val}>{+val}</option>)}
                     </select>
                     <span>{pageState.totalPostCount} total posts</span>
                 </SelectItems>
@@ -189,7 +185,7 @@ const PostTemplate = () => {
             </NavigationBlock>
             <LoadingSpinner className={isLoadingList ? 'loading' : ''} />
             {posts.length ? posts.map((post) =>
-                <PostItem key={post._id} _id={post._id} title={post.title} contents={post.contents} lastUpdated={post.updatedAt} onClickItem={onClickItem} />
+                <PostItem key={post._id} post={post} onClickItem={onClickItem} />
             ) : <div>Write a new memo...</div>}
 
             <NewMemoButton onClick={moveToWrite}>+</NewMemoButton>

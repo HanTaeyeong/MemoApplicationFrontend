@@ -9,6 +9,10 @@ import history from '../../history';
 import { validate, IdSchema, PasswordSchema } from '../../lib/validation';
 import { setItem, removeItem } from '../../lib/localStorageRequest';
 
+
+
+
+
 const RegisterForm = () => {
     const dispatch = useDispatch();
     const auth = useSelector(({ auth }: RootStateType) => auth);
@@ -18,31 +22,20 @@ const RegisterForm = () => {
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value, name } = e.target;
-        dispatch(
-            changeField({
-                ...auth,
-                [name]: value
-            })
-        )
+        dispatch(changeField({ ...auth, [name]: value }))
     }
 
     const onSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
+        
         if (password !== passwordConfirm) {
-            dispatch(changeField({
-                ...auth, authError: '[PW] Passwords are not same.'
-            }))
+            dispatch(changeField({ ...auth, authError: '[PW] Passwords are not same.' }))
             return;
         }
 
         const idResult = validate(IdSchema, { username })
         if (!idResult.isValid) {
-            dispatch(
-                changeField({
-                    ...auth,
-                    authError: '[ID] ID should consists of number and alphabet (4 ~ 16).'
-                })
-            )
+            dispatch(changeField({ ...auth, authError: '[ID] ID should consists of number and alphabet (4 ~ 16).' }))
             return;
         }
 
@@ -58,7 +51,7 @@ const RegisterForm = () => {
         }
         dispatch(registerAsync({ username, password }))
     }
-
+    
     const checkAuthState = () => {
         if (!authorized && !loading['auth/CHECK']) {
             removeItem('username');

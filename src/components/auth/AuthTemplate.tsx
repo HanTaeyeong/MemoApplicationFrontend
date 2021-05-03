@@ -12,12 +12,6 @@ const AuthTemplateBlock = styled.div`
 `;
 
 const WhiteBox = styled.div`
-    .logo-area{
-        display:block;
-        text-align:center;
-        font-weight:bold;
-        letter-spacing:2px;
-    }
     font-size:2rem;
     box-shadow: 0 0 8px rgba(0,0,0,0.025);
     padding: 2rem;
@@ -25,13 +19,21 @@ const WhiteBox = styled.div`
     border-radius:2px;
 `;
 
-const AuthTemplate = ({children}:{children:JSX.Element}) => {
+const WhiteBoxTitle = styled.div`
+    display:block;
+    text-align:center;
+    font-weight:bold;
+    letter-spacing:2px;
+`;
+
+
+const AuthTemplate = ({ children }: { children: JSX.Element }) => {
     return (
         <AuthTemplateBlock>
             <WhiteBox>
-                <div className="logo-area">
+                <WhiteBoxTitle>
                     Simple Memo
-                </div>
+                </WhiteBoxTitle>
             </WhiteBox>
             {children}
         </AuthTemplateBlock>
