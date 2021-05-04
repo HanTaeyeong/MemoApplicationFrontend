@@ -7,9 +7,13 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import WritePage from './pages/WritePage';
 
+import Navigation from './containers/navigation/Navigation';
+
 function App() {
   return (
     <div>
+      <Route path={["/navigation"]} component={Navigation}/>
+
       <Route path={["/home"]} component={IntroPage} />
       <Route path={["/", "/login"]} component={LoginPage} exact />
       <Route path="/register" component={RegisterPage} exact />

@@ -87,12 +87,6 @@ const NewMemoBlock = styled.div`
     margin-bottom:1rem;
 `
 
-interface ItemType {
-    _id: string,
-    title: string,
-    contents: string,
-}
-
 const pageLimitValues=['10','20','50','100'];
 
 const PostTemplate = () => {
