@@ -63,14 +63,9 @@ const Navigation = () => {
     return (
         <NavigationBlock>
             <div onClick={() => setNavActive(!navActive)}>activation</div>
-            
             <NavList className={navActive ? 'navActive' : ''}>
                 {navItems.map((navItem) => <NavigationItem key={navItem._id} navItem={navItem} />)}
             </NavList>
-
-
-
-
             <NavActivationBackground className={navActive ? 'navActive' : ''} onClick={()=>setNavActive(false)} />
         </NavigationBlock>
     )

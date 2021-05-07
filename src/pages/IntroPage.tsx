@@ -7,9 +7,6 @@ const IntroPageBlock=styled.div`
     display:flex;
 `;
 
-
-
-
 const IntroPage = () => {
     return (
         <IntroPageBlock>
