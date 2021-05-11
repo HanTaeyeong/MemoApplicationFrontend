@@ -3,12 +3,32 @@ import styled from 'styled-components';
 
 import NavigationItem, { NavigationItemType } from './NavigationItem'
 
+
 const navItems: NavigationItemType[] = [
     { _id: 'Email67395!+', title: 'Email', icon: '4', link: '1' },
     { _id: 'Subscription+eif39j2', title: 'Subscription', icon: '', link: '' },
     { _id: 'Donation+de9fj3', title: 'Donation', icon: '', link: '' },
     { _id: 'About+39fjdie', title: 'About', icon: '', link: '' },
 ]
+
+
+const Navigation = () => {
+    const [navActive, setNavActive] = useState(false);
+    return (
+        <NavigationBlock>
+            <div onClick={() => setNavActive(!navActive)}>activation</div>
+            <NavList className={navActive ? 'navActive' : ''}>
+                {navItems.map((navItem) => <NavigationItem key={navItem._id} navItem={navItem} />)}
+            </NavList>
+            <NavActivationBackground className={navActive ? 'navActive' : ''} onClick={()=>setNavActive(false)} />
+        </NavigationBlock>
+    )
+}
+
+const Email = styled.div``;
+const Subscription = styled.div``;
+const Donation = styled.div``;
+const About = styled.div``;
 
 const NavigationBlock = styled.div`
     display:flex;
@@ -44,7 +64,7 @@ const NavList = styled.div`
     top:100px;
 
     left:-500px;
-    background:black;
+    background:yellow;
     transition:0.5s;
 
     &.navActive{
@@ -53,22 +73,6 @@ const NavList = styled.div`
 `;
 
 
-const Email = styled.div``;
-const Subscription = styled.div``;
-const Donation = styled.div``;
-const About = styled.div``;
 
-const Navigation = () => {
-    const [navActive, setNavActive] = useState(false);
-    return (
-        <NavigationBlock>
-            <div onClick={() => setNavActive(!navActive)}>activation</div>
-            <NavList className={navActive ? 'navActive' : ''}>
-                {navItems.map((navItem) => <NavigationItem key={navItem._id} navItem={navItem} />)}
-            </NavList>
-            <NavActivationBackground className={navActive ? 'navActive' : ''} onClick={()=>setNavActive(false)} />
-        </NavigationBlock>
-    )
-}
 
 export default Navigation;

@@ -2,6 +2,34 @@ import styled from 'styled-components';
 
 import palette from '../../lib/styles/palette';
 
+export interface PostItemType {
+    _id: string,
+    title: string,
+    contents: string,
+    lastUpdated: string,
+}
+
+const PostItem = ({ post, onClickItem }: { post: PostItemType, onClickItem?: Function, }) => {
+    const { _id,title, contents, lastUpdated } = post;
+
+    return (
+        <PostItemBlock title={title} id={_id} onClick={(e) => onClickItem ? onClickItem(e) : {}}>
+            <ItemHead>
+                <span className="title">{title}</span>
+                <ItemSubInfo>
+                    <span><b>Last update</b></span>
+                    <span>{lastUpdated?.slice(0, 10)}</span>
+                </ItemSubInfo>
+            </ItemHead>
+
+            <ItemContent>
+                {contents}
+            </ItemContent>
+        </PostItemBlock>
+    )
+}
+
+
 const PostItemBlock = styled.div`
 
 margin-top:0.5rem;
@@ -39,31 +67,5 @@ const ItemContent = styled.div`
     margin-bottom:2rem;
     
     `
-export interface PostItemType {
-    _id: string,
-    title: string,
-    contents: string,
-    lastUpdated: string,
-}
-
-const PostItem = ({ post, onClickItem }: { post: PostItemType, onClickItem?: Function }) => {
-    const { title, contents, lastUpdated } = post;
-
-    return (
-        <PostItemBlock title={title} onClick={(e) => onClickItem ? onClickItem(e) : {}}>
-            <ItemHead>
-                <span className="title">{title}</span>
-                <ItemSubInfo>
-                    <span><b>Last update</b></span>
-                    <span>{lastUpdated?.slice(0, 10)}</span>
-                </ItemSubInfo>
-            </ItemHead>
-
-            <ItemContent>
-                {contents}
-            </ItemContent>
-        </PostItemBlock>
-    )
-}
 
 export default PostItem
