@@ -27,18 +27,31 @@ const RegisterForm = () => {
 
     const onSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        
+        if (!isPasswordsSame()) return;
+        if (!isValidId()) return;
+        if (!isValidPassword()) return;
+
+        dispatch(registerAsync({ username, password }))
+    }
+
+    const isPasswordsSame = () => {
         if (password !== passwordConfirm) {
             dispatch(changeField({ ...auth, authError: '[PW] Passwords are not same.' }))
-            return;
+            return false;
         }
+        return true;
+    }
 
+    const isValidId = () => {
         const idResult = validate(IdSchema, { username })
         if (!idResult.isValid) {
             dispatch(changeField({ ...auth, authError: '[ID] ID should consists of number and alphabet (4 ~ 16).' }))
-            return;
+            return false;
         }
+        return true;
+    }
 
+    const isValidPassword = () => {
         const passwordResult = validate(PasswordSchema, { password });
         if (!passwordResult.isValid) {
             dispatch(
@@ -47,11 +60,11 @@ const RegisterForm = () => {
                     authError: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
                 })
             )
-            return;
+            return false;
         }
-        dispatch(registerAsync({ username, password }))
+        return true;
     }
-    
+
     const checkAuthState = () => {
         if (!authorized && !loading['auth/CHECK']) {
             removeItem('username');
@@ -61,6 +74,7 @@ const RegisterForm = () => {
             history.push('/postListPage');
         }
     }
+
     useEffect(() => {
         checkAuthState();
     }, [])
