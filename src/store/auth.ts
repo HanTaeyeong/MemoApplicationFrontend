@@ -3,9 +3,9 @@ import { createRequestThunk, createRequestActionTypes } from '../lib/createReque
 import * as authAPI from '../lib/api/auth';
 import ErrorCodes from '../lib/ErrorCodes';
 
-const CHANGE_AUTH_TYPE = 'auth/CHANGE_AUTH_TYPE';
-const CHANGE_FIELD = 'auth/CHANGE_FIELD';
-const INITIALIZE_FORM = 'auth/INITIALIZE_FORM';
+export const CHANGE_AUTH_TYPE = 'auth/CHANGE_AUTH_TYPE';
+export const CHANGE_FIELD = 'auth/CHANGE_FIELD';
+export const INITIALIZE_FORM = 'auth/INITIALIZE_FORM';
 
 export const TEMP_SET_USER = 'auth/TEMP_SET_USER';
 

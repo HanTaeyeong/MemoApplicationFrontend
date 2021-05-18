@@ -2,6 +2,35 @@ import React from 'react'
 import styled from 'styled-components';
 import Button from './Button';
 
+interface ConfirmModalType {
+    visible: boolean;
+    title: string;
+    description: string;
+    confirmText: string;
+    cancelText: string
+};
+
+const ConfirmModal = ({ visible, title, description, confirmText, cancelText }: ConfirmModalType) => {
+
+    if (!visible) {
+        return null;
+    }
+
+    return (
+        <ModalBackground>
+            <ConfirmModalBlock>
+                <h2>{title}</h2>
+                <p>{description}</p>
+                <div className="buttons">
+                    <ConfirmButton cyan={false} fullWidth={false} >{cancelText}</ConfirmButton>
+                    <ConfirmButton cyan fullWidth={false} >{confirmText}</ConfirmButton>
+                </div>
+
+            </ConfirmModalBlock>
+        </ModalBackground>
+    )
+}
+
 const ModalBackground = styled.div`
     position:fixed;
     z-index:30;
@@ -42,34 +71,5 @@ const ConfirmButton = styled(Button)`
         margin-left:0.75rem;
     }
 `;
-
-interface ConfirmModalType {
-    visible: boolean;
-    title: string;
-    description: string;
-    confirmText: string;
-    cancelText: string
-};
-
-const ConfirmModal = ({ visible, title, description, confirmText, cancelText }: ConfirmModalType) => {
-
-    if (!visible) {
-        return null;
-    }
-
-    return (
-        <ModalBackground>
-            <ConfirmModalBlock>
-                <h2>{title}</h2>
-                <p>{description}</p>
-                <div className="buttons">
-                    <ConfirmButton cyan={false} fullWidth={false} >{cancelText}</ConfirmButton>
-                    <ConfirmButton cyan fullWidth={false} >{confirmText}</ConfirmButton>
-                </div>
-
-            </ConfirmModalBlock>
-        </ModalBackground>
-    )
-}
 
 export default ConfirmModal
