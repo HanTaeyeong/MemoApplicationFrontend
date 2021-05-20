@@ -2,7 +2,7 @@ import { createAction, createReducer } from 'typesafe-actions';
 import { createRequestThunk, createRequestActionTypes } from '../lib/createRequest';
 import * as postApi from '../lib/api/post';
 
-const CHANGE_WRITING_FIELD = 'write/CHANGE_WRITING_FIELD';
+export const CHANGE_WRITING_FIELD = 'write/CHANGE_WRITING_FIELD';
 
 
 const [WRITE_POST, WRITE_POST_SUCCESS, WRITE_POST_FAILURE] = createRequestActionTypes('write/WRITE_POST');
@@ -31,7 +31,7 @@ export interface WriteType {
 
     postError: boolean;
 }
-const initialState: WriteType = {
+export const initialState: WriteType = {
     _id: '',
     title: '',
     contents: '',

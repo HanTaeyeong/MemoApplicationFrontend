@@ -12,7 +12,7 @@ it('loading start should change loading state to be true & loading finish makes 
 
     const { initialState } = loadingStore;
     const currentKey = getRandomObjectKey(initialState);
-
+    console.log(`loading reducer test => selected currentKey is ${currentKey}`)
     const expectedResult = {
         type: loadingStore.START_LOADING,
         payload: { ...initialState, [currentKey]: true }
