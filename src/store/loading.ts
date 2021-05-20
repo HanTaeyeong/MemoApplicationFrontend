@@ -1,12 +1,12 @@
 import { createAction, createReducer } from 'typesafe-actions';
 
-const START_LOADING = 'loading/START_LOADING';
-const FINISH_LOADING = 'loading/FINISH_LOADING';
+export const START_LOADING = 'loading/START_LOADING';
+export const FINISH_LOADING = 'loading/FINISH_LOADING';
 
 export const startLoading = createAction(START_LOADING, requestType => requestType)();
 export const finishLoading = createAction(FINISH_LOADING, requestType => requestType)();
 
-const initialState = {
+export const initialState = {
     'auth/LOGIN': false,
     'auth/REGISTER': false,
     'auth/LOGOUT': false,
