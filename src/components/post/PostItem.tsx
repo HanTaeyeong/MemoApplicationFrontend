@@ -10,7 +10,7 @@ export interface PostItemType {
 }
 
 const PostItem = ({ post, onClickItem }: { post: PostItemType, onClickItem?: Function, }) => {
-    const { _id,title, contents, lastUpdated } = post;
+    const { _id, title, contents, lastUpdated } = post;
 
     return (
         <PostItemBlock title={title} id={_id} onClick={(e) => onClickItem ? onClickItem(e) : {}}>
@@ -31,17 +31,15 @@ const PostItem = ({ post, onClickItem }: { post: PostItemType, onClickItem?: Fun
 
 
 const PostItemBlock = styled.div`
-
-margin-top:0.5rem;
-border-bottom:1px solid ${palette.gray[2]};
-cursor:pointer;
+    margin-top:0.5rem;
+    border-bottom:1px solid ${palette.gray[2]};
+    cursor:pointer;
 `;
 
 const ItemHead = styled.div`
-display:flex;
-
-flex-direction:row;
-justify-content:space-between;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
     
     .title{    
         font-size:1.125rem;
@@ -65,7 +63,6 @@ const ItemContent = styled.div`
     font-size:0.77rem;
     color:${palette.gray[8]};
     margin-bottom:2rem;
-    
     `
 
 export default PostItem

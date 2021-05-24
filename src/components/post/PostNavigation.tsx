@@ -25,6 +25,7 @@ function PostNavigation({ pageLimitValues, onChangeSelect, pageState, onChangePa
                 </select>
                 <span>{totalPostCount} total posts</span>
             </SelectItems>
+            
             <PageItems>
                 <SButton onClick={onChangePage} name="-1" disabled={page === 1} className={isLoadingList ? 'loading' : ''}>before</SButton>
                 <SButton onClick={onChangePage} name='1' disabled={page === lastPage} className={isLoadingList ? 'loading' : ''}>next</SButton>

@@ -81,12 +81,12 @@ const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange
     }, [])
 
     useEffect(() => {
-        if (auth.authError && auth.authError.slice(0, 4) === "[ID]") {
-            const { current } = idRef;
-            current?.focus();
-        } else if (auth.authError && auth.authError.slice(0, 4) === "[PW]") {
-            const { current } = passwordRef;
-            current?.focus();
+        const authErrorHead = auth?.authError?.slice(0, 4)
+        if (authErrorHead === "[ID]") {
+            idRef.current?.focus();
+        }
+        if (authErrorHead === "[PW]") {
+            passwordRef.current?.focus();
         }
     }, [auth.authError])
 

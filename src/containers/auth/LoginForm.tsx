@@ -17,7 +17,6 @@ const LoginForm = () => {
     const auth = useSelector(({ auth }: RootStateType) => auth);
     const loading = useSelector(({ loading }: RootStateType) => loading);
 
-
     const { authorized, username, password } = auth;
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,39 +29,52 @@ const LoginForm = () => {
         )
     }
 
-    const isValidId = () => {
-        const idResult = validate(IdSchema, { username })
-        if (!idResult.isValid) {
-            dispatch(
-                changeField({
-                    ...auth,
-                    authError: '[ID] ID should consists of number and alphabet (4 ~ 16).'
-                })
-            )
-            return false;
+    const checkId = () => {
+        if (!isVailidId()) {
+            setAuthErrorId()
         }
-        return true;
     }
-    
+    const isVailidId=()=>{
+        const idResult = validate(IdSchema, { username })
+        return idResult.isValid
+    }
+    const setAuthErrorId = () => {
+        dispatch(
+            changeField({
+                ...auth,
+                authError: '[ID] ID should consists of number and alphabet (4 ~ 16).'
+            })
+        )
+    }
+
+    const checkPassword = () => {
+        if (!isValidPassword()) {
+            setAuthErrorPassword();
+        }
+    }
     const isValidPassword=()=>{
         const passwordResult = validate(PasswordSchema, { password });
-        if (!passwordResult.isValid) {
-            dispatch(
-                changeField({
-                    ...auth,
-                    authError: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
-                })
-            )
-            return false;
-        }
-        return true;
+        return passwordResult.isValid;
     }
+    const setAuthErrorPassword = () => {
+        dispatch(
+            changeField({
+                ...auth,
+                authError: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
+            })
+        )
+    }
+
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+                
+        checkId()
+        checkPassword();
 
-        if(!isValidId()) return;
-        if(!isValidPassword()) return;
+        if(!isVailidId()||!isValidPassword()){
+            return;
+        }
         
         dispatch(loginAsync({ username, password }))
     }
