@@ -19,65 +19,6 @@ const LoginForm = () => {
 
     const { authorized, username, password } = auth;
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value, name } = e.target;
-        dispatch(
-            changeField({
-                ...auth,
-                [name]: value
-            })
-        )
-    }
-
-    const checkId = () => {
-        if (!isVailidId()) {
-            setAuthErrorId()
-        }
-    }
-    const isVailidId=()=>{
-        const idResult = validate(IdSchema, { username })
-        return idResult.isValid
-    }
-    const setAuthErrorId = () => {
-        dispatch(
-            changeField({
-                ...auth,
-                authError: '[ID] ID should consists of number and alphabet (4 ~ 16).'
-            })
-        )
-    }
-
-    const checkPassword = () => {
-        if (!isValidPassword()) {
-            setAuthErrorPassword();
-        }
-    }
-    const isValidPassword=()=>{
-        const passwordResult = validate(PasswordSchema, { password });
-        return passwordResult.isValid;
-    }
-    const setAuthErrorPassword = () => {
-        dispatch(
-            changeField({
-                ...auth,
-                authError: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
-            })
-        )
-    }
-
-
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-                
-        checkId()
-        checkPassword();
-
-        if(!isVailidId()||!isValidPassword()){
-            return;
-        }
-        
-        dispatch(loginAsync({ username, password }))
-    }
 
     useEffect(() => {
         const localUsername = getItem('username');
@@ -92,6 +33,60 @@ const LoginForm = () => {
             history.push('/postListPage');
         }
     }, [authorized, loading['auth/CHECK'], loading['auth/LOGIN']])
+
+
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { value, name } = e.target;
+        dispatch(
+            changeField({
+                ...auth,
+                [name]: value
+            })
+        )
+    }
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if(!isVailidId()){
+            setAuthErrorId();
+            return;
+        }
+
+        if(!isValidPassword()){
+            setAuthErrorPassword();
+            return;
+        }
+
+        dispatch(loginAsync({ username, password }))
+    }
+
+    const isVailidId = () => {
+        const idResult = validate(IdSchema, { username })
+        return idResult.isValid
+    }
+    const setAuthErrorId = () => {
+        dispatch(
+            changeField({
+                ...auth,
+                authError: '[ID] ID should consists of number and alphabet (4 ~ 16).'
+            })
+        )
+    }
+
+    const isValidPassword = () => {
+        const passwordResult = validate(PasswordSchema, { password });
+        return passwordResult.isValid;
+    }
+    const setAuthErrorPassword = () => {
+        dispatch(
+            changeField({
+                ...auth,
+                authError: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
+            })
+        )
+    }
+
 
     return (
         <AuthForm authType="login" onChange={onChange} onSubmit={onSubmit} />

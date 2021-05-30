@@ -12,6 +12,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import App from '../../App';
 import rootReducer from '../../store';
+import { isExportDeclaration } from 'typescript';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 const persister = persistStore(store);
@@ -40,9 +41,14 @@ describe('Test App', () => {
         expect(screen.getByRole('app')).toHaveTextContent(/Simple Memo/i);
         expect(screen.getByRole('app')).toHaveTextContent(/Login/i)
         expect(screen.getByRole('app')).toHaveTextContent(/Go to Register/i)
-        const loginButton = screen.getByText(/Go to Register/i);
+        //const loginButton = screen.getByText(/Go to Register/i);
         //loginButton.click();
+        const gotoRegisterButton = screen.getByRole('button',{name:/Login/i});
+        const loginButton = screen.getByRole('button',{name:/Login/i});
         act(()=>loginButton.click());
-        expect(screen.getByText('Go to Login')).toBeDefined()
+        expect(screen.getByText(/ID should consists of number and alphabet/i)).toBeDefined();
+
+        act(()=>gotoRegisterButton.click());
+        expect(screen.getByRole('button',{name:/Register/i})).toBeDefined();
     });
 });
