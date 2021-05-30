@@ -109,7 +109,7 @@ const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange
             <Footer>
                 {authType === 'login' ? (
                     <Link to='/register' role='button'>Go to Register</Link>
-                ) : (<Link to="/login">Go to Login</Link>)}
+                ) : (<Link to="/login" role='button'>Go to Login</Link>)}
             </Footer>
         </AuthFormBlock>
     )
