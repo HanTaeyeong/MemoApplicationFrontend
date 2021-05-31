@@ -5,6 +5,9 @@ import fetchMock from "fetch-mock";
 import * as writeStore from "../../store/write";
 import * as loading from "../../store/loading";
 
+const middlewares = [thunk];
+const mockStore = configureMockStore(middlewares);
+
 describe("write reducer syncronous test", () => {
   it("changeWritingField should change write store state", () => {
     const mockData = {
@@ -50,16 +53,73 @@ describe("write reducer syncronous test", () => {
     expect(writeStore.updatePost()(mockData)).toEqual(expectedResult);
   });
 
-  it('deletePost should distpatch correctly',()=>{
-      const mockData={
-          _id:'gjfjije'
-      }
-      const expectedResult={
-          type:writeStore.DELETE_POST,
-          payload:mockData
-      }
-      expect(writeStore.deletePost()(mockData)).toEqual(expectedResult);
-  })
+  it("deletePost should distpatch correctly", () => {
+    const mockData = {
+      _id: "gjfjije",
+    };
+    const expectedResult = {
+      type: writeStore.DELETE_POST,
+      payload: mockData,
+    };
+    expect(writeStore.deletePost()(mockData)).toEqual(expectedResult);
+  });
 });
 
-describe("write reducer async test", () => {});
+describe("write reducer async test", () => {
+  afterEach(() => {
+    fetchMock.restore();
+    fetchMock.reset();
+  });
+  it("writePostAysync should invoke START_LOADING action", () => {
+    const store = mockStore({ write: {} });
+    const onLoadingState = [
+      { type: writeStore.WRITE_POST },
+      {
+        payload: writeStore.WRITE_POST,
+        type: loading.START_LOADING,
+      },
+    ];
+
+    const requestValue = {
+      title: "writePostAsync title",
+      contents: "writePostAsync contents",
+      tags: [],
+    };
+
+    store.dispatch(writeStore.writePostAsync(requestValue));
+    expect(store.getActions()).toEqual(onLoadingState);
+  });
+  it("updatePostAsync should invoke START_LOADING", () => {
+    const store = mockStore({ write: {} });
+    const onLoadingState = [
+      {
+        type: writeStore.UPDATE_POST,
+      },
+      {
+        payload: writeStore.UPDATE_POST,
+        type: loading.START_LOADING,
+      },
+    ];
+
+    const requestValue = {
+      _id: "wierjf",
+      title: "updatePost title",
+      constents: "updatePost constents",
+    };
+    store.dispatch(writeStore.updatePostAsync(requestValue));
+    expect(store.getActions()).toEqual(onLoadingState);
+  });
+
+  it("deletePostAsync should invoke START_LOADING", () => {
+    const store = mockStore({ write: {} });
+    const onLoadingState = [
+      { type: writeStore.DELETE_POST },
+      { payload: writeStore.DELETE_POST, type: loading.START_LOADING },
+    ];
+    const requestValue = {
+      _id: "eifjdkef",
+    };
+    store.dispatch(writeStore.deletePostAsync(requestValue));
+    expect(store.getActions()).toEqual(onLoadingState);
+  });
+});
