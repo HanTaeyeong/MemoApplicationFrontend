@@ -49,7 +49,7 @@ enum AuthTypeEnum {
     'register' = 'register'
 }
 
-interface AuthStateType {
+export interface AuthStateType {
     authType: AuthTypeEnum;
     username: string;
     password: string;
@@ -59,7 +59,7 @@ interface AuthStateType {
     checkError: any;
 }
 
-const initialState: AuthStateType = {
+export const initialState: AuthStateType = {
     authType: AuthTypeEnum['register'],
     username: '',
     password: '',
