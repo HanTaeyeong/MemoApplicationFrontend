@@ -8,7 +8,7 @@ import Button from '../common/Button';
 import { initializeForm, logoutAsync } from '../../store/auth';
 import { removeItem } from '../../lib/localStorageRequest';
 
-const Header = () => {
+const ListHeader = () => {
     const authState = useSelector(({ auth, loading }: RootStateType) =>
         ({ username: auth.username, authorized: auth.authorized, loading: { ...loading } }))
     const { authorized, username } = authState;
@@ -30,8 +30,8 @@ const Header = () => {
 
     return (
         <HeaderBlock>
-                <span className='logo'>Simple Memo</span>
-                <Button cyan={false} fullWidth={false} onClickFunction={ onLogout}>Logout</Button>
+            <span className='logo'>Simple Memo</span>
+            <Button cyan={false} fullWidth={false} onClickFunction={onLogout}>Logout</Button>
         </HeaderBlock>
     )
 }
@@ -61,4 +61,4 @@ const HeaderBlock = styled.div`
 `;
 
 
-export default Header
+export default ListHeader

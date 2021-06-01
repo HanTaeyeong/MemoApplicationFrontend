@@ -6,15 +6,14 @@ import "@testing-library/jest-dom/extend-expect";
 import configureMockStore from "redux-mock-store";
 
 import Button from "../../../components/common/Button";
-import palette from "../../../lib/styles/palette";
 
 // ${(props: ButtonPropsType) => props.fullWidth &&
 //     css`
 // padding-top:0.75rem;
 // padding-bottom:0.75rem;
-// width:100%;
-// font-size:1.33rem;
-// `}
+// widt-size:1.33rem;
+// `}h:100%;
+// font
 
 const store = configureMockStore([])({});
 
