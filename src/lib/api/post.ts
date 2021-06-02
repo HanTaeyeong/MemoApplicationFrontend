@@ -2,7 +2,11 @@ import client from './client';
 
 const prefix = '/api/post';
 
-export const getPostList = async ({ page, limit }: { page: number, limit: number }) => await client.get(`${prefix}/get?page=${page}&limit=${limit}`)
+export const getPostList = async ({ page, limit }: { page: number, limit: number }) => {
+    const res = await client.get(`${prefix}/get?page=${page}&limit=${limit}`)
+    console.log(res);
+    return res;
+}
 
 export const writePost = ({ title, contents, tags }: { title: string, contents: string, tags: string[] | undefined }) => {
     if (!title.trim()) {

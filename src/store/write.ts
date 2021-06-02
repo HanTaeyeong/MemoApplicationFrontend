@@ -78,7 +78,7 @@ const write = createReducer(initialState, {
     [CHANGE_PAGE_STATE]: (state: WriteStateType, { payload: { page, limit, lastPage, totalPostCount } }: any) =>
         ({ ...state, pageState: { page, limit, lastPage, totalPostCount } }),
 
-    [GET_POST_LIST_SUCCESS]: (state: WriteStateType, { payload: {  posts, lastPage, totalPostCount  } }: any) =>
+    [GET_POST_LIST_SUCCESS]: (state: WriteStateType, { payload: { posts, lastPage, totalPostCount  } }: any) =>
     ({
         ...state, pageState: { ...state.pageState, lastPage, totalPostCount },
         posts: posts.map((post: any) => post._doc), postError: false

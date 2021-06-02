@@ -14,47 +14,37 @@ import palette from '../../lib/styles/palette';
 import { RootStateType } from '../../store';
 import { changeWritingField, getPostListAsync, changePageState } from '../../store/write';
 
-const pageLimitValues = ['10', '20', '50', '100'];
-
 const PostTemplate = () => {
     const dispatch = useDispatch();
     const loading = useSelector(({ loading }: RootStateType) => loading)
     const write = useSelector(({ write }: RootStateType) => write)
     const { posts, pageState } = write;
-    const isLoadingList = loading['write/GET_POST_LIST'];
+    const { page, limit, lastPage, totalPostCount } = pageState;
 
-  
-
-    const onPageStateChanged = async () => {
-        getPostList();
-    }
+    const isLoadingList = loading['write/GET_POST_LIST']; 
     
-    const getPostList = () => {
-        const { page, limit } = pageState;
+    const onPageStateChanged = async () => {
         dispatch(getPostListAsync({ page, limit }));
     }
 
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
-        const { totalPostCount } = pageState;
 
         const nextLimit = +e.target.value;
         const nextLastPage = ((totalPostCount / nextLimit) | 0) + 1;
 
         dispatch(changePageState({
-            pageState: {
-                ...pageState, page: 1,
-                limit: nextLimit, lastPage: nextLastPage
-            }
+            totalPostCount,
+            page: 1,
+            limit: nextLimit,
+            lastPage: nextLastPage
         }));
     }
 
     const onChangePage = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        const { page, lastPage } = pageState;
 
         let nextPage = page + (+e.currentTarget.name);
-
         if (nextPage < 1) {
             nextPage = 1;
         }
@@ -62,7 +52,7 @@ const PostTemplate = () => {
             nextPage = lastPage;
         }
 
-        dispatch(changePageState({ pageState: { ...pageState, page: nextPage } }));
+        dispatch(changePageState({ limit, lastPage, totalPostCount, page: nextPage }));
     };
 
     const onClickItem = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -73,8 +63,9 @@ const PostTemplate = () => {
         dispatch(changeWritingField({ ...write, _id, title, contents }));
         history.push('/write');
     }
-
+    
     useEffect(() => {
+        
         if (!isLoadingList) {
             onPageStateChanged();
         }
@@ -89,8 +80,8 @@ const PostTemplate = () => {
         <PostTemplateBlock>
             <ListHeader />
 
-            <PostNavigation pageLimitValues={pageLimitValues} onChangeSelect={onChangeSelect}
-                pageState={pageState} onChangePage={onChangePage} isLoadingList={isLoadingList} />
+            <PostNavigation onChangeSelect={onChangeSelect}
+                onChangePage={onChangePage} />
 
             {posts?.length ? posts.map((post) =>
                 <PostItem key={post._id} post={post} onClickItem={onClickItem} />

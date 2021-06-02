@@ -1,4 +1,4 @@
-import { ChangeEventHandler, MouseEventHandler,useEffect } from 'react'
+import { ChangeEventHandler, MouseEventHandler, useEffect } from 'react'
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 
@@ -6,22 +6,18 @@ import palette from '../../lib/styles/palette';
 import { RootStateType } from '../../store';
 
 export interface PostNavigationType {
-    pageLimitValues: string[];
-
-    pageState: { page: number, limit: number, lastPage: number, totalPostCount: number };
-
-    isLoadingList: boolean;
-
     onChangeSelect: ChangeEventHandler<HTMLSelectElement>;
     onChangePage: MouseEventHandler<HTMLButtonElement>;
 }
 
-function PostNavigation({ pageLimitValues, onChangeSelect, onChangePage }: PostNavigationType) {
+const pageLimitValues = ['10', '20', '50', '100'];
+
+function PostNavigation({ onChangeSelect, onChangePage }: PostNavigationType) {
     const write = useSelector(({ write }: RootStateType) => write);
     const loading = useSelector(({ loading }: RootStateType) => loading);
     const isLoadingList = loading['write/GET_POST_LIST'];
-   
-    const { totalPostCount, page, lastPage } = write.pageState;
+    
+    const { page, limit, lastPage, totalPostCount } = write.pageState;
 
     return (
         <NavigationBlock>

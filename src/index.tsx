@@ -13,7 +13,7 @@ import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import rootReducer from './store';
-import { tempSetUser, checkAsync, TEMP_SET_USER } from './store/auth';
+import { checkAsync, TEMP_SET_USER } from './store/auth';
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
