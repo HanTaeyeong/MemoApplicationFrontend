@@ -54,7 +54,6 @@ export interface WriteStateType {
 
     postError: boolean;
 
-    postData: Object,
     posts: PostType[],
     pageState: PageStateType;
 }
@@ -67,7 +66,6 @@ export const initialState: WriteStateType = {
     username: '',
 
     postError: false,
-    postData: {},
     posts: [],
     pageState: { page: 1, limit: 10, lastPage: 1, totalPostCount: 0 }
 }
@@ -80,8 +78,11 @@ const write = createReducer(initialState, {
     [CHANGE_PAGE_STATE]: (state: WriteStateType, { payload: { page, limit, lastPage, totalPostCount } }: any) =>
         ({ ...state, pageState: { page, limit, lastPage, totalPostCount } }),
 
-    [GET_POST_LIST_SUCCESS]: (state: WriteStateType, { payload: data }: any) =>
-        ({ ...state, postData: {}, posts: data.map((post:any)=>post._doc), postError: false }),
+    [GET_POST_LIST_SUCCESS]: (state: WriteStateType, { payload: {  posts, lastPage, totalPostCount  } }: any) =>
+    ({
+        ...state, pageState: { ...state.pageState, lastPage, totalPostCount },
+        posts: posts.map((post: any) => post._doc), postError: false
+    }),
     [GET_POST_LIST_FAILURE]: (state: WriteStateType) => ({ ...state, postError: true }),
 
     [WRITE_POST_SUCCESS]: (state: WriteStateType) => ({ ...state, postError: false }),

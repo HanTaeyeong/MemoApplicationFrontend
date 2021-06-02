@@ -20,22 +20,18 @@ const PostTemplate = () => {
     const dispatch = useDispatch();
     const loading = useSelector(({ loading }: RootStateType) => loading)
     const write = useSelector(({ write }: RootStateType) => write)
-    const { posts, pageState, postData } = write;
+    const { posts, pageState } = write;
     const isLoadingList = loading['write/GET_POST_LIST'];
 
-    const getPostList = () => {
-        const { page, limit } = write.pageState;
-        dispatch(getPostListAsync({ page, limit }));
-    }
+  
 
     const onPageStateChanged = async () => {
         getPostList();
-        // const { headers } = postData;
-        // dispatch(changePageState({
-        //     ...pageState,
-        //     lastPage: +headers['last-page'],
-        //     totalPostCount: +headers['total-post-count']
-        // }))
+    }
+    
+    const getPostList = () => {
+        const { page, limit } = pageState;
+        dispatch(getPostListAsync({ page, limit }));
     }
 
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -60,10 +56,10 @@ const PostTemplate = () => {
         let nextPage = page + (+e.currentTarget.name);
 
         if (nextPage < 1) {
-            return;
+            nextPage = 1;
         }
         if (nextPage > lastPage) {
-            return;
+            nextPage = lastPage;
         }
 
         dispatch(changePageState({ pageState: { ...pageState, page: nextPage } }));
@@ -82,7 +78,6 @@ const PostTemplate = () => {
         if (!isLoadingList) {
             onPageStateChanged();
         }
-        console.log(write);
     }, [pageState?.page, pageState?.limit])
 
     const moveToWrite = () => {
