@@ -1,31 +1,37 @@
-import { ChangeEventHandler, MouseEventHandler } from 'react'
+import { ChangeEventHandler, MouseEventHandler,useEffect } from 'react'
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 
 import palette from '../../lib/styles/palette';
+import { RootStateType } from '../../store';
 
 export interface PostNavigationType {
     pageLimitValues: string[];
-    
+
     pageState: { page: number, limit: number, lastPage: number, totalPostCount: number };
-    
+
     isLoadingList: boolean;
 
-    onChangeSelect:ChangeEventHandler<HTMLSelectElement>;
+    onChangeSelect: ChangeEventHandler<HTMLSelectElement>;
     onChangePage: MouseEventHandler<HTMLButtonElement>;
 }
 
-function PostNavigation({ pageLimitValues, onChangeSelect, pageState, onChangePage, isLoadingList }: PostNavigationType) {
-    const {totalPostCount, page, lastPage}=pageState;
+function PostNavigation({ pageLimitValues, onChangeSelect, onChangePage }: PostNavigationType) {
+    const write = useSelector(({ write }: RootStateType) => write);
+    const loading = useSelector(({ loading }: RootStateType) => loading);
+    const isLoadingList = loading['write/GET_POST_LIST'];
+   
+    const { totalPostCount, page, lastPage } = write.pageState;
 
     return (
         <NavigationBlock>
             <SelectItems>
                 <select name="limits" onChange={onChangeSelect} >
-                    {pageLimitValues.map(value => <option value={value} key={'pageLimitOption'+value}>{+value}</option>)}
+                    {pageLimitValues.map(value => <option value={value} key={'pageLimitOption' + value}>{+value}</option>)}
                 </select>
                 <span>{totalPostCount} total posts</span>
             </SelectItems>
-            
+
             <PageItems>
                 <SButton onClick={onChangePage} name="-1" disabled={page === 1} className={isLoadingList ? 'loading' : ''}>before</SButton>
                 <SButton onClick={onChangePage} name='1' disabled={page === lastPage} className={isLoadingList ? 'loading' : ''}>next</SButton>

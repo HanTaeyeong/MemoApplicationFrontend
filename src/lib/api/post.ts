@@ -1,13 +1,12 @@
-import { reduceEachTrailingCommentRange } from 'typescript';
 import client from './client';
 
 const prefix = '/api/post';
 
-export const getPostList = ({ page, limit }: { page: number, limit: number }) => client.get(`${prefix}/get?page=${page}&limit=${limit}`)
+export const getPostList = async ({ page, limit }: { page: number, limit: number }) => await client.get(`${prefix}/get?page=${page}&limit=${limit}`)
 
 export const writePost = ({ title, contents, tags }: { title: string, contents: string, tags: string[] | undefined }) => {
     if (!title.trim()) {
-        return ()=>{};
+        return () => { };
     }
     return client.post(prefix + '/write', { title, contents, tags });
 }

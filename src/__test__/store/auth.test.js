@@ -11,7 +11,7 @@ const initialState = {
   password: "",
   passwordConfirm: "",
   authorized: false,
-  authError: null,
+  authErrorMessage: 'null',
   checkError: null,
 };
 
@@ -64,7 +64,7 @@ describe("auth reducer syncronous test", () => {
         username: "hty123",
         password: "qwerty1234",
         passwordConfirm: "qwerty1234",
-        authError: false,
+        authErrorMessage: '',
       },
     };
     expect(
@@ -73,7 +73,7 @@ describe("auth reducer syncronous test", () => {
         username: "hty123",
         password: "qwerty1234",
         passwordConfirm: "qwerty1234",
-        authError: false,
+        authErrorMessage: 'false',
       })
     ).toEqual(expectedResult);
   });

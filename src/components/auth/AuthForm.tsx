@@ -77,31 +77,34 @@ const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange
     const passwordRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        dispatch(changeField({ authError: '' }));
+        dispatch(changeField({ authErrorMessage: '' }));
     }, [])
 
     useEffect(() => {
-        const authErrorHead = auth?.authError?.slice(0, 4)
+        console.log(auth.authErrorMessage);
+        return;
+        const authErrorHead = auth?.authErrorMessage?.slice(0, 4)
+        
         if (authErrorHead === "[ID]") {
             idRef.current?.focus();
         }
         if (authErrorHead === "[PW]") {
             passwordRef.current?.focus();
         }
-    }, [auth.authError])
+    }, [auth.authErrorMessage])
 
     return (
         <AuthFormBlock>
             <h3>{text}</h3>
             <form onSubmit={(e) => onSubmit(e)}>
                 <StyledInput onChange={(e) => onChange(e)} autoComplete="username" name="username"
-                    placeholder="Id" ref={idRef} className={auth.authError && 'error'} />
+                    placeholder="Id" ref={idRef} className={auth.authErrorMessage && 'error'} />
                 <StyledInput onChange={(e) => onChange(e)} type="password" autoComplete="new-password"
-                    name="password" placeholder="password" ref={passwordRef} className={auth.authError && 'error'} />
+                    name="password" placeholder="password" ref={passwordRef} className={auth.authErrorMessage && 'error'} />
 
                 {authType === 'register' && (<StyledInput onChange={(e) => onChange(e)} autoComplete="new-password" name="passwordConfirm" placeholder="passwordConfirm" type="password" />)}
 
-                {auth.authError && <ErrorMessage>{auth.authError}</ErrorMessage>}
+                {auth.authErrorMessage && <ErrorMessage>{auth.authErrorMessage}</ErrorMessage>}
 
                 <ButtonWithMarginTop cyan fullWidth >{text}</ButtonWithMarginTop>
             </form>

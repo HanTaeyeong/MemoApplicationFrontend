@@ -69,7 +69,7 @@ const LoginForm = () => {
         dispatch(
             changeField({
                 ...auth,
-                authError: '[ID] ID should consists of number and alphabet (4 ~ 16).'
+                authErrorMessage: '[ID] ID should consists of number and alphabet (4 ~ 16).'
             })
         )
     }
@@ -82,7 +82,7 @@ const LoginForm = () => {
         dispatch(
             changeField({
                 ...auth,
-                authError: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
+                authErrorMessage: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
             })
         )
     }

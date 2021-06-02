@@ -1,15 +1,9 @@
 import styled from 'styled-components';
 
 import palette from '../../lib/styles/palette';
+import {PostType} from '../../store/write'
 
-export interface PostItemType {
-    _id: string,
-    title: string,
-    contents: string,
-    lastUpdated: string,
-}
-
-const PostItem = ({ post, onClickItem }: { post: PostItemType, onClickItem?: Function, }) => {
+const PostItem = ({ post, onClickItem }: { post: PostType, onClickItem?: Function, }) => {
     const { _id, title, contents, lastUpdated } = post;
 
     return (

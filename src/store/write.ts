@@ -3,7 +3,9 @@ import { createRequestThunk, createRequestActionTypes } from '../lib/createReque
 import * as postApi from '../lib/api/post';
 
 export const CHANGE_WRITING_FIELD = 'write/CHANGE_WRITING_FIELD';
+export const CHANGE_PAGE_STATE = 'write/CHANGE_PAGE_STATE';
 
+export const [GET_POST_LIST, GET_POST_LIST_SUCCESS, GET_POST_LIST_FAILURE] = createRequestActionTypes('write/GET_POST_LIST');
 
 export const [WRITE_POST, WRITE_POST_SUCCESS, WRITE_POST_FAILURE] = createRequestActionTypes('write/WRITE_POST');
 export const [UPDATE_POST, UPDATE_POST_SUCCESS, UPDATE_POST_FAILURE] = createRequestActionTypes('write/UPDATE_POST');
@@ -11,6 +13,12 @@ export const [DELETE_POST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE] = createReq
 
 export const changeWritingField = createAction(CHANGE_WRITING_FIELD, ({ _id, title, contents, tags }) =>
     ({ _id, title, contents, tags }))();
+
+export const changePageState = createAction(CHANGE_PAGE_STATE, ({ page, limit, lastPage, totalPostCount }) =>
+    ({ page, limit, lastPage, totalPostCount }))();
+
+export const getPostList = createAction(GET_POST_LIST, ({ page, limit }) => ({ page, limit }));
+export const getPostListAsync = createRequestThunk(GET_POST_LIST, postApi.getPostList);
 
 export const writePost = createAction(WRITE_POST, ({ title, contents, tags }) => ({ title, contents, tags }))
 export const writePostAsync = createRequestThunk(WRITE_POST, postApi.writePost);
@@ -21,8 +29,23 @@ export const updatePostAsync = createRequestThunk(UPDATE_POST, postApi.updatePos
 export const deletePost = createAction(DELETE_POST, ({ _id }) => ({ _id }));
 export const deletePostAsync = createRequestThunk(DELETE_POST, postApi.deletePost);
 
+export interface PostType {
+    _id: string,
+    title: string,
+    contents: string,
+    tags: string[] | undefined,
+    lastUpdated: string,
+    username: string
+}
 
-export interface WriteType {
+interface PageStateType {
+    page: number,
+    limit: number,
+    lastPage: number,
+    totalPostCount: number
+}
+
+export interface WriteStateType {
     _id: string,
     title: string,
     contents: string,
@@ -30,8 +53,13 @@ export interface WriteType {
     username: string,
 
     postError: boolean;
+
+    postData: Object,
+    posts: PostType[],
+    pageState: PageStateType;
 }
-export const initialState: WriteType = {
+
+export const initialState: WriteStateType = {
     _id: '',
     title: '',
     contents: '',
@@ -39,20 +67,31 @@ export const initialState: WriteType = {
     username: '',
 
     postError: false,
+    postData: {},
+    posts: [],
+    pageState: { page: 1, limit: 10, lastPage: 1, totalPostCount: 0 }
 }
 
 
 const write = createReducer(initialState, {
-    [CHANGE_WRITING_FIELD]: (state: WriteType, { payload: { _id, title, contents, tags } }: any) => ({ ...state, _id, title, contents, tags }),
+    [CHANGE_WRITING_FIELD]: (state: WriteStateType, { payload: { _id, title, contents, tags } }: any) =>
+        ({ ...state, _id, title, contents, tags }),
 
-    [WRITE_POST_SUCCESS]: (state: WriteType) => ({ ...state, postError: false }),
-    [WRITE_POST_FAILURE]: (state: WriteType) => ({ ...state, postError: true }),
+    [CHANGE_PAGE_STATE]: (state: WriteStateType, { payload: { page, limit, lastPage, totalPostCount } }: any) =>
+        ({ ...state, pageState: { page, limit, lastPage, totalPostCount } }),
 
-    [UPDATE_POST_SUCCESS]: (state: WriteType) => ({ ...state, postError: false }),
-    [UPDATE_POST_FAILURE]: (state: WriteType) => ({ ...state, postError: true }),
+    [GET_POST_LIST_SUCCESS]: (state: WriteStateType, { payload: data }: any) =>
+        ({ ...state, postData: {}, posts: data.map((post:any)=>post._doc), postError: false }),
+    [GET_POST_LIST_FAILURE]: (state: WriteStateType) => ({ ...state, postError: true }),
 
-    [DELETE_POST_SUCCESS]: (state: WriteType) => ({ ...state, postError: false }),
-    [DELETE_POST_FAILURE]: (state: WriteType) => ({ ...state, postError: false })
+    [WRITE_POST_SUCCESS]: (state: WriteStateType) => ({ ...state, postError: false }),
+    [WRITE_POST_FAILURE]: (state: WriteStateType) => ({ ...state, postError: true }),
+
+    [UPDATE_POST_SUCCESS]: (state: WriteStateType) => ({ ...state, postError: false }),
+    [UPDATE_POST_FAILURE]: (state: WriteStateType) => ({ ...state, postError: true }),
+
+    [DELETE_POST_SUCCESS]: (state: WriteStateType) => ({ ...state, postError: false }),
+    [DELETE_POST_FAILURE]: (state: WriteStateType) => ({ ...state, postError: false })
 })
 
 export default write;
