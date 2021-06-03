@@ -41,6 +41,18 @@ describe("post/PostItem Component test", () => {
     expect(screen.getByText(lastUpdated).innerHTML).toBe(lastUpdated);
   });
 
+  it("PostItem whithout fn render test", () => {
+   
+    const postItem = renderPostItem(mockPostData);
+    const { _id, title, contents, lastUpdated } = mockPostData;
+
+    expect(postItem).toBeTruthy();
+    expect(screen.getByText(title).innerHTML).toBe(title);
+    expect(screen.getByText(contents).innerHTML).toBe(contents);
+    expect(screen.getByText(lastUpdated).innerHTML).toBe(lastUpdated);
+  });
+
+
   it("PostItem onClickItem works well", () => {
     const fn = jest.fn();
     renderPostItem(mockPostData, fn);

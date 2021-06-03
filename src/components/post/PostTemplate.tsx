@@ -12,7 +12,7 @@ import LoadingSpinner from './LoadingSpinner';
 import palette from '../../lib/styles/palette';
 
 import { RootStateType } from '../../store';
-import { changeWritingField, getPostListAsync, changePageState } from '../../store/write';
+import { changeWritingField, getPostListAsync } from '../../store/write';
 
 const PostTemplate = () => {
     const dispatch = useDispatch();
@@ -27,34 +27,6 @@ const PostTemplate = () => {
         dispatch(getPostListAsync({ page, limit }));
     }
 
-    const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        e.preventDefault();
-
-        const nextLimit = +e.target.value;
-        const nextLastPage = ((totalPostCount / nextLimit) | 0) + 1;
-
-        dispatch(changePageState({
-            totalPostCount,
-            page: 1,
-            limit: nextLimit,
-            lastPage: nextLastPage
-        }));
-    }
-
-    const onChangePage = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-
-        let nextPage = page + (+e.currentTarget.name);
-        if (nextPage < 1) {
-            nextPage = 1;
-        }
-        if (nextPage > lastPage) {
-            nextPage = lastPage;
-        }
-
-        dispatch(changePageState({ limit, lastPage, totalPostCount, page: nextPage }));
-    };
-
     const onClickItem = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
 
@@ -66,7 +38,7 @@ const PostTemplate = () => {
 
     useEffect(() => {
         onPageStateChanged();
-    }, [pageState?.page, pageState?.limit])
+    }, [page, limit])
 
     const moveToWrite = () => {
         dispatch(changeWritingField({ _id: "", title: "", contents: "", tags: [] }))
@@ -77,8 +49,7 @@ const PostTemplate = () => {
         <PostTemplateBlock>
             <ListHeader />
 
-            <PostNavigation onChangeSelect={onChangeSelect}
-                onChangePage={onChangePage} />
+            <PostNavigation />
 
             {posts?.length ? posts.map((post) =>
                 <PostItem key={post._id} post={post} onClickItem={onClickItem} />

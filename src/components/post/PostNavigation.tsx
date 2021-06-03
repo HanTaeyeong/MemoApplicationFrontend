@@ -1,9 +1,11 @@
 import { ChangeEventHandler, MouseEventHandler, useEffect } from 'react'
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 
 import palette from '../../lib/styles/palette';
 import { RootStateType } from '../../store';
+
+import {changePageState} from '../../store/write';
 
 export interface PostNavigationType {
     onChangeSelect: ChangeEventHandler<HTMLSelectElement>;
@@ -12,12 +14,41 @@ export interface PostNavigationType {
 
 const pageLimitValues = ['10', '20', '50', '100'];
 
-function PostNavigation({ onChangeSelect, onChangePage }: PostNavigationType) {
+function PostNavigation() {
+    const dispatch = useDispatch();
     const write = useSelector(({ write }: RootStateType) => write);
     const loading = useSelector(({ loading }: RootStateType) => loading);
     const isLoadingList = loading['write/GET_POST_LIST'];
     
-    const { page, lastPage, totalPostCount } = write.pageState;
+    const {limit, page, lastPage, totalPostCount } = write.pageState;
+
+    const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        e.preventDefault();
+
+        const nextLimit = +e.target.value;
+        const nextLastPage = ((totalPostCount / nextLimit) | 0) + 1;
+
+        dispatch(changePageState({
+            totalPostCount,
+            page: 1,
+            limit: nextLimit,
+            lastPage: nextLastPage
+        }));
+    }
+
+    const onChangePage = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+
+        let nextPage = page + (+e.currentTarget.name);
+        if (nextPage < 1) {
+            nextPage = 1;
+        }
+        if (nextPage > lastPage) {
+            nextPage = lastPage;
+        }
+
+        dispatch(changePageState({ limit, lastPage, totalPostCount, page: nextPage }));
+    };
 
     return (
         <NavigationBlock>
