@@ -21,9 +21,9 @@ const PostTemplate = () => {
     const { posts, pageState } = write;
     const { page, limit, lastPage, totalPostCount } = pageState;
 
-    const isLoadingList = loading['write/GET_POST_LIST']; 
-    
-    const onPageStateChanged = async () => {
+    const isLoadingList = loading['write/GET_POST_LIST'];
+
+    const onPageStateChanged = () => {
         dispatch(getPostListAsync({ page, limit }));
     }
 
@@ -63,12 +63,9 @@ const PostTemplate = () => {
         dispatch(changeWritingField({ ...write, _id, title, contents }));
         history.push('/write');
     }
-    
+
     useEffect(() => {
-        
-        if (!isLoadingList) {
-            onPageStateChanged();
-        }
+        onPageStateChanged();
     }, [pageState?.page, pageState?.limit])
 
     const moveToWrite = () => {

@@ -11,11 +11,12 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
+import {composeWithDevTools} from 'redux-devtools-extension';
 
 import rootReducer from './store';
 import { checkAsync, TEMP_SET_USER } from './store/auth';
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
 console.log(navigator.language);
 

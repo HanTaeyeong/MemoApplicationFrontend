@@ -17,7 +17,7 @@ function PostNavigation({ onChangeSelect, onChangePage }: PostNavigationType) {
     const loading = useSelector(({ loading }: RootStateType) => loading);
     const isLoadingList = loading['write/GET_POST_LIST'];
     
-    const { page, limit, lastPage, totalPostCount } = write.pageState;
+    const { page, lastPage, totalPostCount } = write.pageState;
 
     return (
         <NavigationBlock>
