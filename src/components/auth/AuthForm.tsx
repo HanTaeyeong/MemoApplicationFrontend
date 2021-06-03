@@ -81,6 +81,8 @@ const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange
     }, [])
 
     useEffect(() => {
+        if(!auth.authErrorMessage) return;
+        
         const authErrorHead = auth?.authErrorMessage?.slice(0, 4)
         if (authErrorHead === "[ID]") {
             idRef.current?.focus();
