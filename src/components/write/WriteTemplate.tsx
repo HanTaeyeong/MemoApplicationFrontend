@@ -116,10 +116,12 @@ const WriteTemplate = () => {
     }
 
     const onGoingBack = () => {
-        if (!_id) { dispatch(writePostAsync({ title, contents, tags })) }
+        if (!_id) 
+        { dispatch(writePostAsync({ title, contents, tags })) }
         else {
             dispatch(updatePostAsync({ _id, title, contents }))
         }
+
         setMoveToPostList(true);
     }
     const onDelete = () => {

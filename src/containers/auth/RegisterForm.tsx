@@ -36,7 +36,7 @@ const RegisterForm = () => {
 
     const isPasswordsSame = () => {
         if (password !== passwordConfirm) {
-            dispatch(changeField({ ...auth, authError: '[PW] Passwords are not same.' }))
+            dispatch(changeField({ ...auth, authErrorMessage: '[PW] Passwords are not same.' }))
             return false;
         }
         return true;
@@ -45,7 +45,7 @@ const RegisterForm = () => {
     const isValidId = () => {
         const idResult = validate(IdSchema, { username })
         if (!idResult.isValid) {
-            dispatch(changeField({ ...auth, authError: '[ID] ID should consists of number and alphabet (4 ~ 16).' }))
+            dispatch(changeField({ ...auth, authErrorMessage: '[ID] ID should consists of number and alphabet (4 ~ 16).' }))
             return false;
         }
         return true;
@@ -57,7 +57,7 @@ const RegisterForm = () => {
             dispatch(
                 changeField({
                     ...auth,
-                    authError: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
+                    authErrorMessage: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
                 })
             )
             return false;

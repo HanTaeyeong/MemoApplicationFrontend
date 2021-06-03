@@ -6,74 +6,26 @@ import styled from 'styled-components';
 
 import ListHeader from './ListHeader';
 import PostNavigation from './PostNavigation';
-import PostItem, { PostItemType } from './PostItem';
+import PostItem from './PostItem';
 import LoadingSpinner from './LoadingSpinner';
 
 import palette from '../../lib/styles/palette';
 
 import { RootStateType } from '../../store';
-import { changeWritingField } from '../../store/write';
-
-import * as postApi from '../../lib/api/post';
-
-const pageLimitValues = ['10', '20', '50', '100'];
+import { changeWritingField, getPostListAsync } from '../../store/write';
 
 const PostTemplate = () => {
     const dispatch = useDispatch();
     const loading = useSelector(({ loading }: RootStateType) => loading)
     const write = useSelector(({ write }: RootStateType) => write)
-    const [posts, setPosts] = useState<PostItemType[]>([]);
-    const [pageState, setPageState] = useState({ page: 1, limit: 10, lastPage: 1, totalPostCount: 0 });
-    const [isLoadingList, setIsLoadingList] = useState(false);
+    const { posts, pageState } = write;
+    const { page, limit, lastPage, totalPostCount } = pageState;
 
-    async function getPostList() {
-        const { page, limit } = pageState;
-        setIsLoadingList(true);
-        const postList = await postApi.getPostList({ page, limit });
-        setIsLoadingList(false);
-        return postList;
+    const isLoadingList = loading['write/GET_POST_LIST'];
+
+    const onPageStateChanged = () => {
+        dispatch(getPostListAsync({ page, limit }));
     }
-
-    const onPageStateChanged = async () => {
-        const postList = await getPostList();
-        const { headers } = postList;
-        const newPosts = [];
-        setPageState({
-            ...pageState,
-            lastPage: +headers['last-page'],
-            totalPostCount: +headers['total-post-count']
-        })
-        for (const d of postList.data) {
-            newPosts.push({ ...d._doc })
-        }
-        setPosts(newPosts);
-    }
-
-    const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        e.preventDefault();
-        const { totalPostCount } = pageState;
-
-        const nextLimit = +e.target.value;
-        const nextLastPage = ((totalPostCount / nextLimit) | 0) + 1;
-
-        setPageState({ ...pageState, page: 1, limit: nextLimit, lastPage: nextLastPage })
-    }
-
-    const onChangePage = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-
-        const { page, lastPage } = pageState;
-
-        let nextPage = page + (+e.currentTarget.name);
-
-        if (nextPage < 1) {
-            nextPage = 1;
-        }
-        if (nextPage > lastPage) {
-            nextPage = lastPage;
-        }
-        setPageState({ ...pageState, page: nextPage });
-    };
 
     const onClickItem = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
@@ -85,10 +37,8 @@ const PostTemplate = () => {
     }
 
     useEffect(() => {
-        if (!isLoadingList) {
-            onPageStateChanged();
-        }
-    }, [pageState.page, pageState.limit])
+        onPageStateChanged();
+    }, [page, limit])
 
     const moveToWrite = () => {
         dispatch(changeWritingField({ _id: "", title: "", contents: "", tags: [] }))
@@ -99,15 +49,14 @@ const PostTemplate = () => {
         <PostTemplateBlock>
             <ListHeader />
 
-            <PostNavigation pageLimitValues={pageLimitValues} onChangeSelect={onChangeSelect}
-                pageState={pageState} onChangePage={onChangePage} isLoadingList={isLoadingList} />
+            <PostNavigation />
 
-            {posts.length ? posts.map((post) =>
+            {posts?.length ? posts.map((post) =>
                 <PostItem key={post._id} post={post} onClickItem={onClickItem} />
             ) : <div>Write a new memo...</div>}
 
-            <NewMemoButton onClick={moveToWrite}>+</NewMemoButton>
-            <LoadingSpinner className={isLoadingList ? 'loading' : ''} />
+            <NewMemoButton role='new-memo-button' onClick={moveToWrite}>+</NewMemoButton>
+            <LoadingSpinner role='loading-spinner' className={isLoadingList ? 'loading' : ''} />
         </PostTemplateBlock>
     )
 }

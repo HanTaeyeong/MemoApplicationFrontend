@@ -11,7 +11,7 @@ import Navigation from './containers/navigation/Navigation';
 
 function App() {
   return (
-    <div>
+    <div role='app'>
       <Route path={["/navigation"]} component={Navigation}/>
 
       <Route path={["/home"]} component={IntroPage} />

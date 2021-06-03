@@ -102,7 +102,7 @@ const Button = ({ children, cyan, fullWidth, onClickFunction }: ButtonType) => {
     }
 
     return (
-        <StyledButton cyan={cyan} fullWidth={fullWidth}
+        <StyledButton role='button' cyan={cyan} fullWidth={fullWidth}
             onClick={onClick} className={isLoading ? 'loading' : ''}>
             <span className={'text'}>{children}</span>
         </StyledButton>

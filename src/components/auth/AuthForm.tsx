@@ -77,39 +77,39 @@ const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange
     const passwordRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        dispatch(changeField({ authError: '' }));
+        dispatch(changeField({ authErrorMessage: '' }));
     }, [])
 
     useEffect(() => {
-        if (auth.authError && auth.authError.slice(0, 4) === "[ID]") {
-            const { current } = idRef;
-            current?.focus();
-        } else if (auth.authError && auth.authError.slice(0, 4) === "[PW]") {
-            const { current } = passwordRef;
-            current?.focus();
+        const authErrorHead = auth?.authErrorMessage?.slice(0, 4)
+        if (authErrorHead === "[ID]") {
+            idRef.current?.focus();
         }
-    }, [auth.authError])
+        if (authErrorHead === "[PW]") {
+            passwordRef.current?.focus();
+        }
+    }, [auth.authErrorMessage])
 
     return (
         <AuthFormBlock>
             <h3>{text}</h3>
             <form onSubmit={(e) => onSubmit(e)}>
                 <StyledInput onChange={(e) => onChange(e)} autoComplete="username" name="username"
-                    placeholder="Id" ref={idRef} className={auth.authError && 'error'} />
+                    placeholder="Id" ref={idRef} className={auth.authErrorMessage && 'error'} />
                 <StyledInput onChange={(e) => onChange(e)} type="password" autoComplete="new-password"
-                    name="password" placeholder="password" ref={passwordRef} className={auth.authError && 'error'} />
+                    name="password" placeholder="password" ref={passwordRef} className={auth.authErrorMessage && 'error'} />
 
                 {authType === 'register' && (<StyledInput onChange={(e) => onChange(e)} autoComplete="new-password" name="passwordConfirm" placeholder="passwordConfirm" type="password" />)}
 
-                {auth.authError && <ErrorMessage>{auth.authError}</ErrorMessage>}
+                {auth.authErrorMessage && <ErrorMessage>{auth.authErrorMessage}</ErrorMessage>}
 
                 <ButtonWithMarginTop cyan fullWidth >{text}</ButtonWithMarginTop>
             </form>
 
             <Footer>
                 {authType === 'login' ? (
-                    <Link to='/register'>Go to Register</Link>
-                ) : (<Link to="/login">Go To Login</Link>)}
+                    <Link to='/register' role='button'>Go to Register</Link>
+                ) : (<Link to="/login" role='button'>Go to Login</Link>)}
             </Footer>
         </AuthFormBlock>
     )

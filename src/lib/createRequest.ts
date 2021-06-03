@@ -18,7 +18,7 @@ export function createRequestThunk(type: string, request: Function) {
         } catch (e) {
             dispatch({
                 type: FAILURE,
-                payload: {error:e.toJSON()},
+                payload: {error:e},
             });
         } finally {
             dispatch(finishLoading(type));
