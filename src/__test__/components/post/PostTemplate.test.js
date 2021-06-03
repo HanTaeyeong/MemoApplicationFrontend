@@ -6,6 +6,7 @@ import "@testing-library/jest-dom/extend-expect";
 import configureMockStore from "redux-mock-store";
 
 import PostTemplate from "../../../components/post/PostTemplate";
+import { initialState } from "../../../store/write";
 
 const mockPostData = {
   _id: "359fejijd9ef",
@@ -16,6 +17,8 @@ const mockPostData = {
 
 const mockInitialState = {
   auth: { username: "HanTaeyeong", authorized: true, loading: {} },
+  write: initialState,
+  loading: {},
 };
 
 const makeStore = configureMockStore([thunk]);
@@ -46,21 +49,15 @@ describe("post/PostItem Component test", () => {
     const newMemoButton = screen.getByRole("new-memo-button");
 
     const expectedAction = [
+      { type: "write/GET_POST_LIST" },
+      { payload: "write/GET_POST_LIST", type: "loading/START_LOADING" },
       {
+        payload: { _id: "", contents: "", tags: [], title: "" },
         type: "write/CHANGE_WRITING_FIELD",
-        payload: { _id: "", title: "", contents: "", tags: [] },
-      },
+      }
     ];
+
     newMemoButton.click();
     expect(store.getActions()).toEqual(expectedAction);
   });
-
-  //   it("PostItem onClickItem works well", () => {
-  //     const fn = jest.fn();
-  //     renderPostItem(mockPostData, fn);
-  //     const postItem = document.getElementById("359fejijd9ef");
-
-  //     postItem.click();
-  //     expect(fn).toBeCalledTimes(1);
-  //   });
 });

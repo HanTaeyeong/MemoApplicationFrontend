@@ -73,7 +73,7 @@ describe("auth reducer syncronous test", () => {
         username: "hty123",
         password: "qwerty1234",
         passwordConfirm: "qwerty1234",
-        authErrorMessage: 'false',
+        authErrorMessage: '',
       })
     ).toEqual(expectedResult);
   });
