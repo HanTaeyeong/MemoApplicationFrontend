@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import palette from '../../lib/styles/palette';
 import { RootStateType } from '../../store';
 
-import { changePageState } from '../../store/write';
+import { changePageState,getPostListAsync } from '../../store/write';
 
 export interface PostNavigationType {
     onChangeSelect: ChangeEventHandler<HTMLSelectElement>;
@@ -42,6 +42,10 @@ function PostNavigation() {
         
         dispatch(changePageState({ limit, lastPage, totalPostCount, page: nextPage }));
     };
+
+    useEffect(() => {
+        dispatch(getPostListAsync({ page, limit }));
+    }, [page, limit])
 
     return (
         <NavigationBlock>

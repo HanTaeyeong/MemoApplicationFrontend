@@ -63,6 +63,14 @@ const pageLimitValues = ["10", "20", "50", "100"];
 
 const makeStore = configureMockStore([thunk]);
 
+const defaultAction = [
+  { type: "write/GET_POST_LIST" },
+  {
+    payload: "write/GET_POST_LIST",
+    type: "loading/START_LOADING",
+  },
+];
+
 const renderPostNavigation = (store) => {
   return render(
     <Provider store={store}>
@@ -82,11 +90,9 @@ describe("post/PostNavigation test", () => {
     const store = makeStore(mockInitialStateWithoutPosts);
     const postNavigation = renderPostNavigation(store);
     const nextButton = await screen.findByRole("button", { name: "next" });
-    const expectedResult = [];
-    expect(store.getActions()).toEqual([]);
-
+    const expectedResult = [...defaultAction];
+    expect(store.getActions()).toEqual([...defaultAction]);
     nextButton.click();
-
     expect(store.getActions()).toEqual(expectedResult);
   });
 
@@ -95,6 +101,7 @@ describe("post/PostNavigation test", () => {
     const postNavigation = renderPostNavigation(store);
     const nextButton = await screen.findByRole("button", { name: "next" });
     const expectedResult = [
+      ...defaultAction,
       {
         type: "write/CHANGE_PAGE_STATE",
         payload: {
@@ -105,7 +112,7 @@ describe("post/PostNavigation test", () => {
         },
       },
     ];
-    expect(store.getActions()).toEqual([]);
+    expect(store.getActions()).toEqual(defaultAction);
 
     nextButton.click();
 
@@ -117,6 +124,7 @@ describe("post/PostNavigation test", () => {
     const postNavigation = renderPostNavigation(store);
     const beforeButton = await screen.findByRole("button", { name: "before" });
     const expectedResult = [
+      ...defaultAction,
       {
         type: "write/CHANGE_PAGE_STATE",
         payload: {
@@ -127,22 +135,23 @@ describe("post/PostNavigation test", () => {
         },
       },
     ];
-    expect(store.getActions()).toEqual([]);
+    expect(store.getActions()).toEqual(defaultAction);
     beforeButton.click();
     expect(store.getActions()).toEqual(expectedResult);
   });
 
-  it("Select limit test",  async() => {
+  it("Select limit test", async () => {
     const store = makeStore(mockInitialStateWithPosts);
     const postNavigation = renderPostNavigation(store);
-    const select =await screen.findByRole("select");
+    const select = await screen.findByRole("select");
     expect(select.value).toBe("10");
-  
+
     fireEvent.change(select, {
       target: { value: "20" },
     });
 
     const expectedResult = [
+      ...defaultAction,
       {
         type: "write/CHANGE_PAGE_STATE",
         payload: {
