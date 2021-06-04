@@ -77,9 +77,9 @@ describe("post/PostTemplate Component test", () => {
     expect(postTemplate).toBeTruthy();
 
     const postTitle = await screen.findByText(/tyty4/i);
-    const postContents= await screen.findByText(/wanderer2/i);
+    const postContents = await screen.findByText(/wanderer2/i);
     expect(postTitle.innerHTML).toEqual("tyty4");
-    expect(postContents.innerHTML).toEqual('wanderer2');
+    expect(postContents.innerHTML).toEqual("wanderer2");
   });
 
   it("PostTemplate New memo button invokes changeWritingField action", () => {
@@ -97,6 +97,31 @@ describe("post/PostTemplate Component test", () => {
     ];
 
     newMemoButton.click();
+    expect(store.getActions()).toEqual(expectedAction);
+  });
+});
+
+describe("PostItem IntegrateTest", () => {
+  it("onClikPostItem invokes changeWrittingField & move to EdittingPage ", () => {
+    const store = makeStore(mockInitialStateWithPosts);
+    const postTemplate = renderPostTemplate(store);
+    const post1 = screen.getByRole("post-item",{name:'tyty2'});
+    post1.click();
+
+    const expectedAction = [
+      { type: "write/GET_POST_LIST" },
+      { payload: "write/GET_POST_LIST", type: "loading/START_LOADING" },
+      {
+        payload:{
+          _id: "359fejifgjd9ef",
+          title: "tyty2",
+          contents: "wanderer2",
+          tags:[],
+        },
+        type: "write/CHANGE_WRITING_FIELD",
+      },
+    ];
+
     expect(store.getActions()).toEqual(expectedAction);
   });
 });

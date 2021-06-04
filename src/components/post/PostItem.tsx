@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
 import palette from '../../lib/styles/palette';
-import {PostType} from '../../store/write'
+import { PostType } from '../../store/write'
 
 const PostItem = ({ post, onClickItem }: { post: PostType, onClickItem?: Function, }) => {
     const { _id, title, contents, lastUpdated } = post;
 
     return (
-        <PostItemBlock title={title} id={_id} onClick={(e) => onClickItem ? onClickItem(e) : {}}>
+        <PostItemBlock role='post-item' title={title} id={_id} onClick={(e) => onClickItem ? onClickItem(e) : {}}>
             <ItemHead>
                 <span className="title">{title}</span>
                 <ItemSubInfo>

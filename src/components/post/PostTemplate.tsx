@@ -12,20 +12,15 @@ import LoadingSpinner from './LoadingSpinner';
 import palette from '../../lib/styles/palette';
 
 import { RootStateType } from '../../store';
-import { changeWritingField, getPostListAsync } from '../../store/write';
+import { changeWritingField } from '../../store/write';
 
 const PostTemplate = () => {
     const dispatch = useDispatch();
     const loading = useSelector(({ loading }: RootStateType) => loading)
     const write = useSelector(({ write }: RootStateType) => write)
-    const { posts, pageState } = write;
-    const { page, limit, lastPage, totalPostCount } = pageState;
+    const { posts } = write;
 
     const isLoadingList = loading['write/GET_POST_LIST'];
-
-    const onPageStateChanged = () => {
-        dispatch(getPostListAsync({ page, limit }));
-    }
 
     const onClickItem = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
@@ -35,10 +30,6 @@ const PostTemplate = () => {
         dispatch(changeWritingField({ ...write, _id, title, contents }));
         history.push('/write');
     }
-
-    useEffect(() => {
-        onPageStateChanged();
-    }, [page, limit])
 
     const moveToWrite = () => {
         dispatch(changeWritingField({ _id: "", title: "", contents: "", tags: [] }))
