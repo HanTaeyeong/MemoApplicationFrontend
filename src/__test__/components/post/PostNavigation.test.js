@@ -1,7 +1,7 @@
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
 import configureMockStore from "redux-mock-store";
 
@@ -15,117 +15,20 @@ const mockPostData = {
   lastUpdated: "2021-06-01",
 };
 
-const mockPosts = [
-  {
-    _id: "359fejifgjd9ef",
-    title: "tyty2",
-    contents: "wanderer2",
-    lastUpdated: "2021-06-03",
-  },
-  {
-    _id: "359fesjijd9ef",
-    title: "tyty3",
-    contents: "wanderer3",
-    lastUpdated: "2021-06-04",
-  },
-  {
-    _id: "359fdfejijd9ef",
-    title: "tyty4",
-    contents: "wanderer4",
-    lastUpdated: "2021-06-05",
-  },
-  {
-    _id: "359fejifgjd9ef",
-    title: "tyty2",
-    contents: "wanderer2",
-    lastUpdated: "2021-06-03",
-  },
-  {
-    _id: "359fesjijd9ef",
-    title: "tyty3",
-    contents: "wanderer3",
-    lastUpdated: "2021-06-04",
-  },
-  {
-    _id: "359fdfejijd9ef",
-    title: "tyty4",
-    contents: "wanderer4",
-    lastUpdated: "2021-06-05",
-  },
-  {
-    _id: "359fejifgjd9ef",
-    title: "tyty2",
-    contents: "wanderer2",
-    lastUpdated: "2021-06-03",
-  },
-  {
-    _id: "359fesjijd9ef",
-    title: "tyty3",
-    contents: "wanderer3",
-    lastUpdated: "2021-06-04",
-  },
-  {
-    _id: "359fdfejijd9ef",
-    title: "tyty4",
-    contents: "wanderer4",
-    lastUpdated: "2021-06-05",
-  },
-  {
-    _id: "359fejifgjd9ef",
-    title: "tyty2",
-    contents: "wanderer2",
-    lastUpdated: "2021-06-03",
-  },
-  {
-    _id: "359fesjijd9ef",
-    title: "tyty3",
-    contents: "wanderer3",
-    lastUpdated: "2021-06-04",
-  },
-  {
-    _id: "359fdfejijd9ef",
-    title: "tyty4",
-    contents: "wanderer4",
-    lastUpdated: "2021-06-05",
-  },
-  {
-    _id: "359fejifgjd9ef",
-    title: "tyty2",
-    contents: "wanderer2",
-    lastUpdated: "2021-06-03",
-  },
-  {
-    _id: "359fesjijd9ef",
-    title: "tyty3",
-    contents: "wanderer3",
-    lastUpdated: "2021-06-04",
-  },
-  {
-    _id: "359fdfejijd9ef",
-    title: "tyty4",
-    contents: "wanderer4",
-    lastUpdated: "2021-06-05",
-  },
-  {
-    _id: "359fejifgjd9ef",
-    title: "tyty2",
-    contents: "wanderer2",
-    lastUpdated: "2021-06-03",
-  },
-  {
-    _id: "359fesjijd9ef",
-    title: "tyty3",
-    contents: "wanderer3",
-    lastUpdated: "2021-06-04",
-  },
-  {
-    _id: "359fdfejijd9ef",
-    title: "tyty4",
-    contents: "wanderer4",
-    lastUpdated: "2021-06-05",
-  },
-];
+const makeMockPosts = (n) => {
+  const posts = [];
+  for (let i = 0; i < n; i++) {
+    const _id = "359fejifgjd9ef" + i.toString();
+    const title = "tyty" + i.toString();
+    const contents = "wanderer" + i.toString();
+    const lastUpdate = "2021-06-0" + i.toString();
 
+    posts.push({ _id, title, contents, lastUpdate });
+  }
+  return posts;
+};
+const postNumber = 30;
+const mockPosts = makeMockPosts(postNumber);
 const mockInitialStateWithoutPosts = {
   auth: { username: "HanTaeyeong", authorized: true, loading: {} },
   write: initialState,
@@ -139,12 +42,24 @@ const mockInitialStateWithPosts = {
     posts: mockPosts,
     pageState: {
       ...initialState.pageState,
-      lastPage: 2,
+      lastPage: 3,
       totalPostCount: mockPosts.length,
     },
   },
   loading: {},
 };
+
+const afterClickingNextButtonState = {
+  auth: { username: "HanTaeyeong", authorized: true, loading: {} },
+  write: {
+    ...initialState,
+    posts: mockPosts,
+    pageState: { page: 2, limit: 10, lastPage: 3, totalPostCount: postNumber },
+  },
+  loading: {},
+};
+
+const pageLimitValues = ["10", "20", "50", "100"];
 
 const makeStore = configureMockStore([thunk]);
 
@@ -161,19 +76,19 @@ describe("post/PostNavigation test", () => {
     const store = makeStore(mockInitialStateWithPosts);
     const postNavigation = renderPostNavigation(store);
     expect(postNavigation).toBeTruthy();
-  });  
+  });
 
-  it('clicking nextButton without post do not invokes CHANGE_PAGE_STATE',async()=>{
+  it("clicking nextButton without post do not invokes CHANGE_PAGE_STATE", async () => {
     const store = makeStore(mockInitialStateWithoutPosts);
     const postNavigation = renderPostNavigation(store);
     const nextButton = await screen.findByRole("button", { name: "next" });
-    const expectedResult = [ ];
+    const expectedResult = [];
     expect(store.getActions()).toEqual([]);
 
     nextButton.click();
 
     expect(store.getActions()).toEqual(expectedResult);
-  })
+  });
 
   it("clicking next Button having next Page invokes CHANGE_PAGE_STATE", async () => {
     const store = makeStore(mockInitialStateWithPosts);
@@ -182,7 +97,12 @@ describe("post/PostNavigation test", () => {
     const expectedResult = [
       {
         type: "write/CHANGE_PAGE_STATE",
-        payload: { page: 2, limit: 10, lastPage: 2, totalPostCount: 18 },
+        payload: {
+          page: 2,
+          limit: 10,
+          lastPage: 3,
+          totalPostCount: postNumber,
+        },
       },
     ];
     expect(store.getActions()).toEqual([]);
@@ -192,48 +112,47 @@ describe("post/PostNavigation test", () => {
     expect(store.getActions()).toEqual(expectedResult);
   });
 
-  // it('Clicking before Button does nothing',()=>{
+  it("clicking before Button & CHANGE_PAGE_STATE", async () => {
+    const store = makeStore(afterClickingNextButtonState);
+    const postNavigation = renderPostNavigation(store);
+    const beforeButton = await screen.findByRole("button", { name: "before" });
+    const expectedResult = [
+      {
+        type: "write/CHANGE_PAGE_STATE",
+        payload: {
+          page: 1,
+          limit: 10,
+          lastPage: 3,
+          totalPostCount: postNumber,
+        },
+      },
+    ];
+    expect(store.getActions()).toEqual([]);
+    beforeButton.click();
+    expect(store.getActions()).toEqual(expectedResult);
+  });
 
-  // })
+  it("Select limit test",  async() => {
+    const store = makeStore(mockInitialStateWithPosts);
+    const postNavigation = renderPostNavigation(store);
+    const select =await screen.findByRole("select");
+    expect(select.value).toBe("10");
+  
+    fireEvent.change(select, {
+      target: { value: "20" },
+    });
 
-  //   it("PostTemplate wihout postList render test", async () => {
-  //     const store = makeStore(mockInitialStateWithoutPosts);
-  //     const postTemplate = renderPostTemplate(store);
-
-  //     expect(postTemplate).toBeTruthy();
-
-  //     const postEmptyText = await screen.findByText(/Write a new memo/i);
-
-  //     expect(postEmptyText.innerHTML).toEqual("Write a new memo...");
-  //   });
-
-  //   it("PostTemplate with postLists render Test", async () => {
-  //     const store = makeStore(mockInitialStateWithPosts);
-  //     const postTemplate = renderPostTemplate(store);
-
-  //     expect(postTemplate).toBeTruthy();
-
-  //     const postTitle = await screen.findByText(/tyty4/i);
-  //     const postContents= await screen.findByText(/wanderer2/i);
-  //     expect(postTitle.innerHTML).toEqual("tyty4");
-  //     expect(postContents.innerHTML).toEqual('wanderer2');
-  //   });
-
-  //   it("PostTemplate New memo button invokes changeWritingField action", () => {
-  //     const store = makeStore(mockInitialStateWithoutPosts);
-  //     const postTemplate = renderPostTemplate(store);
-  //     const newMemoButton = screen.getByRole("new-memo-button");
-
-  //     const expectedAction = [
-  //       { type: "write/GET_POST_LIST" },
-  //       { payload: "write/GET_POST_LIST", type: "loading/START_LOADING" },
-  //       {
-  //         payload: { _id: "", contents: "", tags: [], title: "" },
-  //         type: "write/CHANGE_WRITING_FIELD",
-  //       },
-  //     ];
-
-  //     newMemoButton.click();
-  //     expect(store.getActions()).toEqual(expectedAction);
-  //   });
+    const expectedResult = [
+      {
+        type: "write/CHANGE_PAGE_STATE",
+        payload: {
+          page: 1,
+          limit: 20,
+          lastPage: 2,
+          totalPostCount: postNumber,
+        },
+      },
+    ];
+    expect(store.getActions()).toEqual(expectedResult);
+  });
 });

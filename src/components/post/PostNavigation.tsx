@@ -1,11 +1,11 @@
 import { ChangeEventHandler, MouseEventHandler, useEffect } from 'react'
 import styled from 'styled-components';
-import { useSelector,useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import palette from '../../lib/styles/palette';
 import { RootStateType } from '../../store';
 
-import {changePageState} from '../../store/write';
+import { changePageState } from '../../store/write';
 
 export interface PostNavigationType {
     onChangeSelect: ChangeEventHandler<HTMLSelectElement>;
@@ -19,8 +19,8 @@ function PostNavigation() {
     const write = useSelector(({ write }: RootStateType) => write);
     const loading = useSelector(({ loading }: RootStateType) => loading);
     const isLoadingList = loading['write/GET_POST_LIST'];
-    
-    const {limit, page, lastPage, totalPostCount } = write.pageState;
+
+    const { limit, page, lastPage, totalPostCount } = write.pageState;
 
     const onChangeSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         e.preventDefault();
@@ -38,30 +38,25 @@ function PostNavigation() {
 
     const onChangePage = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-
         let nextPage = page + (+e.currentTarget.name);
-        if (nextPage < 1) {
-            nextPage = 1;
-        }
-        if (nextPage > lastPage) {
-            nextPage = lastPage;
-        }
-
+        
         dispatch(changePageState({ limit, lastPage, totalPostCount, page: nextPage }));
     };
 
     return (
         <NavigationBlock>
             <SelectItems>
-                <select name="limits" onChange={onChangeSelect} >
-                    {pageLimitValues.map(value => <option value={value} key={'pageLimitOption' + value}>{+value}</option>)}
+                <select role='select' name="limits" onChange={onChangeSelect} >
+                    {pageLimitValues.map(value => <option role='option' value={value} key={'pageLimitOption' + value}>{+value}</option>)}
                 </select>
                 <span>{totalPostCount} total posts</span>
             </SelectItems>
 
             <PageItems>
-                <SButton onClick={onChangePage} name="-1" disabled={page === 1} className={isLoadingList ? 'loading' : ''}>before</SButton>
-                <SButton onClick={onChangePage} name='1' disabled={page === lastPage} className={isLoadingList ? 'loading' : ''}>next</SButton>
+                <SButton onClick={onChangePage} name="-1" disabled={page === 1}
+                    className={isLoadingList ? 'loading' : ''}>before</SButton>
+                <SButton onClick={onChangePage} name='1' disabled={page === lastPage}
+                    className={isLoadingList ? 'loading' : ''}>next</SButton>
                 <span>{page}/{lastPage} page</span>
             </PageItems>
         </NavigationBlock>
