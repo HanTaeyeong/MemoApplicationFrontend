@@ -92,7 +92,7 @@ const write = createReducer(initialState, {
     [UPDATE_POST_FAILURE]: (state: WriteStateType) => ({ ...state, postError: true }),
 
     [DELETE_POST_SUCCESS]: (state: WriteStateType) => ({ ...state, postError: false }),
-    [DELETE_POST_FAILURE]: (state: WriteStateType) => ({ ...state, postError: false })
+    [DELETE_POST_FAILURE]: (state: WriteStateType) => ({ ...state, postError: true })
 })
 
 export default write;

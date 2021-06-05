@@ -13,22 +13,6 @@ const initialState = authStore.initialState;
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-//   [CHANGE_AUTH_TYPE]: (state, { payload: { authType } }) => ({ ...state, authType }),
-//   [CHANGE_FIELD]: (state, { payload: { authType, username, password, passwordConfirm, authErrorMessage } }) => ({ ...state, authType, username, password, passwordConfirm, authErrorMessage }),
-//   [INITIALIZE_FORM]: (state, { payload: { authType } }) => ({ ...initialState }),
-
-//   [REGISTER_SUCCESS]: (state: AuthStateType, { payload: { auth } }: any) => ({ ...state, authorized: true, authErrorMessage: false }),
-//   [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error.message.slice(-3)] }),
-
-//   [LOGIN_SUCCESS]: (state: AuthStateType, { payload: { username, password } }: any) => ({ ...state, authorized: true, authErrorMessage: false }),
-//   [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error.message.slice(-3)] }),
-
-//   [CHECK_SUCCESS]: (state: AuthStateType, { payload: username }: any) => ({ ...state, authorized: true, checkError: false }),
-//   [CHECK_FAILURE]: (state: AuthStateType, { payload: error }: any) => ({ ...state, authorized: false, checkError: error }),
-
-//   [LOGOUT_SUCCESS]: (state: AuthStateType, { payload: username }: any) => ({ ...initialState }),
-//   [LOGOUT_FAILURE]: (state: AuthStateType, { payload: username }: any) => ({ ...initialState })
-
 describe("auth handlers test", () => {
   it("auth/CHANGE_FIELD test", () => {
     const authFunction = auth.handlers["auth/CHANGE_FIELD"];
