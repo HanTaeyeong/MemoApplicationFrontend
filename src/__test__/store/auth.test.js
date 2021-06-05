@@ -3,20 +3,156 @@ import thunk from "redux-thunk";
 import fetchMock from "fetch-mock";
 
 import * as authStore from "../../store/auth";
+import auth from "../../store/auth";
 import * as loading from "../../store/loading";
 
-const initialState = {
-  authType: "register",
-  username: "",
-  password: "",
-  passwordConfirm: "",
-  authorized: false,
-  authErrorMessage: 'null',
-  checkError: null,
-};
+import ErrorCodes from "../../lib/ErrorCodes";
+
+const initialState = authStore.initialState;
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+
+describe("auth handlers test", () => {
+  it("auth/CHANGE_FIELD test", () => {
+    const authFunction = auth.handlers["auth/CHANGE_FIELD"];
+    const action = {
+      payload: {
+        authType: "login",
+        username: "hty",
+        password: "fedjf1010!",
+        passwordConfirm: "fedjf1010!",
+        authErrorMessage: "",
+      },
+    };
+    const expectedResult = {
+      ...initialState,
+      ...action.payload,
+    };
+    expect(authFunction(initialState, action)).toEqual(expectedResult);
+  });
+
+  it("auth/INITIALIZE_FORM test", () => {
+    const authFunction = auth.handlers["auth/INITIALIZE_FORM"];
+    const expectedResult = initialState;
+    expect(authFunction(initialState)).toEqual(expectedResult);
+  });
+
+  it("auth/REGISTER_SUCCESS test", () => {
+    const authFunction = auth.handlers["auth/REGISTER_SUCCESS"];
+    const expectedResult = {
+      ...initialState,
+      authorized: true,
+      authErrorMessage: "",
+    };
+    expect(authFunction(initialState)).toEqual(expectedResult);
+  });
+
+  it("auth/REGISTER_FAILURE test", () => {
+    const authFunction = auth.handlers["auth/REGISTER_FAILURE"];
+    let errorCode = 0;
+    let errorMessage = "";
+    for (const ec in ErrorCodes) {
+      errorCode = ec;
+      errorMessage = ErrorCodes[ec];
+      if (Math.random() > 0.7) break;
+    }
+    const expectedResult = {
+      ...initialState,
+      authorized: false,
+      authErrorMessage: errorMessage,
+    };
+
+    const action = {
+      payload: { error: { message: "REGISTER ERROR!" + errorCode.toString() } },
+    };
+    expect(authFunction(initialState, action)).toEqual(expectedResult);
+  });
+
+  it("auth/LOGIN_SUCCESS test", () => {
+    const authFunction = auth.handlers["auth/LOGIN_SUCCESS"];
+    const expectedResult = {
+      ...initialState,
+      authorized: true,
+      authErrorMessage: "",
+    };
+    expect(authFunction(initialState)).toEqual(expectedResult);
+  });
+
+  it("auth/LOGIN_FAILURE test", () => {
+    const authFunction = auth.handlers["auth/LOGIN_FAILURE"];
+    let errorCode = 0;
+    let errorMessage = "";
+    for (const ec in ErrorCodes) {
+      errorCode = ec;
+      errorMessage = ErrorCodes[ec];
+      if (Math.random() > 0.7) break;
+    }
+    const expectedResult = {
+      ...initialState,
+      authorized: false,
+      authErrorMessage: errorMessage,
+    };
+
+    const action = {
+      payload: { error: { message: "LOGIN ERROR!" + errorCode.toString() } },
+    };
+    expect(authFunction(initialState, action)).toEqual(expectedResult);
+  });
+
+  it("auth/CHECK_SUCCESS test", () => {
+    const authFunction = auth.handlers["auth/CHECK_SUCCESS"];
+    const expectedResult = {
+      ...initialState,
+      authorized: true,
+      checkError: false,
+    };
+    expect(authFunction(initialState)).toEqual(expectedResult);
+  });
+
+  it("auth/CHECK_FAILURE test", () => {
+    const authFunction = auth.handlers["auth/CHECK_FAILURE"];
+
+    const action = { payload: { error: "check failure" } };
+
+    const expectedResult = {
+      ...initialState,
+      checkError: { error: "check failure" },
+    };
+    expect(authFunction(initialState, action)).toEqual(expectedResult);
+  });
+
+  it("auth/LOGOUT_SUCCESS", () => {
+    const authFunction = auth.handlers["auth/LOGOUT_SUCCESS"];
+    const expectedResult = {
+      ...initialState,
+    };
+    expect(
+      authFunction({
+        authType: "login",
+        username: "hty",
+        password: "fedjf1010!",
+        passwordConfirm: "fedjf1010!",
+        authErrorMessage: "",
+      })
+    ).toEqual(expectedResult);
+  });
+  it("auth/LOGOUT_FAILURE", () => {
+    const authFunction = auth.handlers["auth/LOGOUT_FAILURE"];
+    const expectedResult = {
+      ...initialState,
+    };
+    expect(
+      authFunction({
+        authType: "login",
+        username: "hty",
+        password: "fedjf1010!",
+        passwordConfirm: "fedjf1010!",
+        authErrorMessage: "",
+      })
+    ).toEqual(expectedResult);
+  });
+});
 
 describe("auth reducer syncronous test", () => {
   it("register should change auth state", () => {
@@ -64,7 +200,7 @@ describe("auth reducer syncronous test", () => {
         username: "hty123",
         password: "qwerty1234",
         passwordConfirm: "qwerty1234",
-        authErrorMessage: '',
+        authErrorMessage: "",
       },
     };
     expect(
@@ -73,7 +209,7 @@ describe("auth reducer syncronous test", () => {
         username: "hty123",
         password: "qwerty1234",
         passwordConfirm: "qwerty1234",
-        authErrorMessage: '',
+        authErrorMessage: "",
       })
     ).toEqual(expectedResult);
   });
