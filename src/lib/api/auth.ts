@@ -1,6 +1,6 @@
 import client from './client';
 
-const apiServer=process.env.MEMO_API_ADRESS;
+const apiServer=process.env.REACT_APP_MEMO_API_ADDRESS;
 
 const prefix=apiServer+'/api/auth';
 
