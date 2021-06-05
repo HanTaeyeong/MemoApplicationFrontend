@@ -16,6 +16,8 @@ import {composeWithDevTools} from 'redux-devtools-extension';
 import rootReducer from './store';
 import { checkAsync, TEMP_SET_USER } from './store/auth';
 
+require('dotenv').config();
+
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
 console.log(navigator.language);
