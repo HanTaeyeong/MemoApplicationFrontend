@@ -1,6 +1,8 @@
 import client from './client';
 
-const prefix='/api/auth';
+const apiServer=process.env.MEMO_API_ADRESS;
+
+const prefix=apiServer+'/api/auth';
 
 export const login = async ({ username, password }: { username: string, password: string }) =>
     await client.post(prefix+'/login', { username, password });
