@@ -1,6 +1,9 @@
 import client from './client';
 
-const prefix = '/api/post';
+
+const apiServer=process.env.MEMO_API_ADRESS;
+
+const prefix = apiServer+'/api/post';
 
 export const getPostList = async ({ page, limit }: { page: number, limit: number }) => await client.get(`${prefix}/get?page=${page}&limit=${limit}`)
 

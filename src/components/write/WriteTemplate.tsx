@@ -90,7 +90,7 @@ const WriteTemplate = () => {
                 <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
                 <Button cyan={false} fullWidth={false} onClickFunction={onDelete}>Delete</Button>
             </ButtonWrapper>
-            <TitleInput onChange={e => onChangeTitle(e)} name='title'
+            <TitleInput role='title-input' onChange={e => onChangeTitle(e)} name='title'
                 placeholder="Write a title here" value={write.title} />
             <ReactQuill
                 onChange={e => onChangeContents(e)}
@@ -100,7 +100,7 @@ const WriteTemplate = () => {
                 placeholder={quillOption.placeholder}
                 value={write.contents}
             />
-            <div className="themeSwitcher">
+            <div className="themeSwitcher" role='theme-switcher'>
                 <label>Theme </label>
                 <select onChange={(e) =>
                     onChangeSelect(e)}>
