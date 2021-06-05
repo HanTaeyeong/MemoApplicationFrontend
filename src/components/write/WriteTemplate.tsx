@@ -13,57 +13,6 @@ import Button from '../common/Button';
 import { writePostAsync, changeWritingField, updatePostAsync, deletePostAsync } from '../../store/write';
 import { RootStateType } from '../../store';
 
-// import useInterval from '../../lib/hook/useInterval';
-
-const WriteTemplateBlock = styled.div`
-    padding-top:5rem;
-    padding-bottom:5rem;
-    margin: 1rem 4rem;
-    
- .ql-container {
-  border-bottom-left-radius: 0.5em;
-  border-bottom-right-radius: 0.5em;
-  background: #fefcfc;
-}
-.ql-snow.ql-toolbar {
-  display: block;
-  background: #eaecec;
-  border-top-left-radius: 0.5em;
-  border-top-right-radius: 0.5em;
-}
-
- .ql-bubble .ql-editor {
-  border: 1px solid #ccc;
-  border-radius: 0.5em;
-}
- .ql-editor {
-  min-height: 18em;
-}
-
-.themeSwitcher {
-  margin-top: 0.5em;
-  font-size: small;
-}
-`;
-
-
-const TitleInput = styled.input`
-    font-size:3rem;
-    outline:none;
-    padding-bottom:0.5rem;
-    border:none;
-    border-bottom:1px solid ${palette.gray[4]};
-    margin-bottom:2rem;
-    width:100%;
-`;
-
-const ButtonWrapper = styled.div`
-    margin:1rem;
-    margin-left:0;
-    display:flex;
-    justify-content:space-between;
-`;
-
 const quillOption = {
     theme: 'snow',
     placeholder: 'write here...',
@@ -162,5 +111,56 @@ const WriteTemplate = () => {
         </WriteTemplateBlock>
     )
 }
+
+
+const WriteTemplateBlock = styled.div`
+    padding-top:5rem;
+    padding-bottom:5rem;
+    margin: 1rem 4rem;
+    
+ .ql-container {
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+  background: #fefcfc;
+}
+.ql-snow.ql-toolbar {
+  display: block;
+  background: #eaecec;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
+}
+
+ .ql-bubble .ql-editor {
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+}
+ .ql-editor {
+  min-height: 18em;
+}
+
+.themeSwitcher {
+  margin-top: 0.5em;
+  font-size: small;
+}
+`;
+
+
+const TitleInput = styled.input`
+    font-size:3rem;
+    outline:none;
+    padding-bottom:0.5rem;
+    border:none;
+    border-bottom:1px solid ${palette.gray[4]};
+    margin-bottom:2rem;
+    width:100%;
+`;
+
+const ButtonWrapper = styled.div`
+    margin:1rem;
+    margin-left:0;
+    display:flex;
+    justify-content:space-between;
+`;
+
 
 export default WriteTemplate;
