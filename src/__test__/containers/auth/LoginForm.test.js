@@ -4,6 +4,9 @@ import fetchMock from "fetch-mock";
 import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
+import 'jest-styled-components';
+
+
 
 import { render, screen, act, fireEvent } from "@testing-library/react";
 
@@ -67,14 +70,16 @@ describe("LoginForm", () => {
     expect(store.getActions()).toEqual(expectResult);
   });
 
-  it('StyledInput focus test',()=>{
+  it('StyledInput focus test', async () => {
     const store = mockStore({ auth: {}, loading: {}, write: {} });
     renderLoginForm(store);
-    
-    const styledInput= screen.getByRole('input');
-    styledInput.focus();
 
-    expect(1).toEqual(1);
+    const styledInput = screen.getByRole('input');
+    const styledInput2 = screen.getByRole('input2');
+    styledInput2.focus();
+    expect(styledInput2).toHaveFocus();
+    styledInput.focus();
+    expect(styledInput).toHaveFocus();
   })
-  
+
 });
