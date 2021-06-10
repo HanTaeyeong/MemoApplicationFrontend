@@ -9,5 +9,4 @@ export const setItem = (itemName: string, value: string) => {
 
 export const removeItem = (itemName: string) => {
     return localStorage.removeItem(itemName);
-
 }
