@@ -96,9 +96,9 @@ const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange
         <AuthFormBlock>
             <h3>{text}</h3>
             <form onSubmit={(e) => onSubmit(e)}>
-                <StyledInput onChange={(e) => onChange(e)} autoComplete="username" name="username"
+                <StyledInput role='input' onChange={(e) => onChange(e)} autoComplete="username" name="username"
                     placeholder="Id" ref={idRef} className={auth.authErrorMessage && 'error'} />
-                <StyledInput onChange={(e) => onChange(e)} type="password" autoComplete="new-password"
+                <StyledInput role='input2' onChange={(e) => onChange(e)} type="password" autoComplete="new-password"
                     name="password" placeholder="password" ref={passwordRef} className={auth.authErrorMessage && 'error'} />
 
                 {authType === 'register' && (<StyledInput onChange={(e) => onChange(e)} autoComplete="new-password" name="passwordConfirm" placeholder="passwordConfirm" type="password" />)}

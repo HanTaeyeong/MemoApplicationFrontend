@@ -27,42 +27,37 @@ const RegisterForm = () => {
 
     const onSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        if (!isPasswordsSame()) return;
-        if (!isValidId()) return;
-        if (!isValidPassword()) return;
 
-        dispatch(registerAsync({ username, password }))
-    }
-
-    const isPasswordsSame = () => {
-        if (password !== passwordConfirm) {
-            dispatch(changeField({ ...auth, authErrorMessage: '[PW] Passwords are not same.' }))
-            return false;
-        }
-        return true;
-    }
-
-    const isValidId = () => {
-        const idResult = validate(IdSchema, { username })
-        if (!idResult.isValid) {
+        if (!isValidId()) {
             dispatch(changeField({ ...auth, authErrorMessage: '[ID] ID should consists of number and alphabet (4 ~ 16).' }))
-            return false;
+            return;
         }
-        return true;
-    }
 
-    const isValidPassword = () => {
-        const passwordResult = validate(PasswordSchema, { password });
-        if (!passwordResult.isValid) {
+        if (!isValidPassword()) {
             dispatch(
                 changeField({
                     ...auth,
                     authErrorMessage: '[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).'
                 })
             )
-            return false;
+            return;
         }
-        return true;
+        if (password !== passwordConfirm) {
+            dispatch(changeField({ ...auth, authErrorMessage: '[PW] Passwords are not same.' }))
+            return;
+        }
+
+        dispatch(registerAsync({ username, password }))
+    }
+
+    const isValidId = () => {
+        const idResult = validate(IdSchema, { username })
+        return idResult.isValid;
+    }
+
+    const isValidPassword = () => {
+        const passwordResult = validate(PasswordSchema, { password });
+        return passwordResult.isValid;
     }
 
     const checkAuthState = () => {
@@ -70,7 +65,7 @@ const RegisterForm = () => {
             removeItem('username');
         }
         if (authorized && !loading['auth/CHECK'] && !loading['auth/REGISTER']) {
-            setItem('username', JSON.stringify(username));
+            setItem('username', username);
             history.push('/postListPage');
         }
     }
@@ -81,7 +76,7 @@ const RegisterForm = () => {
 
     useEffect(() => {
         if (authorized && !loading['auth/REGISTER']) {
-            setItem('username', JSON.stringify(username));
+            setItem('username', username);
             history.push('/postListPage');
         }
     }, [loading['auth/REGISTER']])

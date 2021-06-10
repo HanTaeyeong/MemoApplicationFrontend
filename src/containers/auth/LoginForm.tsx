@@ -29,7 +29,7 @@ const LoginForm = () => {
 
     useEffect(() => {
         if (authorized && !loading['auth/CHECK'] && !loading['auth/LOGIN']) {
-            setItem('username', JSON.stringify(username));
+            setItem('username', username);
             history.push('/postListPage');
         }
     }, [authorized, loading['auth/CHECK'], loading['auth/LOGIN']])
