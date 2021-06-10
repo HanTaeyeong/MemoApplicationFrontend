@@ -13,7 +13,7 @@ describe('localStorage test',()=>{
     })
     it('localStorage error test',()=>{
         setItem(()=>new Error('sdf'),'gkgsod');
-        console.log(getItem(()=>new Error('sdf')));
+       
         removeItem(12345);
 
         expect(1).toBe(1);

@@ -267,7 +267,6 @@ describe("RegisterForm", () => {
       { type: "loading/START_LOADING", payload: "auth/REGISTER" },
     ];
 
-    console.log(store.getActions());
     expect(store.getActions()).toEqual(expectedResult);
   });
 });

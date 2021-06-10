@@ -16,11 +16,11 @@ const Navigation = () => {
     const [navActive, setNavActive] = useState(false);
     return (
         <NavigationBlock>
-            <div onClick={() => setNavActive(!navActive)}>activation</div>
-            <NavList className={navActive ? 'navActive' : ''}>
+            <div role='nav-active-button' onClick={() => setNavActive(!navActive)}>activation</div>
+            <NavList role='nav-list' className={navActive ? 'navActive' : ''}>
                 {navItems.map((navItem) => <NavigationItem key={navItem._id} navItem={navItem} />)}
             </NavList>
-            <NavActivationBackground className={navActive ? 'navActive' : ''} onClick={()=>setNavActive(false)} />
+            <NavActivationBackground role='nav-background' className={navActive ? 'navActive' : ''} onClick={()=>setNavActive(false)} />
         </NavigationBlock>
     )
 }
