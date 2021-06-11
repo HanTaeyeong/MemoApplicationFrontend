@@ -123,29 +123,26 @@ describe("RegisterForm", () => {
 
     expect(store.getActions()).toEqual(expectedResult);
   });
+});
 
-  it("onSubmit test at RegisterForm with invalid ID error message test", () => {
-    const store = mockStore({
-      auth: { username: "htgfdfe2y!", password: "532fd" },
-      loading: {},
-      write: {},
-    });
-    renderRegisterForm(store);
+//initialState message expectedResult
+const defaultAction = {
+  type: "auth/CHANGE_FIELD",
+  payload: {
+    authType: undefined,
+    username: undefined,
+    password: undefined,
+    passwordConfirm: undefined,
+    authErrorMessage: "",
+  },
+};
 
-    const registerButton = screen.getByRole("button", { name: "Register" });
-    registerButton.click();
-    const expectedResult = [
-      {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
-      },
-
+const onSubmitTestDatas = [
+  {
+    message: "RegisterForm with invalid ID error message test",
+    initialAuth: { username: "htgfdfe2y!", password: "532fd" },
+    expectedResult: [
+      defaultAction,
       {
         type: "auth/CHANGE_FIELD",
         payload: {
@@ -153,36 +150,18 @@ describe("RegisterForm", () => {
           username: "htgfdfe2y!",
           password: "532fd",
           passwordConfirm: undefined,
-          authErrorMessage: "[ID] ID should consists of number and alphabet (4 ~ 16).",
+          authErrorMessage:
+            "[ID] ID should consists of number and alphabet (4 ~ 16).",
         },
       },
-    ];
+    ],
+  },
 
-    expect(store.getActions()).toEqual(expectedResult);
-  });
-
-  it("onSubmit test at RegisterForm with invalid password error message test", () => {
-    const store = mockStore({
-      auth: { username: "htgfdfe2y", password: "532fd" },
-      loading: {},
-      write: {},
-    });
-    renderRegisterForm(store);
-
-    const registerButton = screen.getByRole("button", { name: "Register" });
-    registerButton.click();
-    const expectedResult = [
-      {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
-      },
-
+  {
+    message: "with invalid password error message test",
+    initialAuth: { username: "htgfdfe2y", password: "532fd" },
+    expectedResult: [
+      defaultAction,
       {
         type: "auth/CHANGE_FIELD",
         payload: {
@@ -190,39 +169,22 @@ describe("RegisterForm", () => {
           username: "htgfdfe2y",
           password: "532fd",
           passwordConfirm: undefined,
-          authErrorMessage: "[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).",
+          authErrorMessage:
+            "[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).",
         },
       },
-    ];
+    ]
+  },
 
-    expect(store.getActions()).toEqual(expectedResult);
-  });
-
-  it("onSubmit test at RegisterForm with username & different Password should invoke not same error", () => {
-    const store = mockStore({
-      auth: {
-        username: "htgfdfe2y",
-        password: "dsfei22fh!",
-        passwordConfirm: "ffi2fh",
-      },
-      loading: {},
-      write: {},
-    });
-    renderRegisterForm(store);
-
-    const registerButton = screen.getByRole("button", { name: "Register" });
-    registerButton.click();
-    const expectedResult = [
-      {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
-      },
+  {
+    message: "with username & different Password should invoke not same error",
+    initialAuth: {
+      username: "htgfdfe2y",
+      password: "dsfei22fh!",
+      passwordConfirm: "ffi2fh",
+    },
+    expectedResult: [
+      defaultAction,
       {
         type: "auth/CHANGE_FIELD",
         payload: {
@@ -233,40 +195,39 @@ describe("RegisterForm", () => {
           authErrorMessage: "[PW] Passwords are not same.",
         },
       },
-    ];
+    ],
+  },
 
-    expect(store.getActions()).toEqual(expectedResult);
-  });
-
-  it("onSubmit test at RegisterForm with username & same Password should invoke Register", () => {
-    const store = mockStore({
-      auth: {
-        username: "htgfdfe2y",
-        password: "dsfei2fh!",
-        passwordConfirm: "dsfei2fh!",
-      },
-      loading: {},
-      write: {},
-    });
-    renderRegisterForm(store);
-
-    const registerButton = screen.getByRole("button", { name: "Register" });
-    registerButton.click();
-    const expectedResult = [
-      {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
-      },
+  {
+    message: "with username & same Password should invoke Register",
+    initialAuth: {
+      username: "htgfdfe2y",
+      password: "dsfei2fh!",
+      passwordConfirm: "dsfei2fh!",
+    },
+    expectedResult: [
+      defaultAction,
       { type: "auth/REGISTER" },
       { type: "loading/START_LOADING", payload: "auth/REGISTER" },
-    ];
+    ],
+  },
+];
 
-    expect(store.getActions()).toEqual(expectedResult);
-  });
+describe("onSubmit test", () => {
+  test.each(onSubmitTestDatas)(
+    "%s",
+    ({ message, initialAuth, expectedResult }) => {
+      const store = mockStore({
+        auth: initialAuth,
+        loading: {},
+        write: {},
+      });
+      renderRegisterForm(store);
+
+      const registerButton = screen.getByRole("button", { name: "Register" });
+      registerButton.click();
+
+      expect(store.getActions()).toEqual(expectedResult);
+    }
+  );
 });
