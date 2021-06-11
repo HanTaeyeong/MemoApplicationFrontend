@@ -23,7 +23,7 @@ const ListHeader = () => {
     }
 
     useEffect(() => {
-        if (!authorized && !username) {
+        if (!authorized) {
             history.push('/login', { from: 'PostListPage' })
         }
     }, [authorized, username])
