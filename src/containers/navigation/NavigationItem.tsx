@@ -15,7 +15,7 @@ const NavItemBlock = styled.div`
 const NavigationItem = ({ navItem }: { navItem: NavigationItemType }) => {
     const { title, icon, link } = navItem;
     return (
-        <NavItemBlock onClick={()=>{}}>
+        <NavItemBlock role='nav-list-item' >
             <img src={icon} alt="none" />
             <span>{title}</span>
         </NavItemBlock>
