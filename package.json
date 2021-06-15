@@ -60,6 +60,7 @@
       "last 1 safari version"
     ]
   },
+  "proxy":"http://localhost:5347",
   "devDependencies": {
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
     "enzyme": "^3.11.0",

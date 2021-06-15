@@ -39,6 +39,17 @@ const quillOption = {
     ]
 }
 
+function selectText() {
+    const selection = window.getSelection && window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+        const selected = window.getSelection()?.getRangeAt(0)?.toString();
+        console.log(selected);
+    }
+    return;
+}
+setInterval(() => selectText(), 1000);
+
+
 const WriteTemplate = () => {
     const dispatch = useDispatch();
     const [moveToPostList, setMoveToPostList] = useState(false);
@@ -56,6 +67,7 @@ const WriteTemplate = () => {
     }
 
     const onChangeContents = (text: string) => {
+        console.log(text);
         dispatch(changeWritingField({ ...write, contents: text }));
     }
 
@@ -84,6 +96,8 @@ const WriteTemplate = () => {
 
     return (
         <WriteTemplateBlock>
+            <textarea>
+            </textarea>
             <ButtonWrapper>
                 <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
                 <Button cyan={false} fullWidth={false} onClickFunction={onDelete}>Delete</Button>
