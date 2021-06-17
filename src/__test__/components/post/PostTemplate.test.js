@@ -48,6 +48,12 @@ const mockInitialStateWithPosts = {
   loading: {},
 };
 
+const mockInitialStateLoading = {
+  auth: { username: "HanTaeyeong", authorized: true, loading: {} },
+  write: { ...initialState, posts: mockPosts },
+  loading: { "write/GET_POST_LIST": true },
+};
+
 const makeStore = configureMockStore([thunk]);
 
 const renderPostTemplate = (store) => {
@@ -59,6 +65,13 @@ const renderPostTemplate = (store) => {
 };
 
 describe("post/PostTemplate Component test", () => {
+  it("PostTemplate Loading render test", async () => {
+    const store = makeStore(mockInitialStateLoading);
+    const postTemplate = renderPostTemplate(store);
+    const loadingSpinner = await screen.findByRole('loading-spinner');
+    expect(loadingSpinner).toHaveClass('loading');
+  });
+
   it("PostTemplate wihout postList render test", async () => {
     const store = makeStore(mockInitialStateWithoutPosts);
     const postTemplate = renderPostTemplate(store);
@@ -105,18 +118,18 @@ describe("PostItem IntegrateTest", () => {
   it("onClikPostItem invokes changeWrittingField & move to EdittingPage ", () => {
     const store = makeStore(mockInitialStateWithPosts);
     const postTemplate = renderPostTemplate(store);
-    const post1 = screen.getByRole("post-item",{name:'tyty2'});
+    const post1 = screen.getByRole("post-item", { name: "tyty2" });
     post1.click();
 
     const expectedAction = [
       { type: "write/GET_POST_LIST" },
       { payload: "write/GET_POST_LIST", type: "loading/START_LOADING" },
       {
-        payload:{
+        payload: {
           _id: "359fejifgjd9ef",
           title: "tyty2",
           contents: "wanderer2",
-          tags:[],
+          tags: [],
         },
         type: "write/CHANGE_WRITING_FIELD",
       },

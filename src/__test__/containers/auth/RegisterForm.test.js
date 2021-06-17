@@ -7,7 +7,7 @@ import { createBrowserHistory } from "history";
 
 import { render, screen, act, fireEvent } from "@testing-library/react";
 
-import { setItem, getItem } from "../../../lib/localStorageRequest";
+import { getItem } from "../../../lib/localStorageRequest";
 import RegisterForm from "../../../containers/auth/RegisterForm";
 
 const middlewares = [thunk];
@@ -29,14 +29,7 @@ describe("RegisterForm", () => {
     await renderRegisterForm(store);
     const expectResult = [
       {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
+        "type": "auth/INITIALIZE_FORM",
       },
     ];
 
@@ -48,14 +41,7 @@ describe("RegisterForm", () => {
     await renderRegisterForm(store);
     const expectResult = [
       {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
+        type: "auth/INITIALIZE_FORM"
       },
     ];
 
@@ -100,14 +86,7 @@ describe("RegisterForm", () => {
 
     const expectedResult = [
       {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
+        type: "auth/INITIALIZE_FORM"
       },
       {
         type: "auth/CHANGE_FIELD",
@@ -127,14 +106,7 @@ describe("RegisterForm", () => {
 
 //initialState message expectedResult
 const defaultAction = {
-  type: "auth/CHANGE_FIELD",
-  payload: {
-    authType: undefined,
-    username: undefined,
-    password: undefined,
-    passwordConfirm: undefined,
-    authErrorMessage: "",
-  },
+  type: "auth/INITIALIZE_FORM"
 };
 
 const onSubmitTestDatas = [
@@ -173,7 +145,7 @@ const onSubmitTestDatas = [
             "[PW] Password with at least 1 number, 1 alphabet, 1 special character! (8~32).",
         },
       },
-    ]
+    ],
   },
 
   {
@@ -199,6 +171,20 @@ const onSubmitTestDatas = [
   },
 
   {
+    message: "with username & same Password should invoke Register",
+    initialAuth: {
+      username: "htgfdfe2y",
+      password: "dsfei2fh!",
+      passwordConfirm: "dsfei2fh!",
+    },
+    expectedResult: [
+      defaultAction,
+      { type: "auth/REGISTER" },
+      { type: "loading/START_LOADING", payload: "auth/REGISTER" },
+    ],
+  },
+
+   {
     message: "with username & same Password should invoke Register",
     initialAuth: {
       username: "htgfdfe2y",

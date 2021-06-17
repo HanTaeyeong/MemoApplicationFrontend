@@ -3,11 +3,7 @@ import WriteTemplate from '../components/write/WriteTemplate';
 
 
 const WritePage = () => {
-    return (
-        <div>
-            <WriteTemplate/>
-        </div>
-    )
+    return (<WriteTemplate />)
 }
 
 export default WritePage
