@@ -39,17 +39,6 @@ const quillOption = {
     ]
 }
 
-function selectText() {
-    const selection = window.getSelection && window.getSelection();
-    if (selection && selection.rangeCount > 0) {
-        const selected = selection?.getRangeAt(0).toString();
-        console.log(selected);
-    }
-    return;
-}
-setInterval(() => selectText(), 3000);
-
-
 const WriteTemplate = () => {
     const dispatch = useDispatch();
     const [moveToPostList, setMoveToPostList] = useState(false);
@@ -67,7 +56,6 @@ const WriteTemplate = () => {
     }
 
     const onChangeContents = (text: string) => {
-        console.log(text);
         dispatch(changeWritingField({ ...write, contents: text }));
     }
 
@@ -77,7 +65,8 @@ const WriteTemplate = () => {
     }
 
     const onGoingBack = () => {
-        if (!_id && title.trim()) { dispatch(writePostAsync({ title, contents, tags })) }
+        if (!title.trim()) { return };
+        if (!_id) { dispatch(writePostAsync({ title, contents, tags })) }
         else {
             dispatch(updatePostAsync({ _id, title, contents }))
         }
@@ -96,8 +85,6 @@ const WriteTemplate = () => {
 
     return (
         <WriteTemplateBlock>
-            <textarea>
-            </textarea>
             <ButtonWrapper>
                 <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
                 <Button cyan={false} fullWidth={false} onClickFunction={onDelete}>Delete</Button>
@@ -114,7 +101,7 @@ const WriteTemplate = () => {
             />
             <div className="themeSwitcher" role='theme-switcher'>
                 <label>Theme </label>
-                <select onChange={(e) =>
+                <select role='theme-switcher-select' onChange={(e) =>
                     onChangeSelect(e)}>
                     <option value="snow">Snow</option>
                     <option value="bubble">Bubble</option>
