@@ -42,12 +42,12 @@ const quillOption = {
 function selectText() {
     const selection = window.getSelection && window.getSelection();
     if (selection && selection.rangeCount > 0) {
-        const selected = window.getSelection()?.getRangeAt(0)?.toString();
+        const selected = selection?.getRangeAt(0).toString();
         console.log(selected);
     }
     return;
 }
-setInterval(() => selectText(), 1000);
+setInterval(() => selectText(), 3000);
 
 
 const WriteTemplate = () => {

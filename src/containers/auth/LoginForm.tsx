@@ -11,6 +11,8 @@ import history from '../../history';
 import { validate, IdSchema, PasswordSchema } from '../../lib/validation';
 import { setItem, getItem } from '../../lib/localStorageRequest';
 
+import {getCookie, setCookie,eraseCookie } from '../../lib/CookieUtil';
+
 const LoginForm = () => {
 
     const dispatch = useDispatch();
@@ -25,6 +27,7 @@ const LoginForm = () => {
         if (localUsername) {
             dispatch(checkAsync(localUsername));
         }
+        
     }, [])
 
     useEffect(() => {
