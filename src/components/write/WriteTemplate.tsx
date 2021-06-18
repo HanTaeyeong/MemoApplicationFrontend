@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react'
+import React, { useState,  useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import history from '../../history';
 import styled from 'styled-components';
@@ -11,7 +11,7 @@ import palette from '../../lib/styles/palette';
 import Button from '../common/Button';
 import PostDeleteConfirmModal from './PostDeleteConfirmModal';
 
-import { writePostAsync, changeWritingField, updatePostAsync, deletePostAsync } from '../../store/write';
+import { writePostAsync, changeWritingField, updatePostAsync } from '../../store/write';
 import { RootStateType } from '../../store';
 
 const quillOption = {
