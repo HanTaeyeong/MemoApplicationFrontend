@@ -16,10 +16,10 @@ export const [CHECK, CHECK_SUCCESS, CHECK_FAILURE] = createRequestActionTypes('a
 
 //export const changeAuthType = createAction(CHANGE_AUTH_TYPE, ({ authType }) => ({ authType }))();
 
+export const initializeForm = createAction(INITIALIZE_FORM, ()=>{})();
 export const changeField = createAction(CHANGE_FIELD, ({ authType, username, password, passwordConfirm, authErrorMessage }) => ({
     authType, username, password, passwordConfirm, authErrorMessage
 }))();
-export const initializeForm = createAction(INITIALIZE_FORM, ()=>{})();
 //export const tempSetUser = createAction(TEMP_SET_USER, username => username)();
 
 export const register = createAction(REGISTER, ({ username, password }) => ({

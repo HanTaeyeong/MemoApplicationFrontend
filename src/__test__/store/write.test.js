@@ -5,7 +5,7 @@ import fetchMock from "fetch-mock";
 import * as writeStore from "../../store/write";
 import * as loading from "../../store/loading";
 
-import write from '../../store/write';
+import write from "../../store/write";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
@@ -26,66 +26,85 @@ const makeMockPosts = (n) => {
 const postNumber = 10;
 const mockPosts = makeMockPosts(postNumber);
 
-describe('write store handlers test', () => {
-  it('write/CHANGE_WRITING_FIELD', () => {
-    const handler = write.handlers['write/CHANGE_WRITING_FIELD'];
+const writeHandlers = [
+  "write/WRITE_POST_SUCCESS",
+  "write/WRITE_POST_FAILURE",
+  "write/UPDATE_POST_SUCCESS",
+  "write/UPDATE_POST_FAILURE",
+  "write/DELETE_POST_SUCCESS",
+  "write/DELETE_POST_FAILURE",
+];
+
+const writeHandlerTestDataSet = writeHandlers.map((message,index) => ({
+  index,
+  message,
+}));
+
+describe("write store handlers test", () => {
+  test.each(writeHandlerTestDataSet)("%s handler test", ({index,message}) => {
+    const currentAction = writeHandlers[index];
+    const currentHandler = write.handlers[currentAction];
+    const isSuccess = currentAction.slice(-7) === "SUCCESS";
+    const expectedResult = { ...initialState, postError: !isSuccess };
+    expect(currentHandler(initialState)).toEqual(expectedResult);
+  });
+
+  it("write/CHANGE_WRITING_FIELD", () => {
+    const handler = write.handlers["write/CHANGE_WRITING_FIELD"];
 
     const action = {
       payload: {
-        _id: '3fjijde9f3jifeE', title: 'mytest',
-        contents: 'eifjd', tags: []
-      }
-    }
+        _id: "3fjijde9f3jifeE",
+        title: "mytest",
+        contents: "eifjd",
+        tags: [],
+      },
+    };
     const expectedResult = { ...initialState, ...action.payload };
     expect(handler(initialState, action)).toEqual(expectedResult);
   });
 
-  it('write/CHANGE_PAGE_STATE', () => {
-    const handler = write.handlers['write/CHANGE_PAGE_STATE'];
+  it("write/CHANGE_PAGE_STATE", () => {
+    const handler = write.handlers["write/CHANGE_PAGE_STATE"];
     const action = {
-      payload: { page: 1, limit: 20, lastPage: 5, totalPostCount: 100 }
-    }
-    const expectedResult = { ...initialState, pageState: { ...action.payload } }
-    expect(handler(initialState, action)).toEqual(expectedResult);
-  })
-
-  it('write/GET_POST_LIST_SUCCESS', () => {
-    const handler = write.handlers['write/GET_POST_LIST_SUCCESS'];
-    const action = {
-      payload: { posts: mockPosts, lastPage: 2, totalPostCount: mockPosts.length }
-    }
+      payload: { page: 1, limit: 20, lastPage: 5, totalPostCount: 100 },
+    };
     const expectedResult = {
-      ...initialState, pageState: {
-        ...initialState.pageState, lastPage: 2,
-        totalPostCount: mockPosts.length
-      },
-      posts: mockPosts.map((post) => post._doc), postError: false
-    }
-    expect(handler(initialState, action)).toEqual(expectedResult)
-  })
+      ...initialState,
+      pageState: { ...action.payload },
+    };
+    expect(handler(initialState, action)).toEqual(expectedResult);
+  });
 
-  it('write/GET_POST_LIST_FAILURE', () => {
-    const handler = write.handlers['write/GET_POST_LIST_FAILURE'];
+  it("write/GET_POST_LIST_SUCCESS", () => {
+    const handler = write.handlers["write/GET_POST_LIST_SUCCESS"];
+    const action = {
+      payload: {
+        posts: mockPosts,
+        lastPage: 2,
+        totalPostCount: mockPosts.length,
+      },
+    };
+    const expectedResult = {
+      ...initialState,
+      pageState: {
+        ...initialState.pageState,
+        lastPage: 2,
+        totalPostCount: mockPosts.length,
+      },
+      posts: mockPosts.map((post) => post._doc),
+      postError: false,
+    };
+    expect(handler(initialState, action)).toEqual(expectedResult);
+  });
+
+  it("write/GET_POST_LIST_FAILURE", () => {
+    const handler = write.handlers["write/GET_POST_LIST_FAILURE"];
     const expectedResult = { ...initialState, postError: true };
 
-    expect(handler(initialState)).toEqual(expectedResult)
-  })
-  it('write/async handlers test set', () => {
-
-    const handlers = ['write/WRITE_POST_SUCCESS', 'write/WRITE_POST_FAILURE',
-      'write/UPDATE_POST_SUCCESS', 'write/UPDATE_POST_FAILURE',
-      'write/DELETE_POST_SUCCESS', 'write/DELETE_POST_FAILURE'];
-    const currentHandlerIndex = (Math.random() * 6) | 0;
-    const currentAction = handlers[currentHandlerIndex];
-    const currentHandler = write.handlers[currentAction];
-
-    const isSuccess = currentAction.slice(-7) === 'SUCCESS';
-    const expectedResult = { ...initialState, postError: !isSuccess };
-    
-    expect(currentHandler(initialState)).toEqual(expectedResult)
-  })
-
-})
+    expect(handler(initialState)).toEqual(expectedResult);
+  });
+});
 
 describe("write reducer syncronous test", () => {
   it("changeWritingField should change write store state", () => {

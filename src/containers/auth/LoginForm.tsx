@@ -7,7 +7,6 @@ import AuthForm from '../../components/auth/AuthForm';
 
 import history from '../../history';
 
-
 import { validate, IdSchema, PasswordSchema } from '../../lib/validation';
 import { setItem, getItem } from '../../lib/localStorageRequest';
 

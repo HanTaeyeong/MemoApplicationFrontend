@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { RootStateType } from '../../store';
-import { changeField } from '../../store/auth';
+import { initializeForm } from '../../store/auth';
 
 import palette from '../../lib/styles/palette';
 import Button from '../common/Button';
@@ -76,34 +76,38 @@ const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange
     const idRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
+    const { authErrorMessage } = auth;
+
     useEffect(() => {
-        dispatch(changeField({ authErrorMessage: '' }));
+        dispatch(initializeForm());
     }, [])
 
     useEffect(() => {
-        if(!auth.authErrorMessage) return;
-        
-        const authErrorHead = auth?.authErrorMessage?.slice(0, 4)
+        if (!authErrorMessage) {return};
+
+        const authErrorHead = authErrorMessage?.slice(0, 4)
+
         if (authErrorHead === "[ID]") {
             idRef.current?.focus();
+            return;
         }
         if (authErrorHead === "[PW]") {
             passwordRef.current?.focus();
         }
-    }, [auth.authErrorMessage])
+    }, [authErrorMessage])
 
     return (
         <AuthFormBlock>
             <h3>{text}</h3>
             <form onSubmit={(e) => onSubmit(e)}>
                 <StyledInput role='input' onChange={(e) => onChange(e)} autoComplete="username" name="username"
-                    placeholder="Id" ref={idRef} className={auth.authErrorMessage && 'error'} />
+                    placeholder="Id" ref={idRef} className={authErrorMessage && 'error'} />
                 <StyledInput role='input2' onChange={(e) => onChange(e)} type="password" autoComplete="new-password"
-                    name="password" placeholder="password" ref={passwordRef} className={auth.authErrorMessage && 'error'} />
+                    name="password" placeholder="password" ref={passwordRef} className={authErrorMessage && 'error'} />
 
                 {authType === 'register' && (<StyledInput onChange={(e) => onChange(e)} autoComplete="new-password" name="passwordConfirm" placeholder="passwordConfirm" type="password" />)}
 
-                {auth.authErrorMessage && <ErrorMessage>{auth.authErrorMessage}</ErrorMessage>}
+                {authErrorMessage && <ErrorMessage>{authErrorMessage}</ErrorMessage>}
 
                 <ButtonWithMarginTop cyan fullWidth >{text}</ButtonWithMarginTop>
             </form>

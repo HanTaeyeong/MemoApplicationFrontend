@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import palette from '../../lib/styles/palette';
 import { RootStateType } from '../../store';
 
-import { changePageState,getPostListAsync } from '../../store/write';
+import { changePageState, getPostListAsync } from '../../store/write';
 
 export interface PostNavigationType {
     onChangeSelect: ChangeEventHandler<HTMLSelectElement>;
@@ -26,8 +26,10 @@ function PostNavigation() {
         e.preventDefault();
 
         const nextLimit = +e.target.value;
-        const nextLastPage = ((totalPostCount / nextLimit) | 0) + 1;
 
+        //((totalPostCount / nextLimit) | 0) + (totalPostCount % nextLimit) !== 0
+        const nextLastPage = ((totalPostCount + nextLimit - 1) / nextLimit) | 0;
+        console.log(totalPostCount,nextLimit,nextLastPage)
         dispatch(changePageState({
             totalPostCount,
             page: 1,
@@ -39,7 +41,7 @@ function PostNavigation() {
     const onChangePage = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         let nextPage = page + (+e.currentTarget.name);
-        
+
         dispatch(changePageState({ limit, lastPage, totalPostCount, page: nextPage }));
     };
 

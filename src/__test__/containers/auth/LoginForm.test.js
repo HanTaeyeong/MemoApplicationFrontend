@@ -30,14 +30,7 @@ describe("LoginForm", () => {
     await renderLoginForm(store);
     const expectResult = [
       {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
+        type: "auth/INITIALIZE_FORM",
       },
       { type: "auth/CHECK" },
       { type: "loading/START_LOADING", payload: "auth/CHECK" },
@@ -52,14 +45,7 @@ describe("LoginForm", () => {
     await renderLoginForm(store);
     const expectResult = [
       {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
+        type: "auth/INITIALIZE_FORM",
       },
     ];
 
@@ -104,14 +90,7 @@ describe("LoginForm", () => {
 
     const expectedResult = [
       {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
+        type: "auth/INITIALIZE_FORM",
       },
       { type: "auth/CHECK" },
       { type: "loading/START_LOADING", payload: "auth/CHECK" },
@@ -142,14 +121,7 @@ describe("LoginForm", () => {
     loginButton.click();
     const expectedResult = [
       {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
+        type: "auth/INITIALIZE_FORM",
       },
       { type: "auth/CHECK" },
       { type: "loading/START_LOADING", payload: "auth/CHECK" },
@@ -181,14 +153,7 @@ describe("LoginForm", () => {
     loginButton.click();
     const expectedResult = [
       {
-        type: "auth/CHANGE_FIELD",
-        payload: {
-          authType: undefined,
-          username: undefined,
-          password: undefined,
-          passwordConfirm: undefined,
-          authErrorMessage: "",
-        },
+        type: "auth/INITIALIZE_FORM",
       },
       { type: "auth/CHECK" },
       { type: "loading/START_LOADING", payload: "auth/CHECK" },

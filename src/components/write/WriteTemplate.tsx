@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react'
+import React, { useState,  useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import history from '../../history';
 import styled from 'styled-components';
@@ -9,8 +9,9 @@ import 'react-quill/dist/quill.bubble.css';
 import palette from '../../lib/styles/palette';
 
 import Button from '../common/Button';
+import PostDeleteConfirmModal from './PostDeleteConfirmModal';
 
-import { writePostAsync, changeWritingField, updatePostAsync, deletePostAsync } from '../../store/write';
+import { writePostAsync, changeWritingField, updatePostAsync } from '../../store/write';
 import { RootStateType } from '../../store';
 
 const quillOption = {
@@ -42,6 +43,7 @@ const quillOption = {
 const WriteTemplate = () => {
     const dispatch = useDispatch();
     const [moveToPostList, setMoveToPostList] = useState(false);
+    const [deleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
 
     const write = useSelector(({ write }: RootStateType) => write);
     const loading = useSelector(({ loading }: RootStateType) => loading);
@@ -65,28 +67,29 @@ const WriteTemplate = () => {
     }
 
     const onGoingBack = () => {
-        if (!_id && title.trim()) { dispatch(writePostAsync({ title, contents, tags })) }
+        if (!title.trim()) { return };
+        if (!_id) { dispatch(writePostAsync({ title, contents, tags })) }
         else {
             dispatch(updatePostAsync({ _id, title, contents }))
         }
         setMoveToPostList(true);
     }
-    const onDelete = () => {
-        dispatch(deletePostAsync({ _id }));
-        setMoveToPostList(true);
+
+    const changeConfirmModalOpen = (open: boolean) => {
+        setDeleteConfirmModalOpen(open);
     }
 
     useLayoutEffect(() => {
-        if (moveToPostList && !loading['write/WRITE_POST'] && !loading['write/UPDATE_POST'] && !loading['write/DELETE_POST']) {
+        if (moveToPostList && !loading['write/WRITE_POST'] && !loading['write/UPDATE_POST']) {
             history.push('/postListPage');
         }
-    }, [loading['write/WRITE_POST'], loading['write/UPDATE_POST'], loading['write/DELETE_POST'], moveToPostList])
+    }, [loading['write/WRITE_POST'], loading['write/UPDATE_POST'], moveToPostList])
 
     return (
         <WriteTemplateBlock>
             <ButtonWrapper>
                 <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
-                <Button cyan={false} fullWidth={false} onClickFunction={onDelete}>Delete</Button>
+                <Button cyan={false} fullWidth={false} onClickFunction={() => setDeleteConfirmModalOpen(true)}>Delete</Button>
             </ButtonWrapper>
             <TitleInput role='title-input' onChange={e => onChangeTitle(e)} name='title'
                 placeholder="Write a title here" value={write.title} />
@@ -100,12 +103,13 @@ const WriteTemplate = () => {
             />
             <div className="themeSwitcher" role='theme-switcher'>
                 <label>Theme </label>
-                <select onChange={(e) =>
+                <select role='theme-switcher-select' onChange={(e) =>
                     onChangeSelect(e)}>
                     <option value="snow">Snow</option>
                     <option value="bubble">Bubble</option>
                 </select>
             </div>
+            {deleteConfirmModalOpen && <PostDeleteConfirmModal closeModal={()=>changeConfirmModalOpen(false)}></PostDeleteConfirmModal>}
         </WriteTemplateBlock>
     )
 }

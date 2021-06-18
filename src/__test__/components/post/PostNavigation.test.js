@@ -59,6 +59,18 @@ const afterClickingNextButtonState = {
   loading: {},
 };
 
+const onLoadingPostState = {
+  auth: { username: "HanTaeyeong", authorized: true, loading: {} },
+  write: {
+    ...initialState,
+    posts: mockPosts,
+    pageState: { page: 2, limit: 10, lastPage: 3, totalPostCount: postNumber },
+  },
+  loading: {
+    "write/GET_POST_LIST": true,
+  },
+};
+
 const pageLimitValues = ["10", "20", "50", "100"];
 
 const makeStore = configureMockStore([thunk]);
@@ -162,6 +174,18 @@ describe("post/PostNavigation test", () => {
         },
       },
     ];
+    expect(store.getActions()).toEqual(expectedResult);
+  });
+
+  it("onLoadingPost should render loading style", async () => {
+    const store = makeStore(onLoadingPostState);
+    const postNavigation = renderPostNavigation(store);
+    const beforeButton = await screen.findByRole("button", { name: "before" });
+    const nextButton = await screen.findByRole("button", { name: "next" });
+
+    expect(beforeButton).toHaveClass("loading");
+    expect(nextButton).toHaveClass("loading");
+    const expectedResult = [...defaultAction];
     expect(store.getActions()).toEqual(expectedResult);
   });
 });
