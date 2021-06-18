@@ -8,7 +8,7 @@ import configureMockStore from "redux-mock-store";
 import WriteTemplate from "../../../components/write/WriteTemplate";
 import write, { initialState } from "../../../store/write";
 
-const initialStore = { write: { ...initialState }, loading: {}, auth: {} }
+const initialStore = { write: { ...initialState }, loading: {}, auth: {} };
 
 const makeStore = configureMockStore([thunk]);
 
@@ -22,84 +22,100 @@ const renderWriteTemplate = (store) => {
 
 //fireEvent.change(styledInput1, { target: { value: "hty" } });
 
-
-describe('write/WriteTemplate', () => {
-
-  it('WriteTemplate Render test', () => {
-    const store = makeStore(initialStore)
-    const writeTemplate = renderWriteTemplate(store);
-
-    const backButton = writeTemplate.getByRole('button', { name: 'Back to lists' })
-    const deleteButton = writeTemplate.getByRole('button', { name: 'Delete' })
-    expect(writeTemplate).toBeTruthy();
-    expect(backButton.innerHTML).toEqual('<span class=\"text\">Back to lists</span>');
-    expect(deleteButton.innerHTML).toEqual("<span class=\"text\">Delete</span>");
-
-    const titleInput = writeTemplate.getByRole('title-input');
-
-    expect(titleInput).toBeTruthy();
-
-    const themeSwitcher = writeTemplate.getByRole('theme-switcher')
-    expect(themeSwitcher).toBeTruthy();
-  })
-
-  it('change TitleInput should invoke CHANGE_WRITTING_FIELD', () => {
+describe("write/WriteTemplate", () => {
+  it("WriteTemplate Render test", () => {
     const store = makeStore(initialStore);
     const writeTemplate = renderWriteTemplate(store);
 
-    const titleInput = screen.getByRole('title-input');
+    const backButton = writeTemplate.getByRole("button", {
+      name: "Back to lists",
+    });
+    const deleteButton = writeTemplate.getByRole("button", { name: "Delete" });
+    expect(writeTemplate).toBeTruthy();
+    expect(backButton.innerHTML).toEqual(
+      '<span class="text">Back to lists</span>'
+    );
+    expect(deleteButton.innerHTML).toEqual('<span class="text">Delete</span>');
+
+    const titleInput = writeTemplate.getByRole("title-input");
+
+    expect(titleInput).toBeTruthy();
+
+    const themeSwitcher = writeTemplate.getByRole("theme-switcher");
+    expect(themeSwitcher).toBeTruthy();
+  });
+
+  it("change TitleInput should invoke CHANGE_WRITTING_FIELD", () => {
+    const store = makeStore(initialStore);
+    const writeTemplate = renderWriteTemplate(store);
+
+    const titleInput = screen.getByRole("title-input");
     fireEvent.change(titleInput, { target: { value: "hty123" } });
     const expectedResult = [
       {
-        type: 'write/CHANGE_WRITING_FIELD',
-        payload: { _id: '', title: 'hty123', contents: '', tags: [] }
-      }
-    ]
+        type: "write/CHANGE_WRITING_FIELD",
+        payload: { _id: "", title: "hty123", contents: "", tags: [] },
+      },
+    ];
     expect(store.getActions()).toEqual(expectedResult);
-  })
+  });
 
-  it('clicking Go to back Button without title should do nothing', () => {
-    const store = makeStore(initialStore)
+  it("clicking Go to back Button without title should do nothing", () => {
+    const store = makeStore(initialStore);
     renderWriteTemplate(store);
 
-    const backButton = screen.getByRole('button', { name: 'Back to lists' });
+    const backButton = screen.getByRole("button", { name: "Back to lists" });
     backButton.click();
     expect(store.getActions()).toEqual([]);
-  })
-  it('clicking Go to back Button with title but not _id should write Post', () => {
-    const store = makeStore({ ...initialStore, write: { ...initialStore.write, title: 'ty-test' } });
+  });
+  it("clicking Go to back Button with title but not _id should write Post", () => {
+    const store = makeStore({
+      ...initialStore,
+      write: { ...initialStore.write, title: "ty-test" },
+    });
     renderWriteTemplate(store);
 
-    const backButton = screen.getByRole('button', { name: 'Back to lists' });
+    const backButton = screen.getByRole("button", { name: "Back to lists" });
     backButton.click();
-    const expectedResult = [{ "type": "write/WRITE_POST" }, { "payload": "write/WRITE_POST", "type": "loading/START_LOADING" }]
-    expect(store.getActions()).toEqual(expectedResult)
-  })
-  it('clicking Go to back Button with title and _id should updatePost', () => {
-    const store = makeStore({ ...initialStore, write: { ...initialStore.write, title: 'ty-test', _id: '2ejiref39' } });
-    renderWriteTemplate(store);
-
-    const backButton = screen.getByRole('button', { name: 'Back to lists' });
-    backButton.click();
-    const expectedResult = [{ "type": "write/UPDATE_POST" }, { "payload": "write/UPDATE_POST", "type": "loading/START_LOADING" }]
-
-    expect(store.getActions()).toEqual(expectedResult)
-  })
-  
-  it('clicking Delete Button should invoke deletePostAsync',()=>{
-    const store=makeStore(initialStore);
-    renderWriteTemplate(store);
-    const deleteButton= screen.getByRole('button',{name:'Delete'});
-    deleteButton.click();
-    const expectedResult=[
-      { type: 'write/DELETE_POST' },
-      { type: 'loading/START_LOADING', payload: 'write/DELETE_POST' }
-    ]
+    const expectedResult = [
+      { type: "write/WRITE_POST" },
+      { payload: "write/WRITE_POST", type: "loading/START_LOADING" },
+    ];
     expect(store.getActions()).toEqual(expectedResult);
-  })
+  });
+  it("clicking Go to back Button with title and _id should updatePost", () => {
+    const store = makeStore({
+      ...initialStore,
+      write: { ...initialStore.write, title: "ty-test", _id: "2ejiref39" },
+    });
+    renderWriteTemplate(store);
 
-})
+    const backButton = screen.getByRole("button", { name: "Back to lists" });
+    backButton.click();
+    const expectedResult = [
+      { type: "write/UPDATE_POST" },
+      { payload: "write/UPDATE_POST", type: "loading/START_LOADING" },
+    ];
 
+    expect(store.getActions()).toEqual(expectedResult);
+  });
+
+  it("clicking Delete Button then, Confirm Button should invoke deletePostAsync", async () => {
+    const store = makeStore(initialStore);
+    renderWriteTemplate(store);
+    const deleteButton = await screen.getByRole("button", { name: "Delete" });
+    deleteButton.click();
+    const deleteConfirmButton = await screen.getByRole("button", {
+      name: "Yes",
+    });
+    deleteConfirmButton.click();
+    const expectedResult = [
+      { type: "write/DELETE_POST" },
+      { type: "loading/START_LOADING", payload: "write/DELETE_POST" },
+    ];
+    expect(store.getActions()).toEqual(expectedResult);
+  });
+});
 
 // describe("post/PostTemplate Component test", () => {
 //   it("PostTemplate wihout postList render test", async () => {

@@ -1,12 +1,6 @@
 import React from 'react'
 import PostTemplate from '../components/post/PostTemplate';
 
-const PostListPage = () => {
-    return (
-
-        <PostTemplate />
-
-    )
-}
+const PostListPage = () => <PostTemplate />
 
 export default PostListPage

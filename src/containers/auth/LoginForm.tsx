@@ -7,11 +7,8 @@ import AuthForm from '../../components/auth/AuthForm';
 
 import history from '../../history';
 
-
 import { validate, IdSchema, PasswordSchema } from '../../lib/validation';
 import { setItem, getItem } from '../../lib/localStorageRequest';
-
-import {getCookie, setCookie,eraseCookie } from '../../lib/CookieUtil';
 
 const LoginForm = () => {
 
@@ -27,7 +24,6 @@ const LoginForm = () => {
         if (localUsername) {
             dispatch(checkAsync(localUsername));
         }
-        
     }, [])
 
     useEffect(() => {

@@ -9,6 +9,7 @@ import 'react-quill/dist/quill.bubble.css';
 import palette from '../../lib/styles/palette';
 
 import Button from '../common/Button';
+import PostDeleteConfirmModal from './PostDeleteConfirmModal';
 
 import { writePostAsync, changeWritingField, updatePostAsync, deletePostAsync } from '../../store/write';
 import { RootStateType } from '../../store';
@@ -42,6 +43,7 @@ const quillOption = {
 const WriteTemplate = () => {
     const dispatch = useDispatch();
     const [moveToPostList, setMoveToPostList] = useState(false);
+    const [deleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
 
     const write = useSelector(({ write }: RootStateType) => write);
     const loading = useSelector(({ loading }: RootStateType) => loading);
@@ -72,22 +74,22 @@ const WriteTemplate = () => {
         }
         setMoveToPostList(true);
     }
-    const onDelete = () => {
-        dispatch(deletePostAsync({ _id }));
-        setMoveToPostList(true);
+
+    const changeConfirmModalOpen = (open: boolean) => {
+        setDeleteConfirmModalOpen(open);
     }
 
     useLayoutEffect(() => {
-        if (moveToPostList && !loading['write/WRITE_POST'] && !loading['write/UPDATE_POST'] && !loading['write/DELETE_POST']) {
+        if (moveToPostList && !loading['write/WRITE_POST'] && !loading['write/UPDATE_POST']) {
             history.push('/postListPage');
         }
-    }, [loading['write/WRITE_POST'], loading['write/UPDATE_POST'], loading['write/DELETE_POST'], moveToPostList])
+    }, [loading['write/WRITE_POST'], loading['write/UPDATE_POST'], moveToPostList])
 
     return (
         <WriteTemplateBlock>
             <ButtonWrapper>
                 <Button cyan={true} fullWidth={false} onClickFunction={onGoingBack}>Back to lists</Button>
-                <Button cyan={false} fullWidth={false} onClickFunction={onDelete}>Delete</Button>
+                <Button cyan={false} fullWidth={false} onClickFunction={() => setDeleteConfirmModalOpen(true)}>Delete</Button>
             </ButtonWrapper>
             <TitleInput role='title-input' onChange={e => onChangeTitle(e)} name='title'
                 placeholder="Write a title here" value={write.title} />
@@ -107,6 +109,7 @@ const WriteTemplate = () => {
                     <option value="bubble">Bubble</option>
                 </select>
             </div>
+            {deleteConfirmModalOpen && <PostDeleteConfirmModal closeModal={()=>changeConfirmModalOpen(false)}></PostDeleteConfirmModal>}
         </WriteTemplateBlock>
     )
 }
