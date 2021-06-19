@@ -7,6 +7,9 @@ import axios from 'axios';
 
 // axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
 // axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-const client = axios.create();
+axios.defaults.headers.common['withCredentials'] = true;
 
+const client = axios.create({
+    withCredentials: true
+});
 export default client;
