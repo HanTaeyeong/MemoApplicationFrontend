@@ -7,10 +7,8 @@ const prefix = apiServer + '/api/post';
 
 export const getPostList = async ({ page, limit }: { page: number, limit: number }) => await client.get(`${prefix}/get?page=${page}&limit=${limit}`)
 
-
 export const writePost = ({ title, contents, tags }: { title: string, contents: string, tags: string[] | undefined }) =>
     client.post(prefix + '/write', { title, contents, tags })
-
 
 // export const readPost = (id: string) =>
 //     client.get(`${prefix}/read/${id}`);
