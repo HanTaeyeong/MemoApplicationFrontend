@@ -16,7 +16,7 @@ export const [CHECK, CHECK_SUCCESS, CHECK_FAILURE] = createRequestActionTypes('a
 
 //export const changeAuthType = createAction(CHANGE_AUTH_TYPE, ({ authType }) => ({ authType }))();
 
-export const initializeForm = createAction(INITIALIZE_FORM, ()=>{})();
+export const initializeForm = createAction(INITIALIZE_FORM, () => { })();
 export const changeField = createAction(CHANGE_FIELD, ({ authType, username, password, passwordConfirm, authErrorMessage }) => ({
     authType, username, password, passwordConfirm, authErrorMessage
 }))();
@@ -65,7 +65,7 @@ export const initialState: AuthStateType = {
     password: '',
     passwordConfirm: '',
     authorized: false,
-    authErrorMessage:'',
+    authErrorMessage: '',
     checkError: null,
 }
 
@@ -82,7 +82,7 @@ const auth = createReducer(initialState,
         [LOGIN_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, authErrorMessage: "" }),
         [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error.message.slice(-3)] }),
 
-        [CHECK_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, checkError: false }),
+        [CHECK_SUCCESS]: (state: AuthStateType, { payload: user }: any) => ({ ...state, username: user.username, authorized: true, checkError: false }),
         [CHECK_FAILURE]: (state: AuthStateType, { payload: error }: any) => ({ ...state, authorized: false, checkError: error }),
 
         [LOGOUT_SUCCESS]: (state: AuthStateType) => ({ ...initialState }),

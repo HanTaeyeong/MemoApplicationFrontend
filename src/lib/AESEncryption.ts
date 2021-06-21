@@ -1,7 +1,9 @@
 import aesjs from 'aes-js';
 
 const defaultKey = [131, 22, 35, 41, 5, 6, 221, 8, 9, 23, 51, 22, 13, 15, 15, 16];
-const key = process.env.REACT_APP_AES_COUNTER_KEY?.split(',').map(n => +n) || defaultKey;
+const counterKey = process.env.REACT_APP_AES_COUNTER_KEY;
+
+const key = counterKey ? counterKey.split(',').map(n => +n) : defaultKey;
 
 export const encryptText = (text: string) => {
     const textBytes = aesjs.utils.utf8.toBytes(text);

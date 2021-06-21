@@ -1,9 +1,14 @@
 import { encryptText, decryptText } from './AESEncryption';
 
 export const getItem = (itemName: string) => {
+    console.log(itemName);
     const encryptedHex = localStorage.getItem(itemName);
+    console.log('encrypted', encryptedHex);
+
     if (!encryptedHex) return '';
-    return decryptText(encryptedHex);
+
+    const res = decryptText(encryptedHex);
+    return res
 }
 
 export const setItem = (itemName: string, value: string) => {

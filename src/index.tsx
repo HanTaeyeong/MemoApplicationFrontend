@@ -14,7 +14,9 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import rootReducer from './store';
-import { checkAsync, TEMP_SET_USER } from './store/auth';
+import { checkAsync } from './store/auth';
+import { getItem, removeItem } from './lib/localStorageRequest';
+import axios from 'axios';
 
 require('dotenv').config();
 
@@ -26,15 +28,25 @@ const persister = persistStore(store);
 
 async function loadUser() {
   try {
-    const username = localStorage.getItem('username');
-    if (!username) return;
+    const username = getItem('username');
+    const accessToken = getItem('access-token');
 
-    store.dispatch({ type: TEMP_SET_USER, payload: username });
+    if (!username || accessToken) {
+      removeItem('username');
+      removeItem('access-token');
+      return;
+    }
+
     await checkAsync(() => { });
 
     if (store.getState().auth.checkError) {
-      localStorage.removeItem('username');
+      removeItem('username');
+      removeItem('access-token')
+      return;
     }
+
+    axios.defaults.headers['authorization'] = getItem('access-token');
+
   } catch (e) { console.log(e) }
 }
 
