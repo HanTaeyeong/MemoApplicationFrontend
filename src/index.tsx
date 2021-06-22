@@ -4,17 +4,19 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Router } from 'react-router-dom';
-import  history  from './history';
+import history from './history';
 
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
-import {composeWithDevTools} from 'redux-devtools-extension';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import rootReducer from './store';
-import { checkAsync, TEMP_SET_USER } from './store/auth';
+import { checkAsync } from './store/auth';
+import { getItem, removeItem } from './lib/localStorageRequest';
+import axios from 'axios';
 
 require('dotenv').config();
 
@@ -24,17 +26,25 @@ console.log(navigator.language);
 
 const persister = persistStore(store);
 
-async function loadUser() {
+export async function loadUser() {
   try {
-    const username = localStorage.getItem('username');
-    if (!username) return;
+    const username = getItem('username');
+    const accessToken = getItem('access-token');
 
-    store.dispatch({ type: TEMP_SET_USER, payload: username });
+    if (!username || !accessToken) {
+      removeItem('username');
+      removeItem('access-token');
+      return;
+    }
+
     await checkAsync(() => { });
 
     if (store.getState().auth.checkError) {
-      localStorage.removeItem('username');
+      removeItem('username');
+      removeItem('access-token')
+      return;
     }
+
   } catch (e) { console.log(e) }
 }
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { RootStateType } from '../../store';
-import { initializeForm } from '../../store/auth';
+import { initializeAuth } from '../../store/auth';
 
 import palette from '../../lib/styles/palette';
 import Button from '../common/Button';
@@ -79,7 +79,7 @@ const AuthForm = ({ authType, onChange, onSubmit }: { authType: string, onChange
     const { authErrorMessage } = auth;
 
     useEffect(() => {
-        dispatch(initializeForm());
+        dispatch(initializeAuth());
     }, [])
 
     useEffect(() => {

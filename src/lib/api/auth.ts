@@ -1,19 +1,52 @@
 import client from './client';
+import { setItem, removeItem } from '../../lib/localStorageRequest';
 
-const apiServer=process.env.REACT_APP_MEMO_API_ADDRESS;
+import { initializeAuth } from '../../store/auth';
+import { initializeWrite } from '../../store/write';
 
-const prefix=apiServer+'/api/auth';
+import { getConfig } from './config';
 
-export const login = async ({ username, password }: { username: string, password: string }) =>
-    await client.post(prefix+'/login', { username, password });
+const apiServer = process.env.REACT_APP_MEMO_API_ADDRESS;
+
+const prefix = apiServer + '/api/auth';
+
+export const login = async ({ username, password }: { username: string, password: string }) => {
+    const res = await client.post(prefix + '/login', { username, password }, getConfig());
+
+    const token = res.headers['authorization'];
+    setItem('access-token', token);
+
+    return res;
+}
 
 export const logout = async () => {
-    return await client.post(prefix+'/logout')
+    initializeLocalStorage();
+    const res = await client.post(prefix + '/logout', getConfig())
+
+    return res;
 };
 
-export const register = async ({ username, password }: { username: string, password: string }) =>
-    await client.post(prefix+'/register', { username, password })
+export const register = async ({ username, password }: { username: string, password: string }) => {
+    const res = await client.post(prefix + '/register', { username, password }, getConfig())
 
-export const check = async () => await client.get(prefix+'/check');
+    const token = res.headers['authorization'];
+    setItem('access-token', token);
 
+    return res;
+}
+
+export const check = async () => {
+    const res = await client.get(prefix + '/check', getConfig());
+    if (res.status !== 200) {
+        initializeLocalStorage();
+    }
+    return res;
+}
+
+const initializeLocalStorage = () => {
+    removeItem('access-token');
+    removeItem('username');
+    initializeAuth();
+    initializeWrite();
+}
 

@@ -32,8 +32,8 @@ describe("auth handlers test", () => {
     expect(authFunction(initialState, action)).toEqual(expectedResult);
   });
 
-  it("auth/INITIALIZE_FORM test", () => {
-    const authFunction = auth.handlers["auth/INITIALIZE_FORM"];
+  it("auth/INITIALIZE_AUTH test", () => {
+    const authFunction = auth.handlers["auth/INITIALIZE_AUTH"];
     const expectedResult = initialState;
     expect(authFunction(initialState)).toEqual(expectedResult);
   });

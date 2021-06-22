@@ -29,7 +29,7 @@ describe("RegisterForm", () => {
     await renderRegisterForm(store);
     const expectResult = [
       {
-        "type": "auth/INITIALIZE_FORM",
+        "type": "auth/INITIALIZE_AUTH",
       },
     ];
 
@@ -41,7 +41,7 @@ describe("RegisterForm", () => {
     await renderRegisterForm(store);
     const expectResult = [
       {
-        type: "auth/INITIALIZE_FORM"
+        type: "auth/INITIALIZE_AUTH"
       },
     ];
 
@@ -86,7 +86,7 @@ describe("RegisterForm", () => {
 
     const expectedResult = [
       {
-        type: "auth/INITIALIZE_FORM"
+        type: "auth/INITIALIZE_AUTH"
       },
       {
         type: "auth/CHANGE_FIELD",
@@ -106,7 +106,7 @@ describe("RegisterForm", () => {
 
 //initialState message expectedResult
 const defaultAction = {
-  type: "auth/INITIALIZE_FORM"
+  type: "auth/INITIALIZE_AUTH"
 };
 
 const onSubmitTestDatas = [

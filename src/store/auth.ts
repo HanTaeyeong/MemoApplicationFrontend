@@ -5,7 +5,7 @@ import ErrorCodes from '../lib/ErrorCodes';
 
 export const CHANGE_AUTH_TYPE = 'auth/CHANGE_AUTH_TYPE';
 export const CHANGE_FIELD = 'auth/CHANGE_FIELD';
-export const INITIALIZE_FORM = 'auth/INITIALIZE_FORM';
+export const INITIALIZE_AUTH = 'auth/INITIALIZE_AUTH';
 
 export const TEMP_SET_USER = 'auth/TEMP_SET_USER';
 
@@ -16,7 +16,7 @@ export const [CHECK, CHECK_SUCCESS, CHECK_FAILURE] = createRequestActionTypes('a
 
 //export const changeAuthType = createAction(CHANGE_AUTH_TYPE, ({ authType }) => ({ authType }))();
 
-export const initializeForm = createAction(INITIALIZE_FORM, ()=>{})();
+export const initializeAuth = createAction(INITIALIZE_AUTH, () => { })();
 export const changeField = createAction(CHANGE_FIELD, ({ authType, username, password, passwordConfirm, authErrorMessage }) => ({
     authType, username, password, passwordConfirm, authErrorMessage
 }))();
@@ -65,7 +65,7 @@ export const initialState: AuthStateType = {
     password: '',
     passwordConfirm: '',
     authorized: false,
-    authErrorMessage:'',
+    authErrorMessage: '',
     checkError: null,
 }
 
@@ -74,13 +74,13 @@ const auth = createReducer(initialState,
         //[TEMP_SET_USER]: (state, { payload: username }) => ({ ...state, username }),
         //[CHANGE_AUTH_TYPE]: (state, { payload: { authType } }) => ({ ...state, authType }),
         [CHANGE_FIELD]: (state, { payload: { authType, username, password, passwordConfirm, authErrorMessage } }) => ({ ...state, authType, username, password, passwordConfirm, authErrorMessage }),
-        [INITIALIZE_FORM]: (state) => ({ ...initialState }),
+        [INITIALIZE_AUTH]: (state) => ({ ...initialState }),
 
         [REGISTER_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, authErrorMessage: "" }),
-        [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error.message.slice(-3)] }),
+        [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error?.message?.slice(-3)] }),
 
         [LOGIN_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, authErrorMessage: "" }),
-        [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error.message.slice(-3)] }),
+        [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error?.message?.slice(-3)] }),
 
         [CHECK_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, checkError: false }),
         [CHECK_FAILURE]: (state: AuthStateType, { payload: error }: any) => ({ ...state, authorized: false, checkError: error }),
