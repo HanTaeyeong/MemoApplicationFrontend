@@ -1,4 +1,4 @@
-import React, { useState,  useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import history from '../../history';
 import styled from 'styled-components';
@@ -109,7 +109,7 @@ const WriteTemplate = () => {
                     <option value="bubble">Bubble</option>
                 </select>
             </div>
-            {deleteConfirmModalOpen && <PostDeleteConfirmModal closeModal={()=>changeConfirmModalOpen(false)}></PostDeleteConfirmModal>}
+            {deleteConfirmModalOpen && <PostDeleteConfirmModal closeModal={() => changeConfirmModalOpen(false)}></PostDeleteConfirmModal>}
         </WriteTemplateBlock>
     )
 }

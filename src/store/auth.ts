@@ -77,12 +77,12 @@ const auth = createReducer(initialState,
         [INITIALIZE_AUTH]: (state) => ({ ...initialState }),
 
         [REGISTER_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, authErrorMessage: "" }),
-        [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error.message.slice(-3)] }),
+        [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error?.message?.slice(-3)] }),
 
         [LOGIN_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, authErrorMessage: "" }),
-        [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error.message.slice(-3)] }),
+        [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error?.message?.slice(-3)] }),
 
-        [CHECK_SUCCESS]: (state: AuthStateType, { payload: user }: any) => ({ ...state, username: user.username, authorized: true, checkError: false }),
+        [CHECK_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, checkError: false }),
         [CHECK_FAILURE]: (state: AuthStateType, { payload: error }: any) => ({ ...state, authorized: false, checkError: error }),
 
         [LOGOUT_SUCCESS]: (state: AuthStateType) => ({ ...initialState }),

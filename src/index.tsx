@@ -26,12 +26,12 @@ console.log(navigator.language);
 
 const persister = persistStore(store);
 
-async function loadUser() {
+export async function loadUser() {
   try {
     const username = getItem('username');
     const accessToken = getItem('access-token');
 
-    if (!username || accessToken) {
+    if (!username || !accessToken) {
       removeItem('username');
       removeItem('access-token');
       return;
@@ -44,8 +44,6 @@ async function loadUser() {
       removeItem('access-token')
       return;
     }
-
-    axios.defaults.headers['authorization'] = getItem('access-token');
 
   } catch (e) { console.log(e) }
 }

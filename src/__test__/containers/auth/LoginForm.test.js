@@ -30,7 +30,7 @@ describe("LoginForm", () => {
     await renderLoginForm(store);
     const expectResult = [
       {
-        type: "auth/INITIALIZE_FORM",
+        type: "auth/INITIALIZE_AUTH",
       },
       { type: "auth/CHECK" },
       { type: "loading/START_LOADING", payload: "auth/CHECK" },
@@ -45,7 +45,7 @@ describe("LoginForm", () => {
     await renderLoginForm(store);
     const expectResult = [
       {
-        type: "auth/INITIALIZE_FORM",
+        type: "auth/INITIALIZE_AUTH",
       },
     ];
 
@@ -90,7 +90,7 @@ describe("LoginForm", () => {
 
     const expectedResult = [
       {
-        type: "auth/INITIALIZE_FORM",
+        type: "auth/INITIALIZE_AUTH",
       },
       { type: "auth/CHECK" },
       { type: "loading/START_LOADING", payload: "auth/CHECK" },
@@ -121,7 +121,7 @@ describe("LoginForm", () => {
     loginButton.click();
     const expectedResult = [
       {
-        type: "auth/INITIALIZE_FORM",
+        type: "auth/INITIALIZE_AUTH",
       },
       { type: "auth/CHECK" },
       { type: "loading/START_LOADING", payload: "auth/CHECK" },
@@ -153,7 +153,7 @@ describe("LoginForm", () => {
     loginButton.click();
     const expectedResult = [
       {
-        type: "auth/INITIALIZE_FORM",
+        type: "auth/INITIALIZE_AUTH",
       },
       { type: "auth/CHECK" },
       { type: "loading/START_LOADING", payload: "auth/CHECK" },

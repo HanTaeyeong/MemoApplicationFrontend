@@ -48,7 +48,14 @@ describe("write store handlers test", () => {
     const expectedResult = { ...initialState, postError: !isSuccess };
     expect(currentHandler(initialState)).toEqual(expectedResult);
   });
+  it('write/INITIALIZE_WRITE',()=>{
+    const handler = write.handlers['write/INITIALIZE_WRITE'];
+    const action={
 
+    }
+    const expectedResult={...initialState}
+    expect(handler(initialState,action)).toEqual({...initialState});
+  })
   it("write/CHANGE_WRITING_FIELD", () => {
     const handler = write.handlers["write/CHANGE_WRITING_FIELD"];
 
