@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { RootStateType } from '../../store';
 import Button from '../common/Button';
-import { initializeForm, logoutAsync } from '../../store/auth';
+import { initializeAuth, logoutAsync } from '../../store/auth';
 import { removeItem } from '../../lib/localStorageRequest';
 
 const ListHeader = () => {
@@ -17,7 +17,7 @@ const ListHeader = () => {
     const history = useHistory();
 
     const onLogout = (e: React.MouseEvent<HTMLButtonElement>) => {
-        dispatch(initializeForm);
+        dispatch(initializeAuth);
         removeItem('username');
         dispatch(logoutAsync(''));
     }

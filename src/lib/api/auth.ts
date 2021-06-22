@@ -1,6 +1,9 @@
 import client from './client';
 import { setItem, removeItem } from '../../lib/localStorageRequest';
-import axios from 'axios';
+
+import { initializeAuth } from '../../store/auth';
+import { initializeWrite } from '../../store/write';
+
 
 const apiServer = process.env.REACT_APP_MEMO_API_ADDRESS;
 
@@ -11,15 +14,14 @@ export const login = async ({ username, password }: { username: string, password
 
     const token = res.headers['authorization'];
     setItem('access-token', token);
-    axios.defaults.headers.common['authorization'] = token;
 
     return res;
 }
 
 export const logout = async () => {
+    initializeLocalStorage();
     const res = await client.post(prefix + '/logout')
-    removeItem('access-token');
-    removeItem('username');
+
     return res;
 };
 
@@ -28,7 +30,6 @@ export const register = async ({ username, password }: { username: string, passw
 
     const token = res.headers['authorization'];
     setItem('access-token', token);
-    axios.defaults.headers.common['authorization'] = token;
 
     return res;
 }
@@ -36,9 +37,15 @@ export const register = async ({ username, password }: { username: string, passw
 export const check = async () => {
     const res = await client.get(prefix + '/check');
     if (res.status !== 200) {
-        removeItem('access-token');
-        removeItem('username');
+        initializeLocalStorage();
     }
+    return res;
 }
 
+const initializeLocalStorage = () => {
+    removeItem('access-token');
+    removeItem('username');
+    initializeAuth();
+    initializeWrite();
+}
 

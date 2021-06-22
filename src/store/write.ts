@@ -2,6 +2,7 @@ import { createAction, createReducer } from 'typesafe-actions';
 import { createRequestThunk, createRequestActionTypes } from '../lib/createRequest';
 import * as postApi from '../lib/api/post';
 
+export const INITIALIZE_WRITE = 'write/INITIALIZE_WRITE';
 export const CHANGE_WRITING_FIELD = 'write/CHANGE_WRITING_FIELD';
 export const CHANGE_PAGE_STATE = 'write/CHANGE_PAGE_STATE';
 
@@ -10,6 +11,9 @@ export const [GET_POST_LIST, GET_POST_LIST_SUCCESS, GET_POST_LIST_FAILURE] = cre
 export const [WRITE_POST, WRITE_POST_SUCCESS, WRITE_POST_FAILURE] = createRequestActionTypes('write/WRITE_POST');
 export const [UPDATE_POST, UPDATE_POST_SUCCESS, UPDATE_POST_FAILURE] = createRequestActionTypes('write/UPDATE_POST');
 export const [DELETE_POST, DELETE_POST_SUCCESS, DELETE_POST_FAILURE] = createRequestActionTypes('write/DELETE_POST');
+
+
+export const initializeWrite = createAction(INITIALIZE_WRITE, () => { })();
 
 export const changeWritingField = createAction(CHANGE_WRITING_FIELD, ({ _id, title, contents, tags }) =>
     ({ _id, title, contents, tags }))();
@@ -72,6 +76,8 @@ export const initialState: WriteStateType = {
 
 
 const write = createReducer(initialState, {
+    [INITIALIZE_WRITE]: (state) => ({ ...initialState }),
+
     [CHANGE_WRITING_FIELD]: (state: WriteStateType, { payload: { _id, title, contents, tags } }: any) =>
         ({ ...state, _id, title, contents, tags }),
 

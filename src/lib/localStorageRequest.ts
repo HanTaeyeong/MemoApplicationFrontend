@@ -1,19 +1,22 @@
 import { encryptText, decryptText } from './AESEncryption';
 
 export const getItem = (itemName: string) => {
-    console.log(itemName);
-    const encryptedHex = localStorage.getItem(itemName);
-    console.log('encrypted', encryptedHex);
+    try {
+        const encryptedHex = localStorage.getItem(itemName);
 
-    if (!encryptedHex) return '';
+        if (!encryptedHex) return '';
 
-    const res = decryptText(encryptedHex);
-    return res
+        const res = decryptText(encryptedHex);
+        return res
+    } catch (e) { console.log(e) }
 }
 
 export const setItem = (itemName: string, value: string) => {
-    const encryptedHex = encryptText(value);
-    return localStorage.setItem(itemName, encryptedHex);
+    try {
+        const encryptedHex = encryptText(value);
+        localStorage.setItem(itemName, encryptedHex);
+        return;
+    } catch (e) { console.log(e) }
 }
 
 export const removeItem = (itemName: string) => {
