@@ -7,6 +7,7 @@ export const getConfig = () => {
     const config: AxiosRequestConfig = {
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
+            'Access-Control-Allow-Headers':"*",
             'Authorization': accessToken || "",
             'Access-Control-Allow-Origin': '*',
             'withCredentials': true,
