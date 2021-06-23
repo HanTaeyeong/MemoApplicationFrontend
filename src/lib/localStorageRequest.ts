@@ -5,6 +5,7 @@ export const getItem = (itemName: string) => {
         console.log('getItem itemName',itemName);
         const encryptedHex = localStorage.getItem(itemName);
         console.log('getItem before decrypted',encryptedHex);
+        
         if (!encryptedHex) return '';
 
         const res = decryptText(encryptedHex);

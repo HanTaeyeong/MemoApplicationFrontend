@@ -5,6 +5,11 @@ export const getConfig = () => {
     console.log('localstorage',localStorage.getItem('access-token'));
     const accessToken = getItem('access-token');
     console.log('localStorage decoded',accessToken);
+    
+    if(!accessToken){
+        return {};
+    }
+    
     const config: AxiosRequestConfig = {
         headers: { 'authorization': accessToken }
     }

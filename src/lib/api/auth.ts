@@ -12,8 +12,10 @@ const prefix = apiServer + '/api/auth';
 
 export const login = async ({ username, password }: { username: string, password: string }) => {
     const res = await client.post(prefix + '/login', { username, password }, getConfig());
-
+    console.log('login result',res)
     const token = res.headers['authorization'];
+    console.log('login result authorization header',token);
+
     setItem('access-token', token);
 
     return res;
@@ -37,6 +39,8 @@ export const register = async ({ username, password }: { username: string, passw
 
 export const check = async () => {
     const res = await client.get(prefix + '/check', getConfig());
+    console.log('check res',res);
+    
     if (res.status !== 200) {
         initializeLocalStorage();
     }
