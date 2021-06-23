@@ -11,7 +11,7 @@ export const getConfig = () => {
     }
     
     const config: AxiosRequestConfig = {
-        headers: { 'authorization': accessToken }
+        headers: { 'Authorization': accessToken }
     }
     console.log('config',config);
     
