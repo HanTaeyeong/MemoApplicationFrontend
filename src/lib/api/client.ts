@@ -4,11 +4,6 @@ import axios from 'axios';
 
 // axios.defaults.baseURL = 'http://localhost:4311';
 
-axios.defaults.headers.common['Content-Type'] = 'application/json;charset=utf-8';
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-
-// axios.defaults.headers.common['withCredentials'] = true;
-// axios.defaults.headers.common['Access-Control-Allow-Credentials'] = true;
 // axios.defaults.headers.common['Access-Control-Expose-Headers'] = 'Set-Cookie';
 
 const client = axios.create();
