@@ -12,12 +12,9 @@ const prefix = apiServer + '/api/auth';
 
 export const login = async ({ username, password }: { username: string, password: string }) => {
     const res = await client.post(prefix + '/login', { username, password }, getConfig());
-    console.log('login result', res.headers);
-
-    const token = res.headers.authorization || res.headers.Authorization;
-
-    console.log('login result authorization header', token);
-
+    
+    const token = res?.data?.token;
+    
     setItem('access-token', token);
 
     return res;
@@ -33,7 +30,7 @@ export const logout = async () => {
 export const register = async ({ username, password }: { username: string, password: string }) => {
     const res = await client.post(prefix + '/register', { username, password }, getConfig())
 
-    const token = res.headers.authorization || res.headers.Authorization;
+    const token = res?.data?.token
     setItem('access-token', token);
 
     return res;
