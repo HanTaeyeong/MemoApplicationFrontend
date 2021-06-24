@@ -39,10 +39,10 @@ const PostDeleteConfirmModal = ({ closeModal }: { closeModal: Function }) => {
             <ConfirmModalBlock>
                 <h2>{title}</h2>
                 <p>{description}</p>
-                <div className="buttons">
-                    <ConfirmButton cyan={false} fullWidth={false} onClickFunction={closeModal}  >{cancelText}</ConfirmButton>
-                    <ConfirmButton cyan fullWidth={false} onClickFunction={onDeleteConfirm}>{confirmText}</ConfirmButton>
-                </div>
+                <ConfirmButtonsWrapper>
+                    <Button cyan={false} fullWidth={false} onClickFunction={closeModal}  >{cancelText}</Button>
+                    <Button cyan fullWidth={false} onClickFunction={onDeleteConfirm}>{confirmText}</Button>
+                </ConfirmButtonsWrapper>
             </ConfirmModalBlock>
         </ModalBackground>
     )
@@ -76,17 +76,11 @@ const ConfirmModalBlock = styled.div`
     p{
         margin-bottom:3rem;
     }
-    .buttons{
-        display:flex;
-        justify-content:flex-end;
-    }
+`;
+const ConfirmButtonsWrapper=styled.div`
+    display:flex;
+    justify-content:space-between;
 `;
 
-const ConfirmButton = styled(Button)`
-    height:2rem;
-    &+&{
-        margin-left:0.75rem;
-    }
-`;
 
 export default PostDeleteConfirmModal
