@@ -3,7 +3,7 @@ import { encryptText, decryptText } from './AESEncryption';
 export const getItem = (itemName: string) => {
     try {
         const encryptedHex = localStorage.getItem(itemName);
-
+        
         if (!encryptedHex) return '';
 
         const res = decryptText(encryptedHex);

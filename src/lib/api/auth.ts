@@ -12,8 +12,9 @@ const prefix = apiServer + '/api/auth';
 
 export const login = async ({ username, password }: { username: string, password: string }) => {
     const res = await client.post(prefix + '/login', { username, password }, getConfig());
-
-    const token = res.headers['authorization'];
+    
+    const token = res?.data?.token;
+    
     setItem('access-token', token);
 
     return res;
@@ -29,7 +30,7 @@ export const logout = async () => {
 export const register = async ({ username, password }: { username: string, password: string }) => {
     const res = await client.post(prefix + '/register', { username, password }, getConfig())
 
-    const token = res.headers['authorization'];
+    const token = res?.data?.token
     setItem('access-token', token);
 
     return res;
@@ -37,6 +38,8 @@ export const register = async ({ username, password }: { username: string, passw
 
 export const check = async () => {
     const res = await client.get(prefix + '/check', getConfig());
+    console.log('check res', res);
+
     if (res.status !== 200) {
         initializeLocalStorage();
     }

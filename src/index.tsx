@@ -39,12 +39,6 @@ export async function loadUser() {
 
     await checkAsync(() => { });
 
-    if (store.getState().auth.checkError) {
-      removeItem('username');
-      removeItem('access-token')
-      return;
-    }
-
   } catch (e) { console.log(e) }
 }
 
