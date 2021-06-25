@@ -12,9 +12,9 @@ const prefix = apiServer + '/api/auth';
 
 export const login = async ({ username, password }: { username: string, password: string }) => {
     const res = await client.post(prefix + '/login', { username, password }, getConfig());
-    
+
     const token = res?.data?.token;
-    
+
     setItem('access-token', token);
 
     return res;
