@@ -1,5 +1,5 @@
 ### Associated Link
-https://www.simplememo.net
+https://rex.simplememo.net
 
 ### `yarn test:watchAll`
 90% of test coverage
