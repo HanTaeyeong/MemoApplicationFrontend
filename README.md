@@ -10,8 +10,6 @@ https://rex.simplememo.net
 
 ### HTTPS protocol
 
-### LoadBalancer.
-
 ###TODO
 Email, SMS, TOTP authentication.
 
