@@ -6,5 +6,5 @@ import axios from 'axios';
 
 // axios.defaults.headers.common['Access-Control-Expose-Headers'] = 'Set-Cookie';
 
-const client = axios.create();
+const client = axios.create({ timeout: 3000 });
 export default client;

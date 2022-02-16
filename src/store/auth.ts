@@ -69,6 +69,8 @@ export const initialState: AuthStateType = {
     checkError: null,
 }
 
+const DEFAULT_ERROR_MESSAGE = "Timeout exceeded!";
+
 const auth = createReducer(initialState,
     {
         //[TEMP_SET_USER]: (state, { payload: username }) => ({ ...state, username }),
@@ -77,10 +79,12 @@ const auth = createReducer(initialState,
         [INITIALIZE_AUTH]: (state) => ({ ...initialState }),
 
         [REGISTER_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, authErrorMessage: "" }),
-        [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error?.message?.slice(-3)] }),
+        [REGISTER_FAILURE]: (state: AuthStateType, { payload: { error } }: any) =>
+            ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error?.message?.slice(-3)] || DEFAULT_ERROR_MESSAGE }),
 
         [LOGIN_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, authErrorMessage: "" }),
-        [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) => ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error?.message?.slice(-3)] }),
+        [LOGIN_FAILURE]: (state: AuthStateType, { payload: { error } }: any) =>
+            ({ ...state, authorized: false, authErrorMessage: ErrorCodes[+error?.message?.slice(-3)] || DEFAULT_ERROR_MESSAGE }),
 
         [CHECK_SUCCESS]: (state: AuthStateType) => ({ ...state, authorized: true, checkError: false }),
         [CHECK_FAILURE]: (state: AuthStateType, { payload: error }: any) => ({ ...state, authorized: false, checkError: error }),
