@@ -1,6 +1,11 @@
 ### Associated Link
 https://rex.simplememo.net
 
+Account for testing
+ID: test123
+Password: Test123!!
+
+
 ### `yarn test:watchAll`
 90% of test coverage
 
